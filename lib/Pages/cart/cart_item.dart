@@ -33,9 +33,9 @@ class _CartItemCardState extends State<CartItemCard> {
   @override
   int? selectedIndex;
   Widget build(BuildContext context) {
-    return InkWell(
+  return InkWell(
       onTap: () {
-        NavigatorFunction(
+    NavigatorPushFunction(
             context,
             ProductScreen(
                 name: widget.item.name_ar,

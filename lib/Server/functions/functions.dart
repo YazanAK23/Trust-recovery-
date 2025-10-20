@@ -999,7 +999,7 @@ void showFilterDialog(BuildContext context) {
                 ),
                 InkWell(
                   onTap: () {
-                    NavigatorFunction(context, MainCategories());
+                    NavigatorPushFunction(context, MainCategories());
                   },
                   child: Row(
                     children: [
@@ -1059,37 +1059,37 @@ void showFilterDialog(BuildContext context) {
                                 itemBuilder: (context, int index) {
                                   return InkWell(
                                     onTap: () {
-                                      if (seasons[index]["id"] == 5) {
-                                        NavigatorFunction(
-                                            context,
-                                            AllSeasons(
-                                              id: seasons[index]["id"],
-                                              image: URLIMAGE +
-                                                  seasons[index]["cover"],
-                                              name_ar: seasons[index]
-                                                          ["translations"][0]
-                                                      ["value"] ??
-                                                  "",
-                                              name_en:
-                                                  seasons[index]["name"] ?? "",
-                                            ));
-                                      } else {
-                                        NavigatorFunction(
-                                            context,
-                                            ProductsBySeason(
-                                                name_ar: seasons[index]
-                                                            ["translations"][0]
-                                                        ["value"] ??
-                                                    "",
-                                                name_en: seasons[index]
-                                                        ["name"] ??
-                                                    "",
-                                                image: SeasonsImages[index],
-                                                season_image: URLIMAGE +
-                                                    seasons[index]["cover"],
-                                                season_id: seasons[index]
-                                                    ["id"]));
-                                      }
+                    if (seasons[index]["id"] == 5) {
+                    NavigatorPushFunction(
+                      context,
+                      AllSeasons(
+                        id: seasons[index]["id"],
+                        image: URLIMAGE +
+                          seasons[index]["cover"],
+                        name_ar: seasons[index]
+                              ["translations"][0]
+                            ["value"] ??
+                          "",
+                        name_en:
+                          seasons[index]["name"] ?? "",
+                      ));
+                    } else {
+                    NavigatorPushFunction(
+                      context,
+                      ProductsBySeason(
+                        name_ar: seasons[index]
+                              ["translations"][0]
+                            ["value"] ??
+                          "",
+                        name_en: seasons[index]
+                            ["name"] ??
+                          "",
+                        image: SeasonsImages[index],
+                        season_image: URLIMAGE +
+                          seasons[index]["cover"],
+                        season_id: seasons[index]
+                          ["id"]));
+                    }
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.only(top: 15),

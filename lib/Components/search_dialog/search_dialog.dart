@@ -96,7 +96,7 @@ class _SearchResultsWidgetState extends State<SearchResultsWidget> {
                   return InkWell(
                     onTap: () {
                       FocusScope.of(context).unfocus();
-                      NavigatorFunction(
+            NavigatorPushFunction(
                           context,
                           ProductScreen(
                               name: isArabic

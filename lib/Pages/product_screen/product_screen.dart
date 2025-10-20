@@ -1191,7 +1191,7 @@ class _ProductScreenState extends State<ProductScreen> {
                     : true,
                 child: InkWell(
                   onTap: () {
-                    NavigatorFunction(
+                    NavigatorPushFunction(
                         context,
                         VideoPlayerPage(
                           videoUrl: URLIMAGE + video,

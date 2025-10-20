@@ -32,7 +32,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
       padding: const EdgeInsets.only(right: 5, left: 5),
       child: InkWell(
         onTap: () {
-          NavigatorFunction(
+          NavigatorPushFunction(
               context,
               SubCategories(
                   name_ar: widget.name_ar,
