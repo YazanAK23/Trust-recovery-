@@ -42,7 +42,7 @@ class _SubCategoryWidgetState extends State<SubCategoryWidget> {
       child: InkWell(
         onTap: () {
           if (widget.children == 0) {
-            NavigatorFunction(
+            NavigatorPushFunction(
                 context,
                 ProductsByCategory(
                     name_ar: widget.name_ar,
@@ -50,7 +50,7 @@ class _SubCategoryWidgetState extends State<SubCategoryWidget> {
                     image: URLIMAGE + widget.url,
                     category_id: widget.id));
           } else {
-            NavigatorFunction(
+            NavigatorPushFunction(
                 context,
                 SubCategories(
                   name_ar: widget.name_ar,

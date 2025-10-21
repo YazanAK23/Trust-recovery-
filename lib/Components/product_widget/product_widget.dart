@@ -67,9 +67,9 @@ class _ProductWidgetState extends State<ProductWidget> {
     return Stack(
       alignment: Alignment.topRight,
       children: [
-        InkWell(
+    InkWell(
           onTap: () {
-            NavigatorFunction(
+      NavigatorPushFunction(
                 context,
                 ProductScreen(
                     name: locale.toString() == "ar"

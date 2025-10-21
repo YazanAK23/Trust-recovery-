@@ -33,7 +33,7 @@ class _SeasonWidgetState extends State<SeasonWidget> {
       child: InkWell(
         onTap: () {
           if (widget.id == 5) {
-            NavigatorFunction(
+            NavigatorPushFunction(
                 context,
                 AllSeasons(
                   id: widget.id,
@@ -42,7 +42,7 @@ class _SeasonWidgetState extends State<SeasonWidget> {
                   name_en: widget.name_en,
                 ));
           } else {
-            NavigatorFunction(
+            NavigatorPushFunction(
                 context,
                 ProductsBySeason(
                     name_ar: widget.name_ar,

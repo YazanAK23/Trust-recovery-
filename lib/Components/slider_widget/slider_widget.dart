@@ -44,7 +44,7 @@ class _SlideImageState extends State<SlideImage> {
                           // Check if it's a valid number and within reasonable length
                           if (productIdStr.length < 10 && 
                               int.tryParse(productIdStr) != null) {
-                            NavigatorFunction(
+              NavigatorPushFunction(
                                 context,
                                 ProductScreen(
                                     name: " - ",

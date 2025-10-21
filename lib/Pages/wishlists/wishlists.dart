@@ -168,7 +168,7 @@ class _WishlistsState extends State<Wishlists> {
       int categry = 0}) {
     return InkWell(
       onTap: () {
-        NavigatorFunction(
+        NavigatorPushFunction(
             context,
             ProductScreen(
                 name: name,
@@ -216,7 +216,7 @@ class _WishlistsState extends State<Wishlists> {
                     //     ROLEID == "3" && widget.SIZES!.length != 0 ? true : false,
                     child: InkWell(
                       onTap: () {
-                        NavigatorFunction(
+                        NavigatorPushFunction(
                             context,
                             ProductScreen(
                                 name: name,

@@ -106,7 +106,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                           IconButton(
                               padding: EdgeInsets.all(0),
                               onPressed: () {
-                                NavigatorFunction(context, Notifications());
+                                NavigatorPushFunction(context, Notifications());
                               },
                               icon: Icon(
                                 Icons.notifications,
@@ -147,7 +147,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                         visible: ROLEID.toString() == "3" ? true : false,
                         child: InkWell(
                           onTap: () {
-                            NavigatorFunction(context, Cart());
+                            NavigatorPushFunction(context, Cart());
                           },
                           child: FaIcon(
                             FontAwesomeIcons.cartShopping,

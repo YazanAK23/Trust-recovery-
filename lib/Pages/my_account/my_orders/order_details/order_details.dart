@@ -70,7 +70,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                 ),
                 InkWell(
                   onTap: () {
-                    NavigatorFunction(context, Cart());
+                    NavigatorPushFunction(context, Cart());
                   },
                   child: FaIcon(
                     FontAwesomeIcons.cartShopping,
