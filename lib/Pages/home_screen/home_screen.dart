@@ -485,15 +485,16 @@ class _MainScreenState extends State<MainScreen> {
 
                             return Container(
                                 width: double.infinity,
-                                height: 150,
+                                height: 170,
+                                padding: const EdgeInsets.symmetric(vertical: 10),
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    Flexible(
+                                    Expanded(
                                       child: SeasonWidget(
-                                          height: isTablet ? 110 : 80,
-                                          width: isTablet ? 130 : 90,
+                                          height: isTablet ? 110 : 90,
+                                          width: isTablet ? 130 : double.infinity,
                                           name_ar: seasons[0]["translations"][0]
                                                   ["value"] ??
                                               "",
@@ -502,10 +503,10 @@ class _MainScreenState extends State<MainScreen> {
                                           id: seasons[0]["id"],
                                           image: SeasonsImages[0]),
                                     ),
-                                    Flexible(
+                                    Expanded(
                                       child: SeasonWidget(
-                                          height: isTablet ? 110 : 80,
-                                          width: isTablet ? 130 : 90,
+                                          height: isTablet ? 110 : 90,
+                                          width: isTablet ? 130 : double.infinity,
                                           name_ar: seasons[1]["translations"][0]
                                                   ["value"] ??
                                               "",
@@ -514,10 +515,10 @@ class _MainScreenState extends State<MainScreen> {
                                           id: seasons[1]["id"],
                                           image: SeasonsImages[1]),
                                     ),
-                                    Flexible(
+                                    Expanded(
                                       child: SeasonWidget(
-                                          height: isTablet ? 110 : 80,
-                                          width: isTablet ? 130 : 90,
+                                          height: isTablet ? 110 : 90,
+                                          width: isTablet ? 130 : double.infinity,
                                           name_ar: seasons[2]["translations"][0]
                                                   ["value"] ??
                                               "",

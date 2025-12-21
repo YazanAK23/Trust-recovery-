@@ -29,7 +29,7 @@ class _SeasonWidgetState extends State<SeasonWidget> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(right: 15, left: 15),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
       child: InkWell(
         onTap: () {
           if (widget.id == 5) {
@@ -54,35 +54,47 @@ class _SeasonWidgetState extends State<SeasonWidget> {
         },
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              width: widget.width,
+              width: widget.width == double.infinity ? null : widget.width,
               height: widget.height,
+              constraints: BoxConstraints(
+                maxWidth: 120,
+                minWidth: 80,
+              ),
               decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.grey.withOpacity(0.1),
-                    spreadRadius: 5,
-                    blurRadius: 7,
-                    offset: Offset(0, 2), // changes position of shadow
+                    color: Colors.grey.withOpacity(0.15),
+                    spreadRadius: 2,
+                    blurRadius: 8,
+                    offset: Offset(0, 3),
                   ),
                 ],
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(12),
                 color: Colors.white,
               ),
               child: Center(
                   child: SvgPicture.asset(
                 widget.image,
-                fit: BoxFit.cover,
-                width: 65,
-                height: 65,
+                fit: BoxFit.contain,
+                width: 55,
+                height: 55,
               )),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 15),
+              padding: const EdgeInsets.only(top: 12),
               child: Text(
                 locale.toString() == "ar" ? widget.name_ar : widget.name_en,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13,
+                  color: Colors.black87,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
             )
           ],

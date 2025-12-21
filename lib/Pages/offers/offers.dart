@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:trust_app_updated/Components/app_bar_widget/app_bar_widget.dart';
 import 'package:trust_app_updated/Pages/offers/offer_full_screen/offer_full_screen.dart';
 import 'package:trust_app_updated/l10n/app_localizations.dart';
 import '../../Components/loading_widget/loading_widget.dart';
+import '../../Components/drawer_widget/drawer_widget.dart';
+import '../../Components/search_dialog/search_dialog.dart';
 import '../../Constants/constants.dart';
 import '../../Server/domains/domains.dart';
 import '../../Server/functions/functions.dart';
+import '../../main.dart';
 
 class Offers extends StatefulWidget {
   Offers({super.key});
@@ -17,6 +21,7 @@ class Offers extends StatefulWidget {
 }
 
 class _OffersState extends State<Offers> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List<dynamic> AllProducts = [];
   ScrollController _controller = ScrollController();
   bool _hasNextPage = true;
@@ -260,172 +265,75 @@ class _OffersState extends State<Offers> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[50],
-      body: CustomScrollView(
-        controller: _controller,
-        slivers: [
-          SliverAppBar(
+    return Container(
+      color: MAIN_COLOR,
+      child: SafeArea(
+        child: Scaffold(
+          key: _scaffoldKey,
+          drawer: DrawerWell(
+            Refresh: () {
+              setState(() {});
+            },
+          ),
+          backgroundColor: Colors.grey[50],
+          appBar: AppBar(
             backgroundColor: MAIN_COLOR,
-            elevation: 4,
-            shadowColor: MAIN_COLOR.withOpacity(0.3),
-            pinned: true,
-            expandedHeight: 100,
-            flexibleSpace: FlexibleSpaceBar(
-              background: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      MAIN_COLOR,
-                      MAIN_COLOR.withOpacity(0.85),
-                    ],
-                  ),
-                ),
-              ),
-              centerTitle: true,
-              title: Row(
-                mainAxisSize: MainAxisSize.min,
+            elevation: 0,
+            automaticallyImplyLeading: false,
+            title: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Icon(
-                      Icons.local_offer_rounded,
+                  // Menu Icon
+                  InkWell(
+                    onTap: () {
+                      _scaffoldKey.currentState?.openDrawer();
+                    },
+                    child: SvgPicture.asset(
+                      "assets/images/iCons/Menu.svg",
+                      fit: BoxFit.cover,
                       color: Colors.white,
-                      size: 24,
+                      width: 25,
+                      height: 25,
                     ),
                   ),
-                  SizedBox(width: 12),
-                  Text(
-                    AppLocalizations.of(context)!.offer,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 22,
-                      color: Colors.white,
-                      letterSpacing: 0.5,
+                  // Trust Logo
+                  Image.asset(
+                    "assets/images/logo_white.png",
+                    fit: BoxFit.fill,
+                    width: 150,
+                    height: 40,
+                  ),
+                  // Search Icon
+                  Container(
+                    width: 20,
+                    height: 20,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white),
+                    ),
+                    child: Center(
+                      child: IconButton(
+                        padding: EdgeInsets.all(0),
+                        onPressed: () {
+                          showSearchDialog(context);
+                        },
+                        icon: Icon(
+                          Icons.search_outlined,
+                          color: Colors.white,
+                          size: 15,
+                        ),
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
           ),
-
-          // **Banner Section**
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-              child: Container(
-                width: double.infinity,
-                height: 240,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 15,
-                      offset: Offset(0, 5),
-                    ),
-                  ],
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: _isFirstLoadRunning
-                      ? Container(
-                          color: Colors.grey[300],
-                          child: Center(
-                            child: CircularProgressIndicator(color: MAIN_COLOR),
-                          ),
-                        )
-                      : AllProducts.isEmpty
-                          ? Container(
-                              color: Colors.grey[200],
-                              child: Center(
-                                child: Image.asset(
-                                  "assets/images/new_logo.png",
-                                  height: 100,
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
-                            )
-                          : Builder(
-                              builder: (_) {
-                                final first = AllProducts.first;
-                                final bannerImage = _normalizedImage(first["image"]);
-                                return Stack(
-                                  children: [
-                                    bannerImage.isNotEmpty
-                                        ? Image.network(
-                                            URLIMAGE + bannerImage,
-                                            height: 240,
-                                            width: double.infinity,
-                                            fit: BoxFit.cover,
-                                            loadingBuilder: (context, child, loadingProgress) {
-                                              if (loadingProgress == null) return child;
-                                              return Container(
-                                                color: Colors.grey[300],
-                                                child: Center(
-                                                  child: CircularProgressIndicator(
-                                                    color: MAIN_COLOR,
-                                                    value: loadingProgress.expectedTotalBytes != null
-                                                        ? loadingProgress.cumulativeBytesLoaded /
-                                                            loadingProgress.expectedTotalBytes!
-                                                        : null,
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                            errorBuilder: (context, error, stackTrace) {
-                                              return Container(
-                                                color: Colors.grey[200],
-                                                child: Center(
-                                                  child: Image.asset(
-                                                    "assets/images/new_logo.png",
-                                                    height: 100,
-                                                    fit: BoxFit.contain,
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                          )
-                                        : Container(
-                                            color: Colors.grey[200],
-                                            child: Center(
-                                              child: Image.asset(
-                                                "assets/images/new_logo.png",
-                                                height: 100,
-                                                fit: BoxFit.contain,
-                                              ),
-                                            ),
-                                          ),
-                                    // Subtle gradient overlay
-                                    Positioned.fill(
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                            begin: Alignment.topCenter,
-                                            end: Alignment.bottomCenter,
-                                            colors: [
-                                              Colors.transparent,
-                                              Colors.black.withOpacity(0.3),
-                                            ],
-                                            stops: [0.6, 1.0],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              },
-                            ),
-                ),
-              ),
-            ),
-          ),
+          body: CustomScrollView(
+            controller: _controller,
+            slivers: [
 
           // **Title Section**
           SliverToBoxAdapter(
@@ -484,23 +392,23 @@ class _OffersState extends State<Offers> {
                   ),
                 )
               : AllProducts.isEmpty
-                  ? SliverToBoxAdapter(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 60),
+                  ? SliverFillRemaining(
+                      hasScrollBody: false,
+                      child: Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(
                               Icons.local_offer_outlined,
-                              size: 80,
+                              size: 100,
                               color: Colors.grey[400],
                             ),
-                            SizedBox(height: 16),
+                            SizedBox(height: 24),
                             Text(
                               AppLocalizations.of(context)!.there_is_no_offers,
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
-                                fontSize: 18,
+                                fontSize: 20,
                                 color: Colors.grey[600],
                               ),
                             ),
@@ -549,6 +457,8 @@ class _OffersState extends State<Offers> {
               ),
             ),
         ],
+      ),
+        ),
       ),
     );
   }

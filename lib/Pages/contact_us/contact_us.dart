@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:trust_app_updated/Components/button_widget/button_widget.dart';
 import 'package:trust_app_updated/l10n/app_localizations.dart';
 import 'package:trust_app_updated/Server/functions/functions.dart';
 import '../../Components/search_dialog/search_dialog.dart';
-import '../../Components/drawer_widget/drawer_widget.dart';
 import '../../Constants/constants.dart';
 import '../../main.dart';
 
@@ -18,8 +16,6 @@ class ContactUs extends StatefulWidget {
 }
 
 class _ContactUsState extends State<ContactUs> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  
   // Controllers
   final TextEditingController NameController = TextEditingController();
   final TextEditingController EmailController = TextEditingController();
@@ -49,12 +45,6 @@ class _ContactUsState extends State<ContactUs> {
       color: MAIN_COLOR,
       child: SafeArea(
         child: Scaffold(
-          key: _scaffoldKey,
-          drawer: DrawerWell(
-            Refresh: () {
-              setState(() {});
-            },
-          ),
           appBar: AppBar(
               backgroundColor: MAIN_COLOR,
               centerTitle: true,
@@ -65,6 +55,21 @@ class _ContactUsState extends State<ContactUs> {
                     color: Colors.white,
                     fontSize: 16),
               ),
+              leading: Padding(
+                padding: EdgeInsets.only(
+                  left: locale == "ar" ? 0 : 8.0,
+                  right: locale == "ar" ? 8.0 : 0,
+                ),
+                child: IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: Icon(
+                    locale == "ar" ? Icons.arrow_forward : Icons.arrow_back,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
               actions: [
                 Padding(
                   padding: EdgeInsets.only(
@@ -73,36 +78,15 @@ class _ContactUsState extends State<ContactUs> {
                   ),
                   child: IconButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      showSearchDialog(context);
                     },
-                    icon: Icon(
-                      locale == "ar" ? Icons.arrow_forward : Icons.arrow_back,
+                    icon: const Icon(
+                      Icons.search,
                       color: Colors.white,
                     ),
                   ),
                 ),
-              ],
-              leading: Padding(
-                padding: EdgeInsets.only(
-                  left: locale == "ar" ? 0 : 8.0,
-                  right: locale == "ar" ? 8.0 : 0,
-                ),
-                child: InkWell(
-                  onTap: () {
-                    _scaffoldKey.currentState?.openDrawer();
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SvgPicture.asset(
-                      "assets/images/iCons/Menu.svg",
-                      fit: BoxFit.cover,
-                      color: Colors.white,
-                      width: 25,
-                      height: 25,
-                    ),
-                  ),
-                ),
-              )),
+              ]),
           body: Container(
             height: MediaQuery.of(context).size.height,
             width: double.infinity,
