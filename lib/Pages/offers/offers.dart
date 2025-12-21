@@ -85,7 +85,7 @@ class _OffersState extends State<Offers> {
   Widget offerWidget(
       {required String name, required String image, required String desc}) {
     return Padding(
-      padding: const EdgeInsets.only(top: 15),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: InkWell(
         onTap: () {
           Navigator.push(
@@ -96,77 +96,159 @@ class _OffersState extends State<Offers> {
         },
         child: Container(
           width: double.infinity,
-          height: 180,
-          color: Colors.white,
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Row(
+          height: 200,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.08),
+                blurRadius: 12,
+                offset: Offset(0, 4),
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(16),
+            child: Stack(
               children: [
-                Expanded(
-                  flex: 15,
-                  child: Stack(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: (image.isNotEmpty ?? false)
-                            ? Image.network(
-                                URLIMAGE + image,
-                                fit: BoxFit.cover,
-                                height: 155,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Image.asset(
-                                    "assets/images/logo_red.png",
-                                    fit: BoxFit.contain,
-                                    height: 155,
-                                    width: double.infinity,
-                                  );
-                                },
-                              )
-                            : Image.asset(
-                                "assets/images/logo_red.png",
-                                fit: BoxFit.contain,
-                                height: 155,
-                                width: double.infinity,
+                // Image with gradient overlay
+                Positioned.fill(
+                  child: (image.isNotEmpty)
+                      ? Image.network(
+                          URLIMAGE + image,
+                          fit: BoxFit.cover,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return Container(
+                              color: Colors.grey[300],
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                  color: MAIN_COLOR,
+                                  value: loadingProgress.expectedTotalBytes != null
+                                      ? loadingProgress.cumulativeBytesLoaded /
+                                          loadingProgress.expectedTotalBytes!
+                                      : null,
+                                ),
                               ),
-                      ),
-                      Positioned(
-                        bottom: 15,
-                        left: 10,
-                        right: 10,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              name ?? 'No Name',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                                fontSize: 18,
+                            );
+                          },
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              color: Colors.grey[200],
+                              child: Center(
+                                child: Image.asset(
+                                  "assets/images/logo_red.png",
+                                  fit: BoxFit.contain,
+                                  height: 80,
+                                ),
                               ),
+                            );
+                          },
+                        )
+                      : Container(
+                          color: Colors.grey[200],
+                          child: Center(
+                            child: Image.asset(
+                              "assets/images/logo_red.png",
+                              fit: BoxFit.contain,
+                              height: 80,
                             ),
-                            Text(
-                              desc ?? '',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                                fontSize: 14,
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
+                ),
+                // Gradient overlay
+                Positioned.fill(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.transparent,
+                          Colors.black.withOpacity(0.7),
+                        ],
+                        stops: [0.4, 1.0],
                       ),
-                    ],
+                    ),
                   ),
                 ),
-                IconButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => OfferFullScreen(
-                                name: name, image: image, desc: desc)));
-                  },
-                  icon: Icon(Icons.arrow_forward_ios_outlined, size: 15),
+                // Content
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                name ?? 'No Name',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  shadows: [
+                                    Shadow(
+                                      color: Colors.black.withOpacity(0.5),
+                                      offset: Offset(0, 1),
+                                      blurRadius: 3,
+                                    ),
+                                  ],
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              SizedBox(height: 4),
+                              Text(
+                                desc ?? '',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white.withOpacity(0.9),
+                                  fontSize: 14,
+                                  shadows: [
+                                    Shadow(
+                                      color: Colors.black.withOpacity(0.5),
+                                      offset: Offset(0, 1),
+                                      blurRadius: 3,
+                                    ),
+                                  ],
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(width: 8),
+                        Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: MAIN_COLOR,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: MAIN_COLOR.withOpacity(0.4),
+                                blurRadius: 8,
+                                offset: Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Icon(
+                            Icons.arrow_forward_ios_rounded,
+                            color: Colors.white,
+                            size: 18,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -179,77 +261,253 @@ class _OffersState extends State<Offers> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[50],
       body: CustomScrollView(
         controller: _controller,
         slivers: [
           SliverAppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
+            backgroundColor: MAIN_COLOR,
+            elevation: 4,
+            shadowColor: MAIN_COLOR.withOpacity(0.3),
             pinned: true,
-            flexibleSpace: AppBarWidget(logo: true),
+            expandedHeight: 100,
+            flexibleSpace: FlexibleSpaceBar(
+              background: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      MAIN_COLOR,
+                      MAIN_COLOR.withOpacity(0.85),
+                    ],
+                  ),
+                ),
+              ),
+              centerTitle: true,
+              title: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Icon(
+                      Icons.local_offer_rounded,
+                      color: Colors.white,
+                      size: 24,
+                    ),
+                  ),
+                  SizedBox(width: 12),
+                  Text(
+                    AppLocalizations.of(context)!.offer,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 22,
+                      color: Colors.white,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
 
           // **Banner Section**
           SliverToBoxAdapter(
-            child: Container(
-              width: double.infinity,
-              child: AllProducts.isEmpty
-                  ? Container(height: 220, color: Colors.grey[300])
-                  : Builder(
-                      builder: (_) {
-                        final first = AllProducts.first;
-                        final bannerImage = _normalizedImage(first["image"]);
-                        return bannerImage.isNotEmpty
-                            ? Image.network(
-                                URLIMAGE + bannerImage,
-                                height: 220,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Image.asset(
-                                    "assets/images/new_logo.png",
-                                    height: 220,
-                                    fit: BoxFit.cover,
-                                  );
-                                },
-                              )
-                            : Image.asset(
-                                "assets/images/new_logo.png",
-                                height: 220,
-                                fit: BoxFit.cover,
-                              );
-                      },
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+              child: Container(
+                width: double.infinity,
+                height: 240,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 15,
+                      offset: Offset(0, 5),
                     ),
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: _isFirstLoadRunning
+                      ? Container(
+                          color: Colors.grey[300],
+                          child: Center(
+                            child: CircularProgressIndicator(color: MAIN_COLOR),
+                          ),
+                        )
+                      : AllProducts.isEmpty
+                          ? Container(
+                              color: Colors.grey[200],
+                              child: Center(
+                                child: Image.asset(
+                                  "assets/images/new_logo.png",
+                                  height: 100,
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                            )
+                          : Builder(
+                              builder: (_) {
+                                final first = AllProducts.first;
+                                final bannerImage = _normalizedImage(first["image"]);
+                                return Stack(
+                                  children: [
+                                    bannerImage.isNotEmpty
+                                        ? Image.network(
+                                            URLIMAGE + bannerImage,
+                                            height: 240,
+                                            width: double.infinity,
+                                            fit: BoxFit.cover,
+                                            loadingBuilder: (context, child, loadingProgress) {
+                                              if (loadingProgress == null) return child;
+                                              return Container(
+                                                color: Colors.grey[300],
+                                                child: Center(
+                                                  child: CircularProgressIndicator(
+                                                    color: MAIN_COLOR,
+                                                    value: loadingProgress.expectedTotalBytes != null
+                                                        ? loadingProgress.cumulativeBytesLoaded /
+                                                            loadingProgress.expectedTotalBytes!
+                                                        : null,
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            errorBuilder: (context, error, stackTrace) {
+                                              return Container(
+                                                color: Colors.grey[200],
+                                                child: Center(
+                                                  child: Image.asset(
+                                                    "assets/images/new_logo.png",
+                                                    height: 100,
+                                                    fit: BoxFit.contain,
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          )
+                                        : Container(
+                                            color: Colors.grey[200],
+                                            child: Center(
+                                              child: Image.asset(
+                                                "assets/images/new_logo.png",
+                                                height: 100,
+                                                fit: BoxFit.contain,
+                                              ),
+                                            ),
+                                          ),
+                                    // Subtle gradient overlay
+                                    Positioned.fill(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            begin: Alignment.topCenter,
+                                            end: Alignment.bottomCenter,
+                                            colors: [
+                                              Colors.transparent,
+                                              Colors.black.withOpacity(0.3),
+                                            ],
+                                            stops: [0.6, 1.0],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                ),
+              ),
             ),
           ),
 
           // **Title Section**
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: Center(
-                child: Text(
-                  AppLocalizations.of(context)!.available_offers,
-                  style: TextStyle(
-                      fontSize: 22,
+              padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
+              child: Row(
+                children: [
+                  Container(
+                    width: 4,
+                    height: 28,
+                    decoration: BoxDecoration(
+                      color: MAIN_COLOR,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                  SizedBox(width: 12),
+                  Text(
+                    AppLocalizations.of(context)!.available_offers,
+                    style: TextStyle(
+                      fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: MAIN_COLOR),
-                ),
+                      color: Colors.black87,
+                      letterSpacing: -0.5,
+                    ),
+                  ),
+                  Spacer(),
+                  if (!_isFirstLoadRunning && AllProducts.isNotEmpty)
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: MAIN_COLOR.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        '${AllProducts.length}',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: MAIN_COLOR,
+                        ),
+                      ),
+                    ),
+                ],
               ),
             ),
           ),
 
           // **Product List**
-          AllProducts.isEmpty
+          _isFirstLoadRunning
               ? SliverToBoxAdapter(
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 50),
+                    padding: const EdgeInsets.only(top: 100),
                     child: Center(
-                      child: Text(AppLocalizations.of(context)!.there_is_no_offers,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 18)),
+                      child: CircularProgressIndicator(color: MAIN_COLOR),
                     ),
                   ),
                 )
+              : AllProducts.isEmpty
+                  ? SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 60),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.local_offer_outlined,
+                              size: 80,
+                              color: Colors.grey[400],
+                            ),
+                            SizedBox(height: 16),
+                            Text(
+                              AppLocalizations.of(context)!.there_is_no_offers,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 18,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
               : SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {

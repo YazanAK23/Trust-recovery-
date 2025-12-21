@@ -126,10 +126,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get maintenance_department => 'قسم الصيانة';
 
   @override
-  String get merchants_location => 'موقع التجار على الخريطة';
+  String get merchants_location => 'جميع نقاط البيع على الخريطة';
 
   @override
-  String get show_merchants_location => 'عرض جميع التجار على الخريطة';
+  String get show_merchants_location => 'جميع نقاط البيع على الخريطة';
 
   @override
   String get send_order => 'أرسل الطلبية';

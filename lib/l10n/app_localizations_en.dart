@@ -126,10 +126,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get maintenance_department => 'Maintenance Department';
 
   @override
-  String get merchants_location => 'Merchants Location';
+  String get merchants_location => 'All points of sale on the map';
 
   @override
-  String get show_merchants_location => 'Show All Merchants Location On Map';
+  String get show_merchants_location => 'All points of sale on the map';
 
   @override
   String get send_order => 'Send Order';

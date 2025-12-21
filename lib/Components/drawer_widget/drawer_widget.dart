@@ -122,7 +122,9 @@ class _DrawerWellState extends State<DrawerWell> {
                 ? true
                 : false,
             child: DrawerMethod(
-                name: AppLocalizations.of(context)!.warranties_and_maintenances,
+                name: ROLEID.toString() == "5"
+                    ? AppLocalizations.of(context)!.maintenance_requests
+                    : AppLocalizations.of(context)!.warranties_and_maintenances,
                 OnCLICK: () {
                   Navigator.pop(context); // Close drawer first
                   if (ROLEID.toString() == "3") {
