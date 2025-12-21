@@ -490,36 +490,42 @@ class _MainScreenState extends State<MainScreen> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    SeasonWidget(
-                                        height: isTablet ? 110 : 80,
-                                        width: isTablet ? 130 : 90,
-                                        name_ar: seasons[0]["translations"][0]
-                                                ["value"] ??
-                                            "",
-                                        name_en: seasons[0]["name"] ?? "",
-                                        seasonImage: seasons[0]["cover"],
-                                        id: seasons[0]["id"],
-                                        image: SeasonsImages[0]),
-                                    SeasonWidget(
-                                        height: isTablet ? 110 : 80,
-                                        width: isTablet ? 130 : 90,
-                                        name_ar: seasons[1]["translations"][0]
-                                                ["value"] ??
-                                            "",
-                                        name_en: seasons[1]["name"] ?? "",
-                                        seasonImage: seasons[1]["cover"],
-                                        id: seasons[1]["id"],
-                                        image: SeasonsImages[1]),
-                                    SeasonWidget(
-                                        height: isTablet ? 110 : 80,
-                                        width: isTablet ? 130 : 90,
-                                        name_ar: seasons[2]["translations"][0]
-                                                ["value"] ??
-                                            "",
-                                        name_en: seasons[2]["name"] ?? "",
-                                        seasonImage: seasons[2]["cover"],
-                                        id: seasons[2]["id"],
-                                        image: SeasonsImages[2]),
+                                    Flexible(
+                                      child: SeasonWidget(
+                                          height: isTablet ? 110 : 80,
+                                          width: isTablet ? 130 : 90,
+                                          name_ar: seasons[0]["translations"][0]
+                                                  ["value"] ??
+                                              "",
+                                          name_en: seasons[0]["name"] ?? "",
+                                          seasonImage: seasons[0]["cover"],
+                                          id: seasons[0]["id"],
+                                          image: SeasonsImages[0]),
+                                    ),
+                                    Flexible(
+                                      child: SeasonWidget(
+                                          height: isTablet ? 110 : 80,
+                                          width: isTablet ? 130 : 90,
+                                          name_ar: seasons[1]["translations"][0]
+                                                  ["value"] ??
+                                              "",
+                                          name_en: seasons[1]["name"] ?? "",
+                                          seasonImage: seasons[1]["cover"],
+                                          id: seasons[1]["id"],
+                                          image: SeasonsImages[1]),
+                                    ),
+                                    Flexible(
+                                      child: SeasonWidget(
+                                          height: isTablet ? 110 : 80,
+                                          width: isTablet ? 130 : 90,
+                                          name_ar: seasons[2]["translations"][0]
+                                                  ["value"] ??
+                                              "",
+                                          name_en: seasons[2]["name"] ?? "",
+                                          seasonImage: seasons[2]["cover"],
+                                          id: seasons[2]["id"],
+                                          image: SeasonsImages[2]),
+                                    ),
                                   ],
                                 ));
                           } else {
