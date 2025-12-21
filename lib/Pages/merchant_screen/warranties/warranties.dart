@@ -35,31 +35,33 @@ class _WarrantiesState extends State<Warranties> {
                 height: 70,
                 width: double.infinity,
                 decoration: BoxDecoration(color: MAIN_COLOR),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                child: Stack(
+                  alignment: Alignment.center,
                   children: [
-                    IconButton(
+                    Positioned(
+                      left: locale.toString() == "ar" ? null : 0,
+                      right: locale.toString() == "ar" ? 0 : null,
+                      child: IconButton(
                         onPressed: () {
                           Navigator.pop(context);
                         },
                         icon: Icon(
-                           locale.toString()=="ar"? Icons.arrow_forward_outlined:Icons.arrow_back,
-                          size: 35,
+                          Icons.arrow_back,
+                          size: 28,
                           color: Colors.white,
-                        )),
-                        Text(
-                      AppLocalizations.of(context)!.effective_guarantees,
-                      style: TextStyle(
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: Text(
+                        AppLocalizations.of(context)!.effective_guarantees,
+                        style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 22,
-                          color: Colors.white),
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
-                    Container(
-                      width: 30,
-                    ),
-                    
-                    
                   ],
                 ),
               ),
@@ -159,12 +161,22 @@ class _WarrantiesState extends State<Warranties> {
                                                 productName: locale
                                                             .toString() ==
                                                         "ar"
-                                                    ? (AllProducts[index]
+                                                    ? ((AllProducts[index]
+                                                                    ["product"]
+                                                                ?[
+                                                                "translations"] != null &&
+                                                            (AllProducts[index]
+                                                                        ["product"]
+                                                                    ?[
+                                                                    "translations"] as List)
+                                                                .isNotEmpty)
+                                                        ? (AllProducts[index]
                                                                     ["product"]
                                                                 ?[
                                                                 "translations"]
                                                             ?[0]?["value"] ??
-                                                        "-")
+                                                            "-")
+                                                        : "-")
                                                     : (AllProducts[index]
                                                                 ["product"]
                                                             ?["name"] ??

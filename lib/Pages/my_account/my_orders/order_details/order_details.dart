@@ -126,32 +126,57 @@ class _OrderDetailsState extends State<OrderDetails> {
                                       physics: NeverScrollableScrollPhysics(),
                                       itemBuilder:
                                           (BuildContext context, int index) {
-                                        var imageString = AllProducts[index]
-                                            ["product"]["image"];
-                                        if (AllProducts.isNotEmpty) {
-                                          // Check if the imageString is in the expected format
-                                          if (imageString != null &&
-                                              imageString.startsWith("[") &&
-                                              imageString.endsWith("]")) {
+                                        // Check if product data is null (deleted product)
+                                        bool isProductDeleted = AllProducts[index] == null ||
+                                            AllProducts[index]?["product"] == null;
+                                        
+                                        String imageString = "";
+                                        String productName = "";
+                                        
+                                        if (isProductDeleted) {
+                                          // Product has been deleted
+                                          productName = locale.toString() == "ar"
+                                              ? "المنتج لم يعد متوفراً"
+                                              : "Product No Longer Available";
+                                        } else {
+                                          // Product exists, get image
+                                          var tempImage = AllProducts[index]
+                                              ?["product"]?["image"];
+                                          if (tempImage != null &&
+                                              tempImage.toString().startsWith("[") &&
+                                              tempImage.toString().endsWith("]")) {
                                             // Remove square brackets and any surrounding double quotes
-                                            imageString = imageString
+                                            imageString = tempImage
+                                                .toString()
                                                 .substring(
-                                                    1, imageString.length - 1)
+                                                    1, tempImage.toString().length - 1)
                                                 .replaceAll('"', '');
                                           } else {
-                                            imageString = "";
+                                            imageString = tempImage?.toString() ?? "";
+                                          }
+                                          
+                                          // Get product name
+                                          if (locale.toString() == "ar") {
+                                            var translations = AllProducts[index]?["product"]
+                                                ?["translations"];
+                                            if (translations != null &&
+                                                translations is List &&
+                                                translations.isNotEmpty &&
+                                                translations[0] != null) {
+                                              productName = translations[0]?["value"]?.toString() ?? "";
+                                            }
+                                          } else {
+                                            productName = AllProducts[index]?["product"]
+                                                    ?["name"]?.toString() ??
+                                                "";
                                           }
                                         }
+                                        
                                         return OrderCard(
-                                          name: locale.toString() == "ar"
-                                              ? AllProducts[index]["product"]
-                                                  ["translations"][0]["value"]
-                                              : AllProducts[index]["product"]
-                                                      ["name"] ??
-                                                  "",
+                                          name: productName,
                                           image: imageString,
-                                          qty: AllProducts[index]["quantity"] ??
-                                              "",
+                                          qty: AllProducts[index]?["quantity"] ?? 0,
+                                          isDeleted: isProductDeleted,
                                         );
                                       }),
                                 )),
@@ -183,7 +208,7 @@ class _OrderDetailsState extends State<OrderDetails> {
     );
   }
 
-  Widget OrderCard({int qty = 0, String name = "", String image = ""}) {
+  Widget OrderCard({int qty = 0, String name = "", String image = "", bool isDeleted = false}) {
     return Padding(
       padding: const EdgeInsets.only(top: 20, right: 25, left: 25),
       child: Stack(
@@ -194,12 +219,76 @@ class _OrderDetailsState extends State<OrderDetails> {
               Container(
                 width: double.infinity,
                 height: 220,
-                child: Image.network(
-                  URLIMAGE + image,
-                  fit: BoxFit.cover,
-                  height: 250,
-                  width: double.infinity,
-                ),
+                child: isDeleted
+                    ? Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              Colors.grey[400]!,
+                              Colors.grey[600]!,
+                            ],
+                          ),
+                        ),
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.inventory_2_outlined,
+                                size: 80,
+                                color: Colors.white.withOpacity(0.7),
+                              ),
+                              SizedBox(height: 10),
+                              Text(
+                                locale.toString() == "ar"
+                                    ? "المنتج محذوف"
+                                    : "Deleted Product",
+                                style: TextStyle(
+                                  color: Colors.white.withOpacity(0.9),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    : image.isNotEmpty
+                        ? Image.network(
+                            URLIMAGE + image,
+                            fit: BoxFit.cover,
+                            height: 250,
+                            width: double.infinity,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                color: Colors.grey[300],
+                                child: Center(
+                                  child: Icon(Icons.broken_image,
+                                      size: 50, color: Colors.grey),
+                                ),
+                              );
+                            },
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  value: loadingProgress.expectedTotalBytes != null
+                                      ? loadingProgress.cumulativeBytesLoaded /
+                                          loadingProgress.expectedTotalBytes!
+                                      : null,
+                                ),
+                              );
+                            },
+                          )
+                        : Container(
+                            color: Colors.grey[300],
+                            child: Center(
+                              child: Icon(Icons.image_not_supported,
+                                  size: 50, color: Colors.grey),
+                            ),
+                          ),
               ),
               Container(
                   width: double.infinity,

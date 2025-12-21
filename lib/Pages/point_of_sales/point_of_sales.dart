@@ -188,32 +188,37 @@ class _PointOfSalesState extends State<PointOfSales> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                                color: Color(0xffF1F1F1),
-                                shape: BoxShape.circle),
-                            width: 40,
-                            height: 40,
-                            child: Center(
-                              child: Icon(
-                                Icons.store,
-                                color: MAIN_COLOR,
+                      Expanded(
+                        child: Row(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                  color: Color(0xffF1F1F1),
+                                  shape: BoxShape.circle),
+                              width: 40,
+                              height: 40,
+                              child: Center(
+                                child: Icon(
+                                  Icons.store,
+                                  color: MAIN_COLOR,
+                                ),
                               ),
                             ),
-                          ),
-                          SizedBox(
-                            width: 15,
-                          ),
-                          Text(
-                            name.toString().length > 20
-                                ? name.toString().substring(0, 20)
-                                : name.toString(),
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 18),
-                          )
-                        ],
+                            SizedBox(
+                              width: 15,
+                            ),
+                            Expanded(
+                              child: Text(
+                                name.toString().length > 20
+                                    ? name.toString().substring(0, 20)
+                                    : name.toString(),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 18),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                       Text(
                         phone,

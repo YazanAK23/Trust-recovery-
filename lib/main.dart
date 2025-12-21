@@ -6,6 +6,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -184,7 +185,15 @@ class _TrustState extends State<Trust> {
     final messaging = FirebaseMessaging.instance;
     final token = await messaging.getToken();
     if (token != null) {
+      print('=== FCM Token Generated: $token ===');
       FirebaseCrashlytics.instance.setCustomKey('fcm_token_present', true);
+      
+      // Save FCM token to SharedPreferences
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('fcm_token', token);
+      print('=== FCM Token Saved to SharedPreferences ===');
+    } else {
+      print('=== FCM Token is NULL ===');
     }
   }
 

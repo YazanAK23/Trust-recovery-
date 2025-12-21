@@ -1,13 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:trust_app_updated/Components/text_field_widget/text_field_widget.dart';
-import 'package:trust_app_updated/Pages/merchant_screen/add_maintanence_request/add_maintanence_request.dart';
-import 'package:trust_app_updated/Pages/merchant_screen/add_warranty/add_warranty.dart';
 import 'package:trust_app_updated/Pages/merchant_screen/driver_screen/Warantty_Card/Warantty_Card.dart';
 import 'package:trust_app_updated/Server/functions/functions.dart';
 import 'package:trust_app_updated/l10n/app_localizations.dart';
@@ -16,7 +12,6 @@ import '../../../Components/button_widget/button_widget.dart';
 import '../../../Components/loading_widget/loading_widget.dart';
 import '../../../Constants/constants.dart';
 import '../../home_screen/home_screen.dart';
-import '../../point_of_sales/google_map_view/google_map_view.dart';
 
 class MaintenanceDepartment extends StatefulWidget {
   const MaintenanceDepartment({super.key});
@@ -26,7 +21,6 @@ class MaintenanceDepartment extends StatefulWidget {
 }
 
 class _MaintenanceDepartmentState extends State<MaintenanceDepartment> {
-  @override
   TextEditingController SearchController = TextEditingController();
   String selectedCity = "الجميع";
   Widget build(BuildContext context) {
@@ -453,16 +447,36 @@ class _MaintenanceDepartmentState extends State<MaintenanceDepartment> {
                                                   latitude: AllProducts[index]
                                                           .containsKey(
                                                               "merchant")
-                                                      ? AllProducts[index]
-                                                              ["merchant"]
-                                                          ["coordinates"]["y"]
+                                                      ? (AllProducts[index]["merchant"] != null &&
+                                                              AllProducts[index]["merchant"]
+                                                                  .containsKey("coordinates") &&
+                                                              AllProducts[index]["merchant"]
+                                                                      ["coordinates"] !=
+                                                                  null &&
+                                                              AllProducts[index]["merchant"]
+                                                                      ["coordinates"]
+                                                                  .containsKey("y"))
+                                                          ? AllProducts[index]
+                                                                  ["merchant"]["coordinates"]
+                                                              ["y"] ?? 0.0
+                                                          : 0.0
                                                       : 0.0,
                                                   longitude: AllProducts[index]
                                                           .containsKey(
                                                               "merchant")
-                                                      ? AllProducts[index]
-                                                              ["merchant"]
-                                                          ["coordinates"]["x"]
+                                                      ? (AllProducts[index]["merchant"] != null &&
+                                                              AllProducts[index]["merchant"]
+                                                                  .containsKey("coordinates") &&
+                                                              AllProducts[index]["merchant"]
+                                                                      ["coordinates"] !=
+                                                                  null &&
+                                                              AllProducts[index]["merchant"]
+                                                                      ["coordinates"]
+                                                                  .containsKey("x"))
+                                                          ? AllProducts[index]
+                                                                  ["merchant"]["coordinates"]
+                                                              ["x"] ?? 0.0
+                                                          : 0.0
                                                       : 0.0,
                                                   productName:
                                                       AllProducts[index]
@@ -518,8 +532,6 @@ class _MaintenanceDepartmentState extends State<MaintenanceDepartment> {
   var AllProducts;
   // At the beginning, we fetch the first 20 posts
   int _page = 1;
-  // you can change this value to fetch more or less posts per page (10, 15, 5, etc)
-  final int _limit = 20;
   // There is next page or not
   bool _hasNextPage = true;
   // Used to display loading indicators when _firstLoad function is running

@@ -54,14 +54,20 @@ class _SortDialogState extends State<SortDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(20.0),
+    return SafeArea(
+      child: Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        child: SingleChildScrollView(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
               DropdownButtonFormField<int>(
                 decoration: InputDecoration(
                   labelText: AppLocalizations.of(context)!.order_by_countries,
@@ -188,8 +194,9 @@ class _SortDialogState extends State<SortDialog> {
             ],
           ),
         ),
+        const SizedBox(height: 20),
         Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.fromLTRB(20.0, 0, 20.0, 30.0),
           child: Row(
             children: [
               Expanded(
@@ -223,6 +230,9 @@ class _SortDialogState extends State<SortDialog> {
           ),
         ),
       ],
+        ),
+      ),
+    ),
     );
   }
 

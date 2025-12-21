@@ -447,13 +447,19 @@ class _DriverScreenState extends State<DriverScreen> {
                                                   latitude: AllProducts[index]
                                                           .containsKey(
                                                               "merchant")
-                                                      ? AllProducts[index][
-                                                                  "merchant"] ==
-                                                              null
-                                                          ? 0.0
-                                                          : AllProducts[index]
-                                                                  ["merchant"][
-                                                              "coordinates"]["y"]
+                                                      ? (AllProducts[index]["merchant"] != null &&
+                                                              AllProducts[index]["merchant"]
+                                                                  .containsKey("coordinates") &&
+                                                              AllProducts[index]["merchant"]
+                                                                      ["coordinates"] !=
+                                                                  null &&
+                                                              AllProducts[index]["merchant"]
+                                                                      ["coordinates"]
+                                                                  .containsKey("y"))
+                                                          ? (AllProducts[index]["merchant"]
+                                                                      ["coordinates"]["y"] ??
+                                                              0.0)
+                                                          : 0.0
                                                       : 0.0,
                                                   cost: AllProducts[index]
                                                           ["maintenanceCost"] ??
@@ -461,21 +467,27 @@ class _DriverScreenState extends State<DriverScreen> {
                                                   longitude: AllProducts[index]
                                                           .containsKey(
                                                               "merchant")
-                                                      ? AllProducts[index][
-                                                                  "merchant"] ==
-                                                              null
-                                                          ? 0.0
-                                                          : AllProducts[index]
-                                                                  ["merchant"][
-                                                              "coordinates"]["x"]
+                                                      ? (AllProducts[index]["merchant"] != null &&
+                                                              AllProducts[index]["merchant"]
+                                                                  .containsKey("coordinates") &&
+                                                              AllProducts[index]["merchant"]
+                                                                      ["coordinates"] !=
+                                                                  null &&
+                                                              AllProducts[index]["merchant"]
+                                                                      ["coordinates"]
+                                                                  .containsKey("x"))
+                                                          ? (AllProducts[index]["merchant"]
+                                                                      ["coordinates"]["x"] ??
+                                                              0.0)
+                                                          : 0.0
                                                       : 0.0,
                                                   productName:
                                                       AllProducts[index]
                                                               .containsKey(
                                                                   "product")
-                                                          ? AllProducts[index]
-                                                                  ["product"]
-                                                              ["name"]
+                                                          ? (AllProducts[index]["product"] != null
+                                                              ? (AllProducts[index]["product"]["name"] ?? "-")
+                                                              : "-")
                                                           : "-",
                                                   id: AllProducts[index]["id"],
                                                   initialStatus:
@@ -492,13 +504,9 @@ class _DriverScreenState extends State<DriverScreen> {
                                                               index]
                                                           .containsKey(
                                                               "merchant")
-                                                      ? AllProducts[index][
-                                                                  "merchant"] ==
-                                                              null
-                                                          ? "-"
-                                                          : AllProducts[index]
-                                                                  ["merchant"]
-                                                              ["phoneNumber"]
+                                                      ? (AllProducts[index]["merchant"] != null
+                                                          ? (AllProducts[index]["merchant"]["phoneNumber"] ?? "-")
+                                                          : "-")
                                                       : "-",
                                                   warrantieStatus:
                                                       AllProducts[index]

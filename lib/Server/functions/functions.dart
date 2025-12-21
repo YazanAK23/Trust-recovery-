@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -421,19 +422,34 @@ void hideDialog(BuildContext context) {
 
 
 sendLoginRequest(email, password, context) async {
-  // final _firebaseMessaging = FirebaseMessaging.instance;
-
-  // Wait for the token to be available
-  // final token = await _firebaseMessaging.getToken();
-  // print('Token: $token');
+  // Get FCM token from SharedPreferences
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  String? fcmToken = prefs.getString('fcm_token');
+  
+  // If no token in SharedPreferences, try to get it from Firebase directly
+  if (fcmToken == null || fcmToken.isEmpty) {
+    try {
+      final _firebaseMessaging = FirebaseMessaging.instance;
+      fcmToken = await _firebaseMessaging.getToken();
+      if (fcmToken != null) {
+        await prefs.setString('fcm_token', fcmToken);
+        print('=== FCM Token retrieved and saved: $fcmToken ===');
+      }
+    } catch (e) {
+      print('=== Error getting FCM token: $e ===');
+      fcmToken = '';
+    }
+  } else {
+    print('=== FCM Token from SharedPreferences: $fcmToken ===');
+  }
+  
   final url = Uri.parse(URL_LOGIN);
   final jsonData = {
     'password': password.toString(),
     'email': email.toString(),
-    // 'userToken': token.toString(),
-    'userToken': '',
+    'userToken': fcmToken ?? '',
   };
-  print("json.encode(jsonData)");
+  print("=== Login Request Data ===");
   print(json.encode(jsonData));
   final response = await http.post(
     url,
@@ -442,6 +458,8 @@ sendLoginRequest(email, password, context) async {
     },
     body: json.encode(jsonData),
   );
+  print('=== Login Response Status: ${response.statusCode} ===');
+  print('=== Login Response Body: ${response.body} ===');
   var data = json.decode(response.body);
   if (data["success"] == true) {
     Navigator.of(context, rootNavigator: true).pop();

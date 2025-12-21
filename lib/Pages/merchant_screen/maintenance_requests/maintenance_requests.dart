@@ -36,29 +36,33 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
                 height: 70,
                 width: double.infinity,
                 decoration: BoxDecoration(color: MAIN_COLOR),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                child: Stack(
+                  alignment: Alignment.center,
                   children: [
-                    Container(
-                      width: 30,
-                    ),
-                    Text(
-                      AppLocalizations.of(context)!.maintenance_requests,
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 22,
-                          color: Colors.white),
-                    ),
-                    IconButton(
+                    Positioned(
+                      left: locale.toString() == "ar" ? null : 0,
+                      right: locale.toString() == "ar" ? 0 : null,
+                      child: IconButton(
                         onPressed: () {
                           Navigator.pop(context);
                         },
                         icon: Icon(
-                          Icons.arrow_forward_outlined,
-                          size: 35,
+                          Icons.arrow_back,
+                          size: 28,
                           color: Colors.white,
-                        ))
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: Text(
+                        AppLocalizations.of(context)!.maintenance_requests,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 22,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
