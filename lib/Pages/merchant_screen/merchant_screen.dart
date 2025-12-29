@@ -73,22 +73,6 @@ class _MerchantScreenState extends State<MerchantScreen> {
                               padding: const EdgeInsets.only(top: 15),
                               child: ButtonWidget(
                                   name: AppLocalizations.of(context)!
-                                      .effective_guarantees,
-                                  height: 50,
-                                  width: double.infinity,
-                                  BorderColor: Color(0xffEBEBEB),
-                                  FontSize: 16,
-                                  OnClickFunction: () {
-                                    NavigatorPushFunction(context, Warranties());
-                                  },
-                                  BorderRaduis: 40,
-                                  ButtonColor: Color(0xffEBEBEB),
-                                  NameColor: Colors.black),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 15),
-                              child: ButtonWidget(
-                                  name: AppLocalizations.of(context)!
                                       .activate_warranty,
                                   height: 50,
                                   width: double.infinity,
@@ -113,6 +97,22 @@ class _MerchantScreenState extends State<MerchantScreen> {
                                   OnClickFunction: () {
                                     NavigatorPushFunction(
                                         context, CheckWrranties());
+                                  },
+                                  BorderRaduis: 40,
+                                  ButtonColor: Color(0xffEBEBEB),
+                                  NameColor: Colors.black),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 15),
+                              child: ButtonWidget(
+                                  name: AppLocalizations.of(context)!
+                                      .effective_guarantees,
+                                  height: 50,
+                                  width: double.infinity,
+                                  BorderColor: Color(0xffEBEBEB),
+                                  FontSize: 16,
+                                  OnClickFunction: () {
+                                    NavigatorPushFunction(context, Warranties());
                                   },
                                   BorderRaduis: 40,
                                   ButtonColor: Color(0xffEBEBEB),

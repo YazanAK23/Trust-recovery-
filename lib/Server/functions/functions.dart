@@ -662,6 +662,8 @@ addMaintanenceRequest(
   );
   var data = json.decode(response.body);
   if (data["success"] == true) {
+    // Close loading dialog first
+    Navigator.pop(context);
     Fluttertoast.showToast(
         msg: AppLocalizations.of(context)!.consuccess,
         toastLength: Toast.LENGTH_LONG,
@@ -670,7 +672,12 @@ addMaintanenceRequest(
         backgroundColor: const Color.fromARGB(255, 28, 116, 31),
         textColor: Colors.white,
         fontSize: 16.0);
-    Navigator.pop(context);
+    // Navigate back to Warranty and Maintenance page
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => MerchantScreen()),
+      (route) => false,
+    );
   } else {
     Fluttertoast.showToast(
         msg: AppLocalizations.of(context)!.confailed,

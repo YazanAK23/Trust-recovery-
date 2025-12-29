@@ -10,12 +10,13 @@ import '../../Pages/notifications/notifications.dart';
 import '../search_dialog/search_dialog.dart';
 
 class AppBarWidget extends StatefulWidget {
-  bool logo = true, back = false, isHomePage = false;
+  bool logo = true, back = false, isHomePage = false, hideCartIcon = false;
   AppBarWidget({
     Key? key,
     required this.logo,
     this.back = false,
     this.isHomePage = false,
+    this.hideCartIcon = false,
   }) : super(key: key);
 
   @override
@@ -139,12 +140,12 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                       ),
                     ),
                     Visibility(
-                        visible: ROLEID.toString() == "3" ? true : false,
+                        visible: ROLEID.toString() == "3" && !widget.hideCartIcon ? true : false,
                         child: SizedBox(
                           width: 15,
                         )),
                     Visibility(
-                        visible: ROLEID.toString() == "3" ? true : false,
+                        visible: ROLEID.toString() == "3" && !widget.hideCartIcon ? true : false,
                         child: InkWell(
                               onTap: () {
                                 NavigatorPushFunction(context, Cart());

@@ -494,8 +494,7 @@ class _AddMaintanenceRequestState extends State<AddMaintanenceRequest> {
                                                     warrantyStatus,
                                                     DescriptionController.text,
                                                     context);
-                                                Navigator.pop(context);
-                                                // Navigator.pop(context);
+                                                // Dialog is already closed in the function
                                               }
                                             },
                                             BorderRaduis: 40,

@@ -260,6 +260,7 @@ class _CartState extends State<Cart> {
          AppBarWidget(
           logo: false,
           back: true,
+          hideCartIcon: true,
         ),
       ],
     );
