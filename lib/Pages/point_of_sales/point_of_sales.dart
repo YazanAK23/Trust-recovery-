@@ -252,7 +252,7 @@ class _PointOfSalesState extends State<PointOfSales> {
     );
   }
 
-  var AllProducts;
+  var AllProducts = [];
   // At the beginning, we fetch the first 20 posts
   int _page = 1;
   // you can change this value to fetch more or less posts per page (10, 15, 5, etc)
@@ -270,27 +270,54 @@ class _PointOfSalesState extends State<PointOfSales> {
   bool _locationPermissionGranted = false;
 
   getLocation() async {
+    if (!mounted) return;
+    
     setState(() {
       _isFirstLoadRunning =
           true; // Show loading indicator while obtaining location
     });
+    
     try {
-      LocationPermission permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        // Handle if permission is denied
-        setState(() {
-          _isFirstLoadRunning = false; // Hide loading indicator
-        });
-        Navigator.pop(context);
-        Fluttertoast.showToast(
-            msg: "تم رفض الحصول على خاصية الموقع الجغرافي",
-            toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.BOTTOM,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-            fontSize: 16.0);
+      // Check if location services are enabled
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        // Location services are not enabled, use default location
+        lattitude = 31.557588;
+        longitude = 35.113145;
+        _firstLoad();
         return;
       }
+
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          // Handle if permission is denied - use default location
+          if (mounted) {
+            setState(() {
+              _isFirstLoadRunning = false;
+            });
+          }
+          lattitude = 31.557588;
+          longitude = 35.113145;
+          _firstLoad();
+          return;
+        }
+      }
+      
+      if (permission == LocationPermission.deniedForever) {
+        // Permissions are denied forever, use default location
+        if (mounted) {
+          setState(() {
+            _isFirstLoadRunning = false;
+          });
+        }
+        lattitude = 31.557588;
+        longitude = 35.113145;
+        _firstLoad();
+        return;
+      }
+      
       Position position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
       List<Placemark> placemark =
@@ -298,22 +325,21 @@ class _PointOfSalesState extends State<PointOfSales> {
       String? country = placemark[0].country;
       lattitude = position.latitude;
       longitude = position.longitude;
-      setState(() {
-        _locationPermissionGranted = true;
-      });
+      
+      if (mounted) {
+        setState(() {
+          _locationPermissionGranted = true;
+        });
+      }
       // Call _firstLoad() only after obtaining location
       _firstLoad();
     } catch (e) {
+      if (kDebugMode) {
+        print('Location error: $e');
+      }
       lattitude = 31.557588;
       longitude = 35.113145;
       _firstLoad();
-      // Fluttertoast.showToast(
-      //     msg: "تم رفض الحصول على خاصية الموقع الجغرافي",
-      //     toastLength: Toast.LENGTH_LONG,
-      //     gravity: ToastGravity.BOTTOM,
-      //     backgroundColor: Colors.red,
-      //     textColor: Colors.white,
-      //     fontSize: 16.0);
     }
   }
 
@@ -321,17 +347,27 @@ class _PointOfSalesState extends State<PointOfSales> {
     try {
       var _products =
           await getMerchants(_page, lattitude.toString(), longitude.toString());
-      setState(() {
-        AllProducts = _products;
-      });
+      if (mounted) {
+        setState(() {
+          AllProducts = _products ?? [];
+        });
+      }
     } catch (err) {
       if (kDebugMode) {
-        print('Something went wrong');
+        print('Something went wrong: $err');
+      }
+      if (mounted) {
+        setState(() {
+          AllProducts = [];
+          no_internet = true;
+        });
       }
     }
-    setState(() {
-      _isFirstLoadRunning = false;
-    });
+    if (mounted) {
+      setState(() {
+        _isFirstLoadRunning = false;
+      });
+    }
   }
 
   // This function will be triggered whenver the user scroll
