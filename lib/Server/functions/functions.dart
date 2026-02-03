@@ -135,6 +135,17 @@ getWarranties(int page) async {
   return res;
 }
 
+getWarrantiesByMerchantID(int page) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String? merchantID = prefs.getString('merchant_id');
+  print("$URL_WARRANTIES_BY_MERCHANT_ID/$merchantID?page=$page");
+  var response = await http.get(
+      Uri.parse("$URL_WARRANTIES_BY_MERCHANT_ID/$merchantID?page=$page"),
+      headers: headers);
+  var res = jsonDecode(response.body)["response"]["data"];
+  return res;
+}
+
 getMaintenanceRequests(int page) async {
   var response = await http
       .get(Uri.parse("$URL_MAINTENANCE_REQUESTS?page=$page"), headers: headers);

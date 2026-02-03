@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -694,7 +695,7 @@ class _WarrantiesState extends State<Warranties> {
     });
 
     try {
-      var _products = await getWarranties(_page);
+      var _products = await getWarrantiesByMerchantID(_page);
       setState(() {
         AllProducts = _products;
       });
@@ -721,7 +722,7 @@ class _WarrantiesState extends State<Warranties> {
       _page += 1; // Increase _page by 1
       try {
         // Fetch data from the API
-        var _products = await getWarranties(_page);
+        var _products = await getWarrantiesByMerchantID(_page);
         if (_products.isNotEmpty) {
           setState(() {
             AllProducts.addAll(_products);
