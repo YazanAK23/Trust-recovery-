@@ -18,6 +18,7 @@ import 'package:upgrader/upgrader.dart';
 
 import 'package:trust_app_updated/l10n/app_localizations.dart';
 
+import 'firebase_options.dart';
 import 'LocalDB/Provider/CartProvider.dart';
 import 'LocalDB/Provider/FavouriteProvider.dart';
 import 'Pages/cart/cart.dart';
@@ -61,30 +62,6 @@ Future<void> triggerTestCrash() async {
 
   // Option B: Crashlytics fatal (no await here!)
   FirebaseCrashlytics.instance.crash();
-}
-
-Future<void> _initFirebaseAndCrashlytics() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-
-  // Collect in release; keep enabled in debug for testing (set to true here).
-  await FirebaseCrashlytics.instance
-      .setCrashlyticsCollectionEnabled(kReleaseMode || true);
-
-  // Forward Flutter framework errors
-  FlutterError.onError = (FlutterErrorDetails details) {
-    FlutterError.presentError(details);
-    FirebaseCrashlytics.instance.recordFlutterFatalError(details);
-  };
-
-  // Forward uncaught async & platform dispatcher errors
-  PlatformDispatcher.instance.onError = (error, stack) {
-    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-    return true;
-  };
-
-  // Enrich with app/device metadata
-  await _setAppAndDeviceKeys();
 }
 
 Future<void> _initMessagingAndTopics() async {
@@ -135,21 +112,44 @@ Future<void> _initPlatformPrefs() async {
   );
 }
 
-/// Single entry to initialize everything that must happen before runApp
-Future<void> init() async {
-  await _initFirebaseAndCrashlytics();
-  await _initMessagingAndTopics();
-  await _initPlatformPrefs();
-}
-
 /// --- App entry ----------------------------------------------------------------
 
 void main() {
-  // Catch anything escaping runApp
+  // Catch all errors in the same zone where we'll run the app
   runZonedGuarded(() async {
-    await init();
+    // Initialize Flutter bindings in the same zone as runApp
+    WidgetsFlutterBinding.ensureInitialized();
+    
+    // Initialize Firebase
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+
+    // Set up Crashlytics error handlers
+    await FirebaseCrashlytics.instance
+        .setCrashlyticsCollectionEnabled(kReleaseMode || true);
+
+    // Forward Flutter framework errors
+    FlutterError.onError = (FlutterErrorDetails details) {
+      FlutterError.presentError(details);
+      FirebaseCrashlytics.instance.recordFlutterFatalError(details);
+    };
+
+    // Forward uncaught async & platform dispatcher errors
+    PlatformDispatcher.instance.onError = (error, stack) {
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      return true;
+    };
+
+    // Complete the rest of initialization
+    await _setAppAndDeviceKeys();
+    await _initMessagingAndTopics();
+    await _initPlatformPrefs();
+    
+    // Run the app
     runApp(Trust(flag: false));
   }, (error, stack) {
+    // Catch any errors that escape
     FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
   });
 }
