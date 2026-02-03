@@ -2,9 +2,11 @@ import 'dart:convert';
 
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trust_app_updated/l10n/app_localizations.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:trust_app_updated/Components/button_widget/button_widget.dart';
 import 'package:trust_app_updated/Components/text_field_widget/text_field_widget.dart';
 import 'package:trust_app_updated/Constants/constants.dart';
@@ -23,7 +25,6 @@ class AddWarranty extends StatefulWidget {
 }
 
 class _AddWarrantyState extends State<AddWarranty> {
-  @override
   TextEditingController productSerialNumberController = TextEditingController();
   TextEditingController CustomerNameController = TextEditingController();
   TextEditingController CustomerPhoneController = TextEditingController();
@@ -35,6 +36,26 @@ class _AddWarrantyState extends State<AddWarranty> {
   int productID = 0;
   int merchantID = 0;
   bool showCustomerDetails = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeMerchantID();
+  }
+
+  Future<void> _initializeMerchantID() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? _merchantID = prefs.getString('merchant_id');
+    try {
+      if (_merchantID != null && _merchantID.isNotEmpty) {
+        merchantID = int.parse(_merchantID);
+        setState(() {});
+      }
+    } catch (e) {
+      debugPrint('Error parsing merchant ID: $e');
+      merchantID = 0;
+    }
+  }
   Widget build(BuildContext context) {
     return Container(
       color: MAIN_COLOR,
@@ -219,10 +240,15 @@ class _AddWarrantyState extends State<AddWarranty> {
                                                   .effectice;
                                           showCustomerDetails = true;
 
-                                          merchantID =
+                                          // Keep existing warranty's merchantID if available
+                                          int existingMerchantID =
                                               responseWarranyData["response"]
                                                       ["merchantId"] ??
-                                                  1;
+                                                  0;
+                                          if (existingMerchantID > 0) {
+                                            merchantID = existingMerchantID;
+                                          }
+                                          // Otherwise, merchantID is already set from shared prefs
                                           CustomerNameController.text =
                                               responseWarranyData["response"]
                                                   ["customerName"];
@@ -454,8 +480,20 @@ class _AddWarrantyState extends State<AddWarranty> {
                                           BorderColor: MAIN_COLOR,
                                           FontSize: 18,
                                           OnClickFunction: () async {
-                                            if (_formKey.currentState!
+                                            if (_formKey2.currentState!
                                                 .validate()) {
+                                              // Validate merchantID
+                                              if (merchantID == 0) {
+                                                Fluttertoast.showToast(
+                                                    msg: "خطأ: لا يمكن تحديد رقم التاجر",
+                                                    toastLength: Toast.LENGTH_SHORT,
+                                                    gravity: ToastGravity.BOTTOM,
+                                                    timeInSecForIosWeb: 3,
+                                                    backgroundColor: Colors.red,
+                                                    textColor: Colors.white,
+                                                    fontSize: 16.0);
+                                                return;
+                                              }
                                               showDialog(
                                                 context: context,
                                                 builder:
@@ -512,7 +550,6 @@ class _AddWarrantyState extends State<AddWarranty> {
   }
 
   bool selectedProductNumber = false;
-  bool _hasError = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKey2 = GlobalKey<FormState>();
   String? validateProductSerialNumber(String? value) {
