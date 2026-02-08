@@ -1978,7 +1978,7 @@ abstract class AppLocalizations {
   /// No description provided for @invalid_serial_format.
   ///
   /// In en, this message translates to:
-  /// **'Invalid serial number format. Expected format: XXX-XXXXX-XX'**
+  /// **'Invalid serial number format. Use format: XXX-XXXXX-XX or similar with dashes'**
   String get invalid_serial_format;
 
   /// No description provided for @serial_already_added.
@@ -2004,6 +2004,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'ID Number'**
   String get id_number;
+
+  /// No description provided for @choose_image_source.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Image Source'**
+  String get choose_image_source;
+
+  /// No description provided for @camera.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera'**
+  String get camera;
+
+  /// No description provided for @gallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Gallery'**
+  String get gallery;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

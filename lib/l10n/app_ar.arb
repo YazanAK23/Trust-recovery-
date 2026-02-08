@@ -318,5 +318,8 @@
     "serial_already_added": "تمت إضافة هذا الرقم التسلسلي بالفعل",
     "warranties_submitted_successfully": "تم تقديم الكفالات بنجاح",
     "some_warranties_failed": "فشل تقديم بعض الكفالات",
-    "id_number": "رقم الهوية"
+    "id_number": "رقم الهوية",
+    "choose_image_source": "اختر مصدر الصورة",
+    "camera": "الكاميرا",
+    "gallery": "المعرض"
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
+import 'package:trust_app_updated/l10n/app_localizations.dart';
 
 /// Service for handling barcode and OCR scanning
 class ScanningService {
@@ -28,9 +29,36 @@ class ScanningService {
   /// Scan text from image using OCR
   static Future<String?> scanFromImage(BuildContext context) async {
     try {
-      // Pick image from gallery
+      // Show dialog to choose source
+      final ImageSource? source = await showDialog<ImageSource>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(AppLocalizations.of(context)!.choose_image_source),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.camera_alt, color: Color(0xffD51C29)),
+                  title: Text(AppLocalizations.of(context)!.camera),
+                  onTap: () => Navigator.pop(context, ImageSource.camera),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.photo_library, color: Color(0xffD51C29)),
+                  title: Text(AppLocalizations.of(context)!.gallery),
+                  onTap: () => Navigator.pop(context, ImageSource.gallery),
+                ),
+              ],
+            ),
+          );
+        },
+      );
+
+      if (source == null) return null;
+
+      // Pick image from selected source
       final XFile? image = await _imagePicker.pickImage(
-        source: ImageSource.gallery,
+        source: source,
         imageQuality: 100,
       );
 

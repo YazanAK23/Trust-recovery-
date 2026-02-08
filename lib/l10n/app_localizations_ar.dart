@@ -948,7 +948,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get no_text_found => 'لم يتم العثور على نص في الصورة';
 
   @override
-  String get invalid_serial_format => 'تنسيق الرقم التسلسلي غير صحيح. التنسيق المتوقع: XXX-XXXXX-XX';
+  String get invalid_serial_format => 'تنسيق الرقم التسلسلي غير صحيح. استخدم التنسيق: XXX-XXXXX-XX أو مماثل مع شرطات';
 
   @override
   String get serial_already_added => 'تمت إضافة هذا الرقم التسلسلي بالفعل';
@@ -961,4 +961,13 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get id_number => 'رقم الهوية';
+
+  @override
+  String get choose_image_source => 'اختر مصدر الصورة';
+
+  @override
+  String get camera => 'الكاميرا';
+
+  @override
+  String get gallery => 'المعرض';
 }

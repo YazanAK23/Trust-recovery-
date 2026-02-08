@@ -219,5 +219,8 @@
 	"serial_already_added": "This serial number is already added",
 	"warranties_submitted_successfully": "Warranties submitted successfully",
 	"some_warranties_failed": "Some warranties failed to submit",
-	"id_number": "ID Number"
+	"id_number": "ID Number",
+	"choose_image_source": "Choose Image Source",
+	"camera": "Camera",
+	"gallery": "Gallery"
 }

@@ -948,7 +948,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get no_text_found => 'No text found in image';
 
   @override
-  String get invalid_serial_format => 'Invalid serial number format. Expected format: XXX-XXXXX-XX';
+  String get invalid_serial_format => 'Invalid serial number format. Use format: XXX-XXXXX-XX or similar with dashes';
 
   @override
   String get serial_already_added => 'This serial number is already added';
@@ -961,4 +961,13 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get id_number => 'ID Number';
+
+  @override
+  String get choose_image_source => 'Choose Image Source';
+
+  @override
+  String get camera => 'Camera';
+
+  @override
+  String get gallery => 'Gallery';
 }
