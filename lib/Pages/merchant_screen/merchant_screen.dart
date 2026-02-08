@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trust_app_updated/Components/button_widget/button_widget.dart';
 import 'package:trust_app_updated/Constants/constants.dart';
 import 'package:trust_app_updated/Pages/authentication/register_screen/register_screen.dart';
-import 'package:trust_app_updated/Pages/merchant_screen/add_warranty/add_warranty.dart';
+import 'package:trust_app_updated/Pages/merchant_screen/warranty_activation/warranty_activation_screen.dart';
 import 'package:trust_app_updated/Pages/merchant_screen/check_maintennance_request_by_customer_phone/check_maintennance_request_by_customer_phone.dart';
 import 'package:trust_app_updated/Pages/merchant_screen/check_wrranties/check_wrranties.dart';
 import 'package:trust_app_updated/Pages/merchant_screen/maintenance_requests/maintenance_requests.dart';
@@ -79,7 +79,7 @@ class _MerchantScreenState extends State<MerchantScreen> {
                                   BorderColor: Color(0xffEBEBEB),
                                   FontSize: 16,
                                   OnClickFunction: () {
-                                    NavigatorPushFunction(context, AddWarranty());
+                                    NavigatorPushFunction(context, WarrantyActivationScreen());
                                   },
                                   BorderRaduis: 40,
                                   ButtonColor: Color(0xffEBEBEB),

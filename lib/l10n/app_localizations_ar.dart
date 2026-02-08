@@ -84,7 +84,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get add_waranty => 'اضافة كفالة';
 
   @override
-  String get pending => 'بانتظار التوصيل الى الصيانة';
+  String get pending => 'بانتظار التوصيل للصيانة';
 
   @override
   String get warranties_and_maintenances => 'الكفالات و الصيانة';
@@ -96,7 +96,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get done => 'تم الصيانة';
 
   @override
-  String get delivered => 'تم التسليم إلى التاجر';
+  String get delivered => 'تم التسليم للتاجر';
 
   @override
   String get edit_selected => 'تعديل متعدد';
@@ -880,4 +880,85 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get full_report_for => 'التقرير الكامل لـ';
+
+  @override
+  String get warranty_activation => 'تفعيل الكفالة';
+
+  @override
+  String get protect => 'حماية';
+
+  @override
+  String get scan => 'مسح';
+
+  @override
+  String get activate => 'تفعيل';
+
+  @override
+  String get customer_information => 'معلومات العميل';
+
+  @override
+  String get enter_customer_full_name => 'أدخل اسم العميل الكامل';
+
+  @override
+  String get enter_phone_number => 'أدخل رقم الهاتف';
+
+  @override
+  String get add_products => 'إضافة المنتجات';
+
+  @override
+  String get serial_number => 'الرقم التسلسلي';
+
+  @override
+  String get enter_or_scan_serial_number => 'أدخل أو امسح الرقم التسلسلي';
+
+  @override
+  String get scan_with_camera => 'مسح بالكاميرا';
+
+  @override
+  String get scan_barcode => 'مسح الباركود';
+
+  @override
+  String get scan_from_image => 'مسح من صورة';
+
+  @override
+  String get multiple_products_info => 'يمكنك إضافة عدة منتجات في وقت واحد. سيتم التحقق من كل منتج وتفعيله معًا.';
+
+  @override
+  String get product_added => 'تمت إضافة المنتج';
+
+  @override
+  String get remove_product => 'إزالة المنتج';
+
+  @override
+  String get submit_warranties => 'تقديم الكفالات';
+
+  @override
+  String get at_least_one_product => 'الرجاء إضافة منتج واحد على الأقل';
+
+  @override
+  String get scanning_barcode => 'جاري مسح الباركود...';
+
+  @override
+  String get processing_image => 'جاري معالجة الصورة...';
+
+  @override
+  String get no_barcode_found => 'لم يتم العثور على باركود';
+
+  @override
+  String get no_text_found => 'لم يتم العثور على نص في الصورة';
+
+  @override
+  String get invalid_serial_format => 'تنسيق الرقم التسلسلي غير صحيح. التنسيق المتوقع: XXX-XXXXX-XX';
+
+  @override
+  String get serial_already_added => 'تمت إضافة هذا الرقم التسلسلي بالفعل';
+
+  @override
+  String get warranties_submitted_successfully => 'تم تقديم الكفالات بنجاح';
+
+  @override
+  String get some_warranties_failed => 'فشل تقديم بعض الكفالات';
+
+  @override
+  String get id_number => 'رقم الهوية';
 }

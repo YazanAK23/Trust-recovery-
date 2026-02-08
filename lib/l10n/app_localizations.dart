@@ -250,7 +250,7 @@ abstract class AppLocalizations {
   /// No description provided for @pending.
   ///
   /// In en, this message translates to:
-  /// **'Pending'**
+  /// **'Waiting for Delivery to Maintenance'**
   String get pending;
 
   /// No description provided for @warranties_and_maintenances.
@@ -262,19 +262,19 @@ abstract class AppLocalizations {
   /// No description provided for @in_progress.
   ///
   /// In en, this message translates to:
-  /// **'In Progress'**
+  /// **'In Maintenance'**
   String get in_progress;
 
   /// No description provided for @done.
   ///
   /// In en, this message translates to:
-  /// **'Done'**
+  /// **'Maintenance Completed'**
   String get done;
 
   /// No description provided for @delivered.
   ///
   /// In en, this message translates to:
-  /// **'Delivered'**
+  /// **'Delivered to Merchant'**
   String get delivered;
 
   /// No description provided for @edit_selected.
@@ -1842,6 +1842,168 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Full report for'**
   String get full_report_for;
+
+  /// No description provided for @warranty_activation.
+  ///
+  /// In en, this message translates to:
+  /// **'Warranty Activation'**
+  String get warranty_activation;
+
+  /// No description provided for @protect.
+  ///
+  /// In en, this message translates to:
+  /// **'Protect'**
+  String get protect;
+
+  /// No description provided for @scan.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan'**
+  String get scan;
+
+  /// No description provided for @activate.
+  ///
+  /// In en, this message translates to:
+  /// **'Activate'**
+  String get activate;
+
+  /// No description provided for @customer_information.
+  ///
+  /// In en, this message translates to:
+  /// **'Customer Information'**
+  String get customer_information;
+
+  /// No description provided for @enter_customer_full_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter customer full name'**
+  String get enter_customer_full_name;
+
+  /// No description provided for @enter_phone_number.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter phone number'**
+  String get enter_phone_number;
+
+  /// No description provided for @add_products.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Products'**
+  String get add_products;
+
+  /// No description provided for @serial_number.
+  ///
+  /// In en, this message translates to:
+  /// **'Serial Number'**
+  String get serial_number;
+
+  /// No description provided for @enter_or_scan_serial_number.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter or scan serial number'**
+  String get enter_or_scan_serial_number;
+
+  /// No description provided for @scan_with_camera.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan with Camera'**
+  String get scan_with_camera;
+
+  /// No description provided for @scan_barcode.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan Barcode'**
+  String get scan_barcode;
+
+  /// No description provided for @scan_from_image.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan from Image'**
+  String get scan_from_image;
+
+  /// No description provided for @multiple_products_info.
+  ///
+  /// In en, this message translates to:
+  /// **'You can add multiple products at once. Each product will be validated and activated together.'**
+  String get multiple_products_info;
+
+  /// No description provided for @product_added.
+  ///
+  /// In en, this message translates to:
+  /// **'Product Added'**
+  String get product_added;
+
+  /// No description provided for @remove_product.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Product'**
+  String get remove_product;
+
+  /// No description provided for @submit_warranties.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit Warranties'**
+  String get submit_warranties;
+
+  /// No description provided for @at_least_one_product.
+  ///
+  /// In en, this message translates to:
+  /// **'Please add at least one product'**
+  String get at_least_one_product;
+
+  /// No description provided for @scanning_barcode.
+  ///
+  /// In en, this message translates to:
+  /// **'Scanning Barcode...'**
+  String get scanning_barcode;
+
+  /// No description provided for @processing_image.
+  ///
+  /// In en, this message translates to:
+  /// **'Processing Image...'**
+  String get processing_image;
+
+  /// No description provided for @no_barcode_found.
+  ///
+  /// In en, this message translates to:
+  /// **'No barcode found'**
+  String get no_barcode_found;
+
+  /// No description provided for @no_text_found.
+  ///
+  /// In en, this message translates to:
+  /// **'No text found in image'**
+  String get no_text_found;
+
+  /// No description provided for @invalid_serial_format.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid serial number format. Expected format: XXX-XXXXX-XX'**
+  String get invalid_serial_format;
+
+  /// No description provided for @serial_already_added.
+  ///
+  /// In en, this message translates to:
+  /// **'This serial number is already added'**
+  String get serial_already_added;
+
+  /// No description provided for @warranties_submitted_successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Warranties submitted successfully'**
+  String get warranties_submitted_successfully;
+
+  /// No description provided for @some_warranties_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Some warranties failed to submit'**
+  String get some_warranties_failed;
+
+  /// No description provided for @id_number.
+  ///
+  /// In en, this message translates to:
+  /// **'ID Number'**
+  String get id_number;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

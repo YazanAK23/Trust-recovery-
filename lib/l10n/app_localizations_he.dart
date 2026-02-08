@@ -880,4 +880,85 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get full_report_for => 'Full report for';
+
+  @override
+  String get warranty_activation => 'Warranty Activation';
+
+  @override
+  String get protect => 'Protect';
+
+  @override
+  String get scan => 'Scan';
+
+  @override
+  String get activate => 'Activate';
+
+  @override
+  String get customer_information => 'Customer Information';
+
+  @override
+  String get enter_customer_full_name => 'Enter customer full name';
+
+  @override
+  String get enter_phone_number => 'Enter phone number';
+
+  @override
+  String get add_products => 'Add Products';
+
+  @override
+  String get serial_number => 'Serial Number';
+
+  @override
+  String get enter_or_scan_serial_number => 'Enter or scan serial number';
+
+  @override
+  String get scan_with_camera => 'Scan with Camera';
+
+  @override
+  String get scan_barcode => 'Scan Barcode';
+
+  @override
+  String get scan_from_image => 'Scan from Image';
+
+  @override
+  String get multiple_products_info => 'You can add multiple products at once. Each product will be validated and activated together.';
+
+  @override
+  String get product_added => 'Product Added';
+
+  @override
+  String get remove_product => 'Remove Product';
+
+  @override
+  String get submit_warranties => 'Submit Warranties';
+
+  @override
+  String get at_least_one_product => 'Please add at least one product';
+
+  @override
+  String get scanning_barcode => 'Scanning Barcode...';
+
+  @override
+  String get processing_image => 'Processing Image...';
+
+  @override
+  String get no_barcode_found => 'No barcode found';
+
+  @override
+  String get no_text_found => 'No text found in image';
+
+  @override
+  String get invalid_serial_format => 'Invalid serial number format. Expected format: XXX-XXXXX-XX';
+
+  @override
+  String get serial_already_added => 'This serial number is already added';
+
+  @override
+  String get warranties_submitted_successfully => 'Warranties submitted successfully';
+
+  @override
+  String get some_warranties_failed => 'Some warranties failed to submit';
+
+  @override
+  String get id_number => 'ID Number';
 }
