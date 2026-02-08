@@ -2172,6 +2172,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Cannot delete warranty. Only warranties activated in the last 14 days can be deleted.'**
   String get cannot_delete_old_warranty;
+
+  /// No description provided for @product_catalogs.
+  ///
+  /// In en, this message translates to:
+  /// **'Product Catalogs'**
+  String get product_catalogs;
+
+  /// No description provided for @summer.
+  ///
+  /// In en, this message translates to:
+  /// **'Summer'**
+  String get summer;
+
+  /// No description provided for @winter.
+  ///
+  /// In en, this message translates to:
+  /// **'Winter'**
+  String get winter;
+
+  /// No description provided for @standard.
+  ///
+  /// In en, this message translates to:
+  /// **'Standard'**
+  String get standard;
+
+  /// No description provided for @total_products.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Products'**
+  String get total_products;
+
+  /// No description provided for @no_catalogs_available.
+  ///
+  /// In en, this message translates to:
+  /// **'No catalogs available'**
+  String get no_catalogs_available;
+
+  /// No description provided for @products_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Products'**
+  String get products_label;
+
+  /// No description provided for @pages_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Pages'**
+  String get pages_label;
+
+  /// No description provided for @size_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Size'**
+  String get size_label;
+
+  /// No description provided for @download_pdf_catalog.
+  ///
+  /// In en, this message translates to:
+  /// **'Download PDF Catalog'**
+  String get download_pdf_catalog;
+
+  /// No description provided for @catalogs.
+  ///
+  /// In en, this message translates to:
+  /// **'Catalogs'**
+  String get catalogs;
+
+  /// No description provided for @share.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get share;
+
+  /// No description provided for @preview.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview'**
+  String get preview;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

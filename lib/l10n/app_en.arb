@@ -348,5 +348,18 @@
     "warranty_updated_successfully": "Warranty updated successfully",
     "please_fill_required_fields": "Please fill all required fields",
     "search_by_serial_or_phone": "Search by serial number or phone...",
-    "cannot_delete_old_warranty": "Cannot delete warranty. Only warranties activated in the last 14 days can be deleted."
+    "cannot_delete_old_warranty": "Cannot delete warranty. Only warranties activated in the last 14 days can be deleted.",
+    "product_catalogs": "Product Catalogs",
+    "summer": "Summer",
+    "winter": "Winter",
+    "standard": "Standard",
+    "total_products": "Total Products",
+    "no_catalogs_available": "No catalogs available",
+    "products_label": "Products",
+    "pages_label": "Pages",
+    "size_label": "Size",
+    "download_pdf_catalog": "Download PDF Catalog",
+    "catalogs": "Catalogs",
+    "share": "Share",
+    "preview": "Preview"
 }

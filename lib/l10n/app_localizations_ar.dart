@@ -1044,5 +1044,44 @@ class AppLocalizationsAr extends AppLocalizations {
   String get search_by_serial_or_phone => 'البحث بالرقم التسلسلي أو الهاتف...';
 
   @override
-  String get cannot_delete_old_warranty => 'لا يمكن حذف الكفالة. يمكن حذف الكفالات المفعلة خلال آخر 14 يومًا فقط.';
+  String get cannot_delete_old_warranty => 'لا يمكن حذف الكفالة. يمكن حذف الكفالات المفعلة في آخر 14 يومًا فقط.';
+
+  @override
+  String get product_catalogs => 'كتالوجات المنتجات';
+
+  @override
+  String get summer => 'الصيف';
+
+  @override
+  String get winter => 'الشتاء';
+
+  @override
+  String get standard => 'قياسي';
+
+  @override
+  String get total_products => 'إجمالي المنتجات';
+
+  @override
+  String get no_catalogs_available => 'لا توجد كتالوجات متاحة';
+
+  @override
+  String get products_label => 'منتجات';
+
+  @override
+  String get pages_label => 'صفحات';
+
+  @override
+  String get size_label => 'الحجم';
+
+  @override
+  String get download_pdf_catalog => 'تحميل الكتالوج PDF';
+
+  @override
+  String get catalogs => 'الكتالوجات';
+
+  @override
+  String get share => 'مشاركة';
+
+  @override
+  String get preview => 'معاينة';
 }

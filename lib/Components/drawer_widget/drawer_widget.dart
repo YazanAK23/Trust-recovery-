@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trust_app_updated/Pages/about_us/about_us.dart';
 import 'package:trust_app_updated/Pages/authentication/login_screen/login_screen.dart';
+import 'package:trust_app_updated/Pages/catalogs/catalogs_screen.dart';
 import 'package:trust_app_updated/Pages/contact_us/contact_us.dart';
 import 'package:trust_app_updated/Pages/home_screen/home_screen.dart';
 import 'package:trust_app_updated/Pages/main_categories/main_categories.dart';
@@ -152,18 +153,14 @@ class _DrawerWellState extends State<DrawerWell> {
               },
               icon: Icons.question_mark,
               iconPath: "assets/images/about.svg"),
-         DrawerMethod(
-  name: AppLocalizations.of(context)!.download_catalog,
-  OnCLICK: () {
-    downloadAndOpenFile(
-      context,
-      "https://test.redtrust.ps/storage/pages/August2025/uVKKEL5i80Pq6zO78xxM.pdf",
-      "catalog.pdf",
-    );
-  },
-  icon: Icons.download,
-  iconPath: "assets/images/download-svgrepo-com.svg",
-),
+          DrawerMethod(
+              name: AppLocalizations.of(context)!.catalogs,
+              OnCLICK: () {
+                Navigator.pop(context); // Close drawer first
+                NavigatorPushFunction(context, CatalogsScreen());
+              },
+              icon: Icons.menu_book,
+              iconPath: "assets/images/download-svgrepo-com.svg"),
 
           DrawerMethod(
               name: AppLocalizations.of(context)!.search_drawer,

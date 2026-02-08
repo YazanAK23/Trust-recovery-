@@ -348,5 +348,18 @@
     "warranty_updated_successfully": "تم تحديث الكفالة بنجاح",
     "please_fill_required_fields": "يرجى ملء جميع الحقول المطلوبة",
     "search_by_serial_or_phone": "البحث بالرقم التسلسلي أو الهاتف...",
-    "cannot_delete_old_warranty": "لا يمكن حذف الكفالة. يمكن حذف الكفالات المفعلة خلال آخر 14 يومًا فقط."
+    "cannot_delete_old_warranty": "لا يمكن حذف الكفالة. يمكن حذف الكفالات المفعلة في آخر 14 يومًا فقط.",
+    "product_catalogs": "كتالوجات المنتجات",
+    "summer": "الصيف",
+    "winter": "الشتاء",
+    "standard": "قياسي",
+    "total_products": "إجمالي المنتجات",
+    "no_catalogs_available": "لا توجد كتالوجات متاحة",
+    "products_label": "منتجات",
+    "pages_label": "صفحات",
+    "size_label": "الحجم",
+    "download_pdf_catalog": "تحميل الكتالوج PDF",
+    "catalogs": "الكتالوجات",
+    "share": "مشاركة",
+    "preview": "معاينة"
 }

@@ -1045,4 +1045,43 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get cannot_delete_old_warranty => 'Cannot delete warranty. Only warranties activated in the last 14 days can be deleted.';
+
+  @override
+  String get product_catalogs => 'Product Catalogs';
+
+  @override
+  String get summer => 'Summer';
+
+  @override
+  String get winter => 'Winter';
+
+  @override
+  String get standard => 'Standard';
+
+  @override
+  String get total_products => 'Total Products';
+
+  @override
+  String get no_catalogs_available => 'No catalogs available';
+
+  @override
+  String get products_label => 'Products';
+
+  @override
+  String get pages_label => 'Pages';
+
+  @override
+  String get size_label => 'Size';
+
+  @override
+  String get download_pdf_catalog => 'Download PDF Catalog';
+
+  @override
+  String get catalogs => 'Catalogs';
+
+  @override
+  String get share => 'Share';
+
+  @override
+  String get preview => 'Preview';
 }
