@@ -126,10 +126,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get maintenance_department => 'قسم الصيانة';
 
   @override
-  String get merchants_location => 'جميع نقاط البيع على الخريطة';
+  String get merchants_location => 'موقع التجار على الخريطة';
 
   @override
-  String get show_merchants_location => 'جميع نقاط البيع على الخريطة';
+  String get show_merchants_location => 'عرض جميع التجار على الخريطة';
 
   @override
   String get send_order => 'أرسل الطلبية';
@@ -847,4 +847,37 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get instead => 'بدل';
+
+  @override
+  String get order_id_label => 'رقم الطلب';
+
+  @override
+  String get scheduled_date => 'التاريخ المحدد';
+
+  @override
+  String get phone_number => 'رقم الهاتف';
+
+  @override
+  String get service_notes => 'ملاحظات الصيانة';
+
+  @override
+  String get view_report => 'عرض التقرير';
+
+  @override
+  String get scheduled => 'مجدول';
+
+  @override
+  String get completed => 'مكتمل';
+
+  @override
+  String get overdue => 'متأخر';
+
+  @override
+  String get report_details => 'تفاصيل التقرير';
+
+  @override
+  String get close => 'إغلاق';
+
+  @override
+  String get full_report_for => 'التقرير الكامل لـ';
 }

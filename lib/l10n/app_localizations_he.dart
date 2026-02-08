@@ -126,10 +126,10 @@ class AppLocalizationsHe extends AppLocalizations {
   String get maintenance_department => 'Maintenance Department';
 
   @override
-  String get merchants_location => 'All points of sale on the map';
+  String get merchants_location => 'Merchants Location';
 
   @override
-  String get show_merchants_location => 'All points of sale on the map';
+  String get show_merchants_location => 'Show All Merchants Location On Map';
 
   @override
   String get send_order => 'Send Order';
@@ -847,4 +847,37 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get instead => 'instead';
+
+  @override
+  String get order_id_label => 'Order ID';
+
+  @override
+  String get scheduled_date => 'Scheduled Date';
+
+  @override
+  String get phone_number => 'Phone Number';
+
+  @override
+  String get service_notes => 'Service Notes';
+
+  @override
+  String get view_report => 'View Report';
+
+  @override
+  String get scheduled => 'Scheduled';
+
+  @override
+  String get completed => 'Completed';
+
+  @override
+  String get overdue => 'Overdue';
+
+  @override
+  String get report_details => 'Report Details';
+
+  @override
+  String get close => 'Close';
+
+  @override
+  String get full_report_for => 'Full report for';
 }

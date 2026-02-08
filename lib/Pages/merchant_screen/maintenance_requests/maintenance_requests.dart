@@ -1,19 +1,17 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:trust_app_updated/Components/text_field_widget/text_field_widget.dart';
-import 'package:trust_app_updated/Pages/merchant_screen/add_maintanence_request/add_maintanence_request.dart';
-import 'package:trust_app_updated/Pages/merchant_screen/add_warranty/add_warranty.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:trust_app_updated/Server/functions/functions.dart';
 import 'package:trust_app_updated/l10n/app_localizations.dart';
 import 'package:trust_app_updated/main.dart';
-
-import '../../../Components/button_widget/button_widget.dart';
-import '../../../Components/loading_widget/loading_widget.dart';
+import 'package:trust_app_updated/Components/maintenance_card/maintenance_card_widget.dart';
+import 'package:trust_app_updated/Components/status_summary/status_summary_widget.dart';
+import 'package:trust_app_updated/Components/filter_tabs/filter_tabs_widget.dart';
+import 'package:trust_app_updated/Components/drawer_widget/drawer_widget.dart';
 import '../../../Constants/constants.dart';
+import '../../../Server/domains/domains.dart';
+import '../add_maintanence_request/add_maintanence_request.dart';
 
 class MaintenanceRequests extends StatefulWidget {
   const MaintenanceRequests({super.key});
@@ -23,952 +21,451 @@ class MaintenanceRequests extends StatefulWidget {
 }
 
 class _MaintenanceRequestsState extends State<MaintenanceRequests> {
-  @override
-  TextEditingController SearchController = TextEditingController();
-  Widget build(BuildContext context) {
-    return Container(
-      color: MAIN_COLOR,
-      child: SafeArea(
-        child: Scaffold(
-          body: Column(
-            children: [
-              Container(
-                height: 70,
-                width: double.infinity,
-                decoration: BoxDecoration(color: MAIN_COLOR),
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Positioned(
-                      left: locale.toString() == "ar" ? null : 0,
-                      right: locale.toString() == "ar" ? 0 : null,
-                      child: IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: Icon(
-                          Icons.arrow_back,
-                          size: 28,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    Center(
-                      child: Text(
-                        AppLocalizations.of(context)!.maintenance_requests,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 22,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        NavigatorFunction(
-                            context,
-                            AddMaintanenceRequest(
-                              prodSerialNumber: "",
-                            ));
-                      },
-                      child: Row(
-                        children: [
-                          FaIcon(
-                            FontAwesomeIcons.plus,
-                            color: MAIN_COLOR,
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Text(
-                            AppLocalizations.of(context)!
-                                .add_maintenance_request,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: MAIN_COLOR,
-                                fontSize: 20),
-                          )
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      width: 15,
-                    ),
-                  ],
-                ),
-              ),
-              _isFirstLoadRunning
-                  ? Container()
-                  : Padding(
-                      padding:
-                          const EdgeInsets.only(right: 30, left: 30, top: 15),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20),
-                            child: Container(
-                              height: 60,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(4),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.5),
-                                      spreadRadius: 5,
-                                      blurRadius: 7,
-                                      offset: Offset(
-                                          0, 3), // changes position of shadow
-                                    ),
-                                  ],
-                                  color: Colors.white),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Image.asset(
-                                          "assets/images/wall-clock.png",
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        Text(
-                                          "${AppLocalizations.of(context)!.pending}",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Text(
-                                      PendingStatus.toString(),
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20),
-                            child: Container(
-                              height: 60,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(4),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.5),
-                                      spreadRadius: 5,
-                                      blurRadius: 7,
-                                      offset: Offset(
-                                          0, 3), // changes position of shadow
-                                    ),
-                                  ],
-                                  color: Colors.white),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Image.asset(
-                                          "assets/images/processing-time.png",
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        Text(
-                                          "${AppLocalizations.of(context)!.in_progress}",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Text(
-                                      InProgressStatus.toString(),
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20),
-                            child: Container(
-                              height: 60,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(4),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.5),
-                                      spreadRadius: 5,
-                                      blurRadius: 7,
-                                      offset: Offset(
-                                          0, 3), // changes position of shadow
-                                    ),
-                                  ],
-                                  color: Colors.white),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Image.asset(
-                                          "assets/images/done.png",
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        Text(
-                                          "${AppLocalizations.of(context)!.done}",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Text(
-                                      DoneStatus.toString(),
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20),
-                            child: Container(
-                              height: 60,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(4),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.5),
-                                      spreadRadius: 5,
-                                      blurRadius: 7,
-                                      offset: Offset(
-                                          0, 3), // changes position of shadow
-                                    ),
-                                  ],
-                                  color: Colors.white),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Image.asset(
-                                          "assets/images/delivered.png",
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        Text(
-                                          "${AppLocalizations.of(context)!.delivered}",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Text(
-                                      DeliveredStatus.toString(),
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+  // Status translations
+  final Map<String, String> statusTranslations = {
+    "pending": "بانتظار التوصيل للصيانة",
+    "in_progress": "في الصيانة",
+    "done": "تم الصيانة",
+    "delivered": "تم التسليم للتاجر"
+  };
 
-              // _isFirstLoadRunning
-              //     ? LoadingWidget(
-              //         heightLoading: MediaQuery.of(context).size.height * 0.7)
-              //     : no_internet
-              //         ? Padding(
-              //             padding: const EdgeInsets.only(top: 150),
-              //             child: Text(
-              //               AppLocalizations.of(context)!.no_internet,
-              //               style: TextStyle(
-              //                   fontWeight: FontWeight.bold, fontSize: 18),
-              //             ),
-              //           )
-              //         : AllProducts.length == 0
-              //             ? Padding(
-              //                 padding: const EdgeInsets.only(top: 150),
-              //                 child: Text(
-              //                   AppLocalizations.of(context)!.empty_maintencaes,
-              //                   style: TextStyle(
-              //                       fontWeight: FontWeight.bold, fontSize: 18),
-              //                 ),
-              //               )
-              //             : Expanded(
-              //                 child: Padding(
-              //                   padding:
-              //                       const EdgeInsets.only(right: 10, left: 10),
-              //                   child: AnimationLimiter(
-              //                     child: ListView.builder(
-              //                         cacheExtent: 5000,
-              //                         controller: _controller,
-              //                         itemCount: AllProducts.length,
-              //                         itemBuilder: (context, int index) {
-              //                           return AnimationConfiguration
-              //                               .staggeredList(
-              //                             position: index,
-              //                             duration:
-              //                                 const Duration(milliseconds: 500),
-              //                             child: SlideAnimation(
-              //                               horizontalOffset: 100.0,
-              //                               // verticalOffset: 100.0,
-              //                               child: FadeInAnimation(
-              //                                 curve: Curves.easeOut,
-              //                                 child: warrantyCard(
-              //                                   Reload: () {
-              //                                     _firstLoad();
-              //                                     setState(() {});
-              //                                   },
-              //                                   customerName: AllProducts[index]
-              //                                       ["customerName"],
-              //                                   status: AllProducts[index]
-              //                                                   ["status"]
-              //                                               .toString() ==
-              //                                           "delivered"
-              //                                       ? AppLocalizations.of(context)!
-              //                                           .delivered
-              //                                       : AllProducts[index]
-              //                                                       ["status"]
-              //                                                   .toString() ==
-              //                                               "done"
-              //                                           ? AppLocalizations
-              //                                                   .of(context)!
-              //                                               .done
-              //                                           : AllProducts[index]
-              //                                                           [
-              //                                                           "status"]
-              //                                                       .toString() ==
-              //                                                   "pending"
-              //                                               ? AppLocalizations.of(
-              //                                                       context)!
-              //                                                   .pending
-              //                                               : AppLocalizations.of(
-              //                                                       context)!
-              //                                                   .in_progress,
-              //                                   productName: AllProducts[index]
-              //                                               ["product"] !=
-              //                                           null
-              //                                       ? locale.toString() == "ar"
-              //                                           ? AllProducts[index]
-              //                                                       ["product"]
-              //                                                   ["translations"]
-              //                                               [0]["value"]
-              //                                           : AllProducts[index]
-              //                                                       ["product"]
-              //                                                   ["name"] ??
-              //                                               ""
-              //                                       : "-",
-              //                                   id: AllProducts[index]["id"],
-              //                                   malfunctionDdescription:
-              //                                       AllProducts[index][
-              //                                               "malfunctionDdescription"] ??
-              //                                           "",
-              //                                   notes: AllProducts[index]
-              //                                           ["notes"] ??
-              //                                       "",
-              //                                   customerPhone:
-              //                                       AllProducts[index]
-              //                                           ["customerPhone"],
-              //                                   warrantieStatus:
-              //                                       AllProducts[index]
-              //                                           ["warrantyStatus"],
-              //                                 ),
-              //                               ),
-              //                             ),
-              //                           );
-              //                         }),
-              //                   ),
-              //                 ),
-              //               ),
-              // // when the _loadMore function is running
-              // if (_isLoadMoreRunning == true)
-              //   Padding(
-              //       padding: EdgeInsets.only(top: 10, bottom: 85),
-              //       child: LoadingWidget(heightLoading: 50))
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+  // Data variables
+  List<dynamic> allMaintenanceRequests = [];
+  List<dynamic> filteredRequests = [];
+  
+  // Status counts
+  int pendingCount = 0;
+  int inProgressCount = 0;
+  int doneCount = 0;
+  int deliveredCount = 0;
+  
+  // Filter state
+  String selectedFilter = 'all';
+  
+  // Loading states
+  bool isLoading = false;
+  bool isLoadingMore = false;
+  
+  // Pagination
+  int currentPage = 1;
+  bool hasMorePages = true;
+  
+  // Controllers
+  ScrollController scrollController = ScrollController();
+  
+  // Track locale for rebuilding on language change
+  Locale? _currentLocale;
 
-  int DoneStatus = 0;
-  int InProgressStatus = 0;
-  int PendingStatus = 0;
-  int DeliveredStatus = 0;
-  Widget warrantyCard({
-    bool warrantieStatus = true,
-    String customerPhone = "",
-    Function? Reload,
-    String malfunctionDdescription = "",
-    String notes = "",
-    int id = 0,
-    String customerName = "",
-    String status = "",
-    String productName = "",
-  }) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 20, left: 20, top: 15),
-      child: InkWell(
-        onTap: () {},
-        child: Container(
-          width: double.infinity,
-          // height: 150,
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 5,
-                blurRadius: 7,
-                offset: Offset(0, 3), // changes position of shadow
-              ),
-            ],
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(15),
-            child: Column(
-              children: [
-                Container(
-                  height: 60,
-                  width: double.infinity,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: 15,
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                customerName.toString().length > 20
-                                    ? customerName.toString().substring(0, 20)
-                                    : customerName.toString(),
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 16),
-                              ),
-                              Text(
-                                productName.toString().length > 20
-                                    ? productName.toString().substring(0, 20)
-                                    : productName.toString(),
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 16),
-                              ),
-                              Text(
-                                status,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 16),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                      IconButton(
-                          onPressed: () {
-                            TextEditingController CustomerNameController =
-                                TextEditingController();
-                            TextEditingController CustomerPhoneController =
-                                TextEditingController();
-                            TextEditingController DescriptionController =
-                                TextEditingController();
-                            TextEditingController NotesController =
-                                TextEditingController();
-                            CustomerNameController.text =
-                                customerName.toString();
-                            CustomerPhoneController.text =
-                                customerPhone.toString();
-                            NotesController.text = notes.toString();
-                            DescriptionController.text =
-                                malfunctionDdescription.toString();
-                            showGeneralDialog(
-                              context: context,
-                              barrierDismissible: true,
-                              barrierLabel: MaterialLocalizations.of(context)
-                                  .modalBarrierDismissLabel,
-                              barrierColor: Colors.black.withOpacity(0.5),
-                              transitionDuration: Duration(milliseconds: 300),
-                              pageBuilder:
-                                  (context, animation, secondaryAnimation) {
-                                return Center(
-                                  child: Stack(
-                                    alignment: Alignment.topLeft,
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.all(20),
-                                        decoration: BoxDecoration(
-                                          color: Colors.transparent,
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        child: Material(
-                                          color: Color.fromARGB(198, 0, 0, 0),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(20),
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: <Widget>[
-                                                Text(
-                                                  AppLocalizations.of(context)!
-                                                      .edit,
-                                                  style: TextStyle(
-                                                      fontSize: 18,
-                                                      color: Colors.white),
-                                                ),
-                                                SizedBox(height: 20),
-                                                Visibility(
-                                                  visible: true,
-                                                  child: Column(
-                                                    children: [
-                                                      Container(
-                                                        width: 220,
-                                                        child: Row(
-                                                          children: [
-                                                            Text(
-                                                              AppLocalizations.of(
-                                                                      context)!
-                                                                  .customer_name,
-                                                              style: TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color: Colors
-                                                                      .white),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(12.0),
-                                                        child: Container(
-                                                          height: 50,
-                                                          width: 220,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color:
-                                                                Color.fromARGB(
-                                                                    255,
-                                                                    9,
-                                                                    9,
-                                                                    9),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        4),
-                                                          ),
-                                                          child: TextField(
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .white),
-                                                            controller:
-                                                                CustomerNameController,
-                                                            obscureText: false,
-                                                            maxLines: 50,
-                                                            decoration:
-                                                                InputDecoration(
-                                                              border:
-                                                                  InputBorder
-                                                                      .none,
-                                                              hintStyle: TextStyle(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontSize: 15),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                Visibility(
-                                                  visible: true,
-                                                  child: Column(
-                                                    children: [
-                                                      Container(
-                                                        width: 220,
-                                                        child: Row(
-                                                          children: [
-                                                            Text(
-                                                              AppLocalizations.of(
-                                                                      context)!
-                                                                  .customer_phone,
-                                                              style: TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color: Colors
-                                                                      .white),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(12.0),
-                                                        child: Container(
-                                                          height: 50,
-                                                          width: 220,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color:
-                                                                Color.fromARGB(
-                                                                    255,
-                                                                    9,
-                                                                    9,
-                                                                    9),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        4),
-                                                          ),
-                                                          child: TextField(
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .white),
-                                                            controller:
-                                                                CustomerPhoneController,
-                                                            obscureText: false,
-                                                            maxLines: 50,
-                                                            decoration:
-                                                                InputDecoration(
-                                                              border:
-                                                                  InputBorder
-                                                                      .none,
-                                                              hintStyle: TextStyle(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontSize: 15),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                Column(
-                                                  children: [
-                                                    Container(
-                                                      width: 220,
-                                                      child: Row(
-                                                        children: [
-                                                          Text(
-                                                            AppLocalizations.of(
-                                                                    context)!
-                                                                .notes,
-                                                            style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                color: Colors
-                                                                    .white),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              12.0),
-                                                      child: Container(
-                                                        height: 100,
-                                                        width: 220,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: Color.fromARGB(
-                                                              255, 9, 9, 9),
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(4),
-                                                        ),
-                                                        child: TextField(
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.white),
-                                                          controller:
-                                                              NotesController,
-                                                          obscureText: false,
-                                                          maxLines: 50,
-                                                          decoration:
-                                                              InputDecoration(
-                                                            border: InputBorder
-                                                                .none,
-                                                            hintStyle: TextStyle(
-                                                                color: Colors
-                                                                    .white,
-                                                                fontSize: 15),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Column(
-                                                  children: [
-                                                    Container(
-                                                      width: 220,
-                                                      child: Row(
-                                                        children: [
-                                                          Text(
-                                                            AppLocalizations.of(
-                                                                    context)!
-                                                                .description,
-                                                            style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                color: Colors
-                                                                    .white),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              12.0),
-                                                      child: Container(
-                                                        height: 100,
-                                                        width: 220,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: Color.fromARGB(
-                                                              255, 9, 9, 9),
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(4),
-                                                        ),
-                                                        child: TextField(
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.white),
-                                                          controller:
-                                                              DescriptionController,
-                                                          obscureText: false,
-                                                          maxLines: 50,
-                                                          decoration:
-                                                              InputDecoration(
-                                                            border: InputBorder
-                                                                .none,
-                                                            hintStyle: TextStyle(
-                                                                color: Colors
-                                                                    .white,
-                                                                fontSize: 15),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                ButtonWidget(
-                                                    name: AppLocalizations.of(
-                                                            context)!
-                                                        .save_date,
-                                                    height: 30,
-                                                    width: 90,
-                                                    BorderColor: MAIN_COLOR,
-                                                    FontSize: 12,
-                                                    OnClickFunction: () async {
-                                                      await editMaintanenceRequest(
-                                                          id,
-                                                          CustomerPhoneController
-                                                              .text,
-                                                          CustomerNameController
-                                                              .text,
-                                                          NotesController.text,
-                                                          DescriptionController
-                                                              .text,
-                                                          context);
-                                                      Navigator.pop(context);
-                                                      Reload!();
-                                                    },
-                                                    BorderRaduis: 20,
-                                                    ButtonColor: MAIN_COLOR,
-                                                    NameColor: Colors.white)
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(15.0),
-                                        child: IconButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            },
-                                            icon: Icon(
-                                              Icons.close_outlined,
-                                              color: Colors.white,
-                                            )),
-                                      )
-                                    ],
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                          icon: Icon(Icons.edit))
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  var AllProducts;
-  // At the beginning, we fetch the first 20 posts
-  int _page = 1;
-  // you can change this value to fetch more or less posts per page (10, 15, 5, etc)
-  final int _limit = 20;
-  // There is next page or not
-  bool _hasNextPage = true;
-  // Used to display loading indicators when _firstLoad function is running
-  bool _isFirstLoadRunning = false;
-  // Used to display loading indicators when _loadMore function is running
-  bool _isLoadMoreRunning = false;
-
-  bool no_internet = false;
-
-  void _firstLoad() async {
-    setState(() {
-      _isFirstLoadRunning = true;
-    });
-
-    try {
-      var _products = await getMaintenanceRequestsByMerchantID(_page);
-      setState(() {
-        if (_products != null && _products["data"] != null) {
-          AllProducts = _products["data"];
-          DoneStatus = _products["statusCounts"]["done"] ?? 0;
-          PendingStatus = _products["statusCounts"]["pending"] ?? 0;
-          InProgressStatus = _products["statusCounts"]["in_progress"] ?? 0;
-          DeliveredStatus = _products["statusCounts"]["delivered"] ?? 0;
-        } else {
-          AllProducts = [];
-          DoneStatus = 0;
-          PendingStatus = 0;
-          InProgressStatus = 0;
-          DeliveredStatus = 0;
-        }
-      });
-    } catch (err) {
-      if (kDebugMode) {
-        print('Something went wrong');
-      }
-    }
-    setState(() {
-      _isFirstLoadRunning = false;
-    });
-  }
-
-  // This function will be triggered whenver the user scroll
-  // to near the bottom of the list view
-  void _loadMore() async {
-    if (_hasNextPage == true &&
-        _isFirstLoadRunning == false &&
-        _isLoadMoreRunning == false &&
-        _controller!.position.extentAfter < 300) {
-      setState(() {
-        _isLoadMoreRunning = true; // Display a progress indicator at the bottom
-      });
-      _page += 1; // Increase _page by 1
-      try {
-        // Fetch data from the API
-        var _products = await getMaintenanceRequestsByMerchantID(_page);
-        if (_products.isNotEmpty) {
-          setState(() {
-            AllProducts.addAll(_products);
-          });
-        } else {
-          Fluttertoast.showToast(
-              msg: AppLocalizations.of(context)!.no_products);
-        }
-      } catch (err) {
-        if (kDebugMode) {
-          print('Something went wrong!');
-        }
-      }
-
-      setState(() {
-        _isLoadMoreRunning = false;
-      });
-    }
-  }
-
-  Map<String, List<dynamic>> cache = {};
-  // The controller for the ListView
-  ScrollController? _controller;
   @override
   void initState() {
     super.initState();
-    _firstLoad();
-    _controller = ScrollController()..addListener(_loadMore);
+    fetchMaintenanceRequests();
+    scrollController.addListener(_onScroll);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Ensure data is loaded when page is fully built
+      if (allMaintenanceRequests.isEmpty && !isLoading) {
+        fetchMaintenanceRequests();
+      }
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Check if locale has changed
+    final newLocale = Localizations.localeOf(context);
+    if (_currentLocale != null && _currentLocale != newLocale) {
+      // Language changed, rebuild the UI
+      setState(() {
+        _currentLocale = newLocale;
+      });
+    } else if (_currentLocale == null) {
+      _currentLocale = newLocale;
+    }
   }
 
   @override
   void dispose() {
-    _controller?.removeListener(_loadMore);
+    scrollController.removeListener(_onScroll);
+    scrollController.dispose();
     super.dispose();
+  }
+
+  void _onScroll() {
+    if (scrollController.position.pixels >=
+            scrollController.position.maxScrollExtent - 500 &&
+        !isLoadingMore &&
+        hasMorePages) {
+      loadMoreRequests();
+    }
+  }
+
+  Future<void> fetchMaintenanceRequests() async {
+    if (!mounted) return;
+    
+    setState(() {
+      isLoading = true;
+      currentPage = 1;
+      hasMorePages = true;
+      allMaintenanceRequests.clear();
+      filteredRequests.clear();
+    });
+
+    try {
+      var response = await getMaintenanceRequestsByMerchantID(currentPage);
+      
+      if (response != null && response["data"] != null) {
+        if (!mounted) return;
+        setState(() {
+          allMaintenanceRequests = List.from(response["data"]);
+          
+          // Update status counts
+          pendingCount = response["statusCounts"]["pending"] ?? 0;
+          inProgressCount = response["statusCounts"]["in_progress"] ?? 0;
+          doneCount = response["statusCounts"]["done"] ?? 0;
+          deliveredCount = response["statusCounts"]["delivered"] ?? 0;
+          
+          // Apply filter
+          applyFilter();
+        });
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error fetching maintenance requests: $e');
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  }
+
+  Future<void> loadMoreRequests() async {
+    if (!mounted || !hasMorePages) return;
+    
+    setState(() {
+      isLoadingMore = true;
+    });
+
+    try {
+      currentPage++;
+      var response = await getMaintenanceRequestsByMerchantID(currentPage);
+      
+      if (response != null && response["data"] != null && response["data"].isNotEmpty) {
+        if (!mounted) return;
+        setState(() {
+          allMaintenanceRequests.addAll(response["data"]);
+          applyFilter();
+        });
+      } else {
+        hasMorePages = false;
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error loading more requests: $e');
+      }
+      currentPage--; // Revert page increment on error
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoadingMore = false;
+        });
+      }
+    }
+  }
+
+  void applyFilter() {
+    if (selectedFilter == 'all') {
+      filteredRequests = List.from(allMaintenanceRequests);
+    } else {
+      filteredRequests = allMaintenanceRequests
+          .where((request) => request['status'] == selectedFilter)
+          .toList();
+    }
+  }
+
+  void onFilterChanged(String filter) {
+    setState(() {
+      selectedFilter = filter;
+      applyFilter();
+      // Scroll to top when filter changes
+      if (scrollController.hasClients) {
+        scrollController.animateTo(
+          0,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
+
+  String _extractImageUrl(dynamic imageField) {
+    if (imageField == null) return '';
+    
+    String imageStr = imageField.toString();
+    
+    // If it's a JSON array string
+    if (imageStr.contains('[') && imageStr.contains(']')) {
+      imageStr = imageStr.replaceAll('[', '').replaceAll(']', '').replaceAll('"', '');
+      List<String> images = imageStr.split(',');
+      if (images.isNotEmpty) {
+        String firstImage = images[0].trim();
+        // Build full URL if it's a relative path
+        if (!firstImage.startsWith('http')) {
+          return '$URLIMAGE$firstImage';
+        }
+        return firstImage;
+      }
+    }
+    
+    return imageStr;
+  }
+
+  String _getProductName(dynamic request) {
+    try {
+      if (request['product'] != null) {
+        // Try to get translated name first
+        if (request['product']['translations'] != null) {
+          final translations = request['product']['translations'] as List;
+          final arTranslation = translations.firstWhere(
+            (t) => t['locale'] == 'ar' && t['columnName'] == 'name',
+            orElse: () => null,
+          );
+          if (arTranslation != null && arTranslation['value'] != null) {
+            return arTranslation['value'].toString();
+          }
+        }
+        // Fallback to default name
+        return request['product']['name']?.toString() ?? 'Unknown Product';
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error getting product name: $e');
+      }
+    }
+    return 'Unknown Product';
+  }
+
+  void _handleViewReport(dynamic request) {
+    // TODO: Navigate to detailed report screen
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(AppLocalizations.of(context)!.report_details),
+        content: Text('${AppLocalizations.of(context)!.full_report_for} ${request['productSerialNumber']}'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(AppLocalizations.of(context)!.close),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isRTL = locale.toString() == 'ar';
+    
+    return Container(
+      color: MAIN_COLOR,
+      child: SafeArea(
+        child: Scaffold(
+          backgroundColor: Color(0xFFF5F5F5),
+          drawer: DrawerWell(
+            Refresh: () async {
+              await fetchMaintenanceRequests();
+            },
+          ),
+          body: Column(
+            children: [
+              // Header
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                decoration: BoxDecoration(
+                  color: MAIN_COLOR,
+                ),
+                child: Builder(
+                  builder: (BuildContext context) {
+                    return Row(
+                      textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
+                      children: [
+                        IconButton(
+                          onPressed: () => Navigator.pop(context),
+                          icon: Icon(Icons.arrow_back, color: Colors.white),
+                        ),
+                        Expanded(
+                          child: Text(
+                            AppLocalizations.of(context)!.maintenance_requests,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
+                            textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
+                          ),
+                        ),
+                        Container(
+                          width: 40,
+                          height: 40,
+                          child: IconButton(
+                            padding: EdgeInsets.zero,
+                            onPressed: () {
+                              Scaffold.of(context).openDrawer();
+                            },
+                            icon: SvgPicture.asset(
+                              'assets/images/Menu.svg',
+                              width: 25,
+                              height: 25,
+                              fit: BoxFit.contain,
+                              colorFilter: ColorFilter.mode(
+                                Colors.white,
+                                BlendMode.srcIn,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
+
+              // Status Summary with unified background
+              Container(
+                color: MAIN_COLOR,
+                child: !isLoading
+                    ? StatusSummaryWidget(
+                        scheduledCount: pendingCount,
+                        inProgressCount: inProgressCount,
+                        completedCount: doneCount,
+                      )
+                    : SizedBox.shrink(),
+              ),
+
+              // Filter Tabs
+              if (!isLoading)
+                FilterTabsWidget(
+                  selectedTab: selectedFilter,
+                  onTabSelected: onFilterChanged,
+                  allCount: allMaintenanceRequests.length,
+                  scheduledCount: pendingCount,
+                  inProgressCount: inProgressCount,
+                  completedCount: doneCount,
+                  overdueCount: deliveredCount,
+                ),
+
+              // List of Maintenance Requests
+              Expanded(
+                child: isLoading
+                    ? Center(
+                        child: SpinKitCircle(
+                          color: MAIN_COLOR,
+                          size: 50.0,
+                        ),
+                      )
+                    : filteredRequests.isEmpty
+                        ? Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.inbox_outlined,
+                                  size: 80,
+                                  color: Colors.grey[400],
+                                ),
+                                SizedBox(height: 16),
+                                Text(
+                                  AppLocalizations.of(context)!.empty_maintencaes,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.grey[600],
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
+                                ),
+                              ],
+                            ),
+                          )
+                        : RefreshIndicator(
+                            onRefresh: fetchMaintenanceRequests,
+                            color: MAIN_COLOR,
+                            child: ListView.builder(
+                              controller: scrollController,
+                              physics: AlwaysScrollableScrollPhysics(),
+                              itemCount: filteredRequests.length +
+                                  (isLoadingMore ? 1 : 0),
+                              itemBuilder: (context, index) {
+                                if (index < filteredRequests.length) {
+                                  final request = filteredRequests[index];
+                                  final product = request['product'];
+                                  
+                                  String productImage = '';
+                                  if (product != null && product['image'] != null) {
+                                    productImage = _extractImageUrl(product['image']);
+                                  }
+
+                                  return MaintenanceCardWidget(
+                                    productImage: productImage,
+                                    productName: _getProductName(request),
+                                    productSerialNumber:
+                                        request['productSerialNumber'] ?? '',
+                                    status: request['status'] ?? '',
+                                    scheduledDate:
+                                        request['createdAt'] ?? '',
+                                    customerName:
+                                        request['customerName'] ?? '',
+                                    customerPhone:
+                                        request['customerPhone'] ?? '',
+                                    maintenanceCategoryNotes:
+                                        request['maintenanceCategoryNotes'] ?? '',
+                                    notes: request['notes'] ?? '',
+                                    onViewReport: () =>
+                                        _handleViewReport(request),
+                                  );
+                                } else {
+                                  return Padding(
+                                    padding: EdgeInsets.all(16),
+                                    child: Center(
+                                      child: SpinKitCircle(
+                                        color: MAIN_COLOR,
+                                        size: 30.0,
+                                      ),
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
+                          ),
+              ),
+            ],
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () async {
+              await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AddMaintanenceRequest(prodSerialNumber: ''),
+                ),
+              );
+              // Refresh the list when returning from add page
+              if (mounted) {
+                await fetchMaintenanceRequests();
+              }
+            },
+            backgroundColor: MAIN_COLOR,
+            child: Icon(
+              Icons.add,
+              color: Colors.white,
+              size: 30,
+            ),
+            tooltip: AppLocalizations.of(context)!.new_maintenance_requests,
+          ),
+        ),
+      ),
+    );
   }
 }

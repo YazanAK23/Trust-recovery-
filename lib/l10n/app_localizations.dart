@@ -1348,7 +1348,7 @@ abstract class AppLocalizations {
   /// No description provided for @notes.
   ///
   /// In en, this message translates to:
-  /// **'notes'**
+  /// **'Notes'**
   String get notes;
 
   /// No description provided for @nearof.
@@ -1776,6 +1776,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'instead'**
   String get instead;
+
+  /// No description provided for @order_id_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Order ID'**
+  String get order_id_label;
+
+  /// No description provided for @scheduled_date.
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled Date'**
+  String get scheduled_date;
+
+  /// No description provided for @phone_number.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone Number'**
+  String get phone_number;
+
+  /// No description provided for @service_notes.
+  ///
+  /// In en, this message translates to:
+  /// **'Service Notes'**
+  String get service_notes;
+
+  /// No description provided for @view_report.
+  ///
+  /// In en, this message translates to:
+  /// **'View Report'**
+  String get view_report;
+
+  /// No description provided for @scheduled.
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled'**
+  String get scheduled;
+
+  /// No description provided for @completed.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get completed;
+
+  /// No description provided for @overdue.
+  ///
+  /// In en, this message translates to:
+  /// **'Overdue'**
+  String get overdue;
+
+  /// No description provided for @report_details.
+  ///
+  /// In en, this message translates to:
+  /// **'Report Details'**
+  String get report_details;
+
+  /// No description provided for @close.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
+
+  /// No description provided for @full_report_for.
+  ///
+  /// In en, this message translates to:
+  /// **'Full report for'**
+  String get full_report_for;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

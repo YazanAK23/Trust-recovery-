@@ -169,6 +169,23 @@
 		"done": "Done",
 		"cancelled": "Cancelled"
 	},
+	"maintenance": {
+		"maintenance_requests": "Maintenance Requests",
+		"order_id_label": "Order ID",
+		"scheduled_date": "Scheduled Date",
+		"customer_name": "Customer Name",
+		"phone_number": "Phone Number",
+		"service_notes": "Service Notes",
+		"view_report": "View Report",
+		"scheduled": "Scheduled",
+		"completed": "Completed",
+		"overdue": "Overdue",
+		"all": "All",
+		"no_maintenance_requests": "No maintenance requests found",
+		"report_details": "Report Details",
+		"close": "Close",
+		"full_report_for": "Full report for"
+	},
 	"Your cart is empty": "Your cart is empty",
 	"Go To Home": "Go To Home",
 	"Photo is downloaded successfully": "Photo is downloaded successfully",

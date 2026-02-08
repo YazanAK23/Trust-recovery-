@@ -169,6 +169,23 @@
 		"done": "جاهز",
 		"cancelled": "ملغي"
 	},
+	"maintenance": {
+		"maintenance_requests": "طلبات الصيانة",
+		"order_id_label": "رقم الطلب",
+		"scheduled_date": "التاريخ المحدد",
+		"customer_name": "إسم العميل",
+		"phone_number": "رقم الهاتف",
+		"service_notes": "ملاحظات الصيانة",
+		"view_report": "عرض التقرير",
+		"scheduled": "مجدول",
+		"completed": "مكتمل",
+		"overdue": "متأخر",
+		"all": "الكل",
+		"no_maintenance_requests": "لا توجد طلبات صيانة",
+		"report_details": "تفاصيل التقرير",
+		"close": "إغلاق",
+		"full_report_for": "التقرير الكامل لـ"
+	},
 	"Your cart is empty": "عربة التسوق فارغة",
 	"Go To Home": "اذهب الى الصفحة الرئيسية",
 	"Photo is downloaded successfully": "تم تنزيل الصورة بنجاح",
