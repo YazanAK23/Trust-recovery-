@@ -222,5 +222,19 @@
 	"id_number": "ID Number",
 	"choose_image_source": "Choose Image Source",
 	"camera": "Camera",
-	"gallery": "Gallery"
+	"gallery": "Gallery",
+	"warranties": "Warranties",
+	"search_by_serial_product_customer": "Search by serial, product, or customer...",
+	"all": "All",
+	"active": "Active",
+	"expiring_soon": "Expiring-soon",
+	"expired": "Expired",
+	"customer": "Customer",
+	"phone": "Phone",
+	"purchase_date": "Purchase Date",
+	"warranty_period": "Warranty Period",
+	"edit": "Edit",
+	"delete": "Delete",
+	"years": "Years",
+	"year": "Year"
 }

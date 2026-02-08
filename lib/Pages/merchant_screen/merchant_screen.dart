@@ -10,7 +10,7 @@ import 'package:trust_app_updated/Pages/merchant_screen/warranty_activation/warr
 import 'package:trust_app_updated/Pages/merchant_screen/check_maintennance_request_by_customer_phone/check_maintennance_request_by_customer_phone.dart';
 import 'package:trust_app_updated/Pages/merchant_screen/check_wrranties/check_wrranties.dart';
 import 'package:trust_app_updated/Pages/merchant_screen/maintenance_requests/maintenance_requests.dart';
-import 'package:trust_app_updated/Pages/merchant_screen/warranties/warranties.dart';
+import 'package:trust_app_updated/Pages/merchant_screen/warranties/warranties_screen.dart';
 import 'package:trust_app_updated/Server/functions/functions.dart';
 
 import '../../../Components/loading_widget/loading_widget.dart';
@@ -112,7 +112,7 @@ class _MerchantScreenState extends State<MerchantScreen> {
                                   BorderColor: Color(0xffEBEBEB),
                                   FontSize: 16,
                                   OnClickFunction: () {
-                                    NavigatorPushFunction(context, Warranties());
+                                    NavigatorPushFunction(context, WarrantiesScreen());
                                   },
                                   BorderRaduis: 40,
                                   ButtonColor: Color(0xffEBEBEB),

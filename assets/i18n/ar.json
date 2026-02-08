@@ -222,5 +222,19 @@
 	"id_number": "رقم الهوية",
 	"choose_image_source": "اختر مصدر الصورة",
 	"camera": "الكاميرا",
-	"gallery": "المعرض"
+	"gallery": "المعرض",
+	"warranties": "الضمانات",
+	"search_by_serial_product_customer": "بحث بالرقم التسلسلي أو المنتج أو العميل...",
+	"all": "الكل",
+	"active": "نشط",
+	"expiring_soon": "تنتهي قريباً",
+	"expired": "منتهية",
+	"customer": "العميل",
+	"phone": "الهاتف",
+	"purchase_date": "تاريخ الشراء",
+	"warranty_period": "مدة الضمان",
+	"edit": "تعديل",
+	"delete": "حذف",
+	"years": "سنوات",
+	"year": "سنة"
 }

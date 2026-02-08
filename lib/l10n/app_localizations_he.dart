@@ -970,4 +970,79 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get gallery => 'Gallery';
+
+  @override
+  String get warranties => 'Warranties';
+
+  @override
+  String get search_by_serial_product_customer => 'Search by serial, product, or customer...';
+
+  @override
+  String get active => 'Active';
+
+  @override
+  String get expiring_soon => 'Expiring-soon';
+
+  @override
+  String get expired => 'Expired';
+
+  @override
+  String get customer => 'Customer';
+
+  @override
+  String get phone => 'Phone';
+
+  @override
+  String get purchase_date => 'Purchase Date';
+
+  @override
+  String get warranty_period => 'Warranty Period';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get years => 'Years';
+
+  @override
+  String get year => 'Year';
+
+  @override
+  String get edit_warranty => 'Edit Warranty';
+
+  @override
+  String get delete_warranty_question => 'Delete Warranty?';
+
+  @override
+  String get save_changes => 'Save Changes';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get customer_name_required => 'Customer Name *';
+
+  @override
+  String get phone_number_required => 'Phone Number *';
+
+  @override
+  String get purchase_date_required => 'Purchase Date *';
+
+  @override
+  String get warranty_delete_condition => 'Note: Only warranties activated in the last 14 days can be deleted.';
+
+  @override
+  String get warranty_deleted_successfully => 'Warranty deleted successfully';
+
+  @override
+  String get warranty_updated_successfully => 'Warranty updated successfully';
+
+  @override
+  String get please_fill_required_fields => 'Please fill all required fields';
+
+  @override
+  String get search_by_serial_or_phone => 'Search by serial number or phone...';
+
+  @override
+  String get cannot_delete_old_warranty => 'Cannot delete warranty. Only warranties activated in the last 14 days can be deleted.';
 }

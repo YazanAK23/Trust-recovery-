@@ -180,7 +180,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get ramallah => 'رام الله';
 
   @override
-  String get all => 'الجميع';
+  String get all => 'الكل';
 
   @override
   String get description => 'الوصف';
@@ -970,4 +970,79 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get gallery => 'المعرض';
+
+  @override
+  String get warranties => 'الكفالات';
+
+  @override
+  String get search_by_serial_product_customer => 'بحث بالرقم التسلسلي أو المنتج أو العميل...';
+
+  @override
+  String get active => 'نشط';
+
+  @override
+  String get expiring_soon => 'تنتهي قريباً';
+
+  @override
+  String get expired => 'منتهية';
+
+  @override
+  String get customer => 'العميل';
+
+  @override
+  String get phone => 'الهاتف';
+
+  @override
+  String get purchase_date => 'تاريخ الشراء';
+
+  @override
+  String get warranty_period => 'مدة الكفالة';
+
+  @override
+  String get delete => 'حذف';
+
+  @override
+  String get years => 'سنوات';
+
+  @override
+  String get year => 'سنة';
+
+  @override
+  String get edit_warranty => 'تعديل الكفالة';
+
+  @override
+  String get delete_warranty_question => 'حذف الكفالة؟';
+
+  @override
+  String get save_changes => 'حفظ التغييرات';
+
+  @override
+  String get cancel => 'إلغاء';
+
+  @override
+  String get customer_name_required => 'اسم العميل *';
+
+  @override
+  String get phone_number_required => 'رقم الهاتف *';
+
+  @override
+  String get purchase_date_required => 'تاريخ الشراء *';
+
+  @override
+  String get warranty_delete_condition => 'ملاحظة: يمكن حذف الكفالات المفعلة خلال آخر 14 يومًا فقط.';
+
+  @override
+  String get warranty_deleted_successfully => 'تم حذف الكفالة بنجاح';
+
+  @override
+  String get warranty_updated_successfully => 'تم تحديث الكفالة بنجاح';
+
+  @override
+  String get please_fill_required_fields => 'يرجى ملء جميع الحقول المطلوبة';
+
+  @override
+  String get search_by_serial_or_phone => 'البحث بالرقم التسلسلي أو الهاتف...';
+
+  @override
+  String get cannot_delete_old_warranty => 'لا يمكن حذف الكفالة. يمكن حذف الكفالات المفعلة خلال آخر 14 يومًا فقط.';
 }

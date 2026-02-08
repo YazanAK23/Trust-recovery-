@@ -412,7 +412,7 @@ abstract class AppLocalizations {
   /// No description provided for @edit.
   ///
   /// In en, this message translates to:
-  /// **'ُEdit'**
+  /// **'Edit'**
   String get edit;
 
   /// No description provided for @downloading.
@@ -2022,6 +2022,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Gallery'**
   String get gallery;
+
+  /// No description provided for @warranties.
+  ///
+  /// In en, this message translates to:
+  /// **'Warranties'**
+  String get warranties;
+
+  /// No description provided for @search_by_serial_product_customer.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by serial, product, or customer...'**
+  String get search_by_serial_product_customer;
+
+  /// No description provided for @active.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get active;
+
+  /// No description provided for @expiring_soon.
+  ///
+  /// In en, this message translates to:
+  /// **'Expiring-soon'**
+  String get expiring_soon;
+
+  /// No description provided for @expired.
+  ///
+  /// In en, this message translates to:
+  /// **'Expired'**
+  String get expired;
+
+  /// No description provided for @customer.
+  ///
+  /// In en, this message translates to:
+  /// **'Customer'**
+  String get customer;
+
+  /// No description provided for @phone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone'**
+  String get phone;
+
+  /// No description provided for @purchase_date.
+  ///
+  /// In en, this message translates to:
+  /// **'Purchase Date'**
+  String get purchase_date;
+
+  /// No description provided for @warranty_period.
+  ///
+  /// In en, this message translates to:
+  /// **'Warranty Period'**
+  String get warranty_period;
+
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// No description provided for @years.
+  ///
+  /// In en, this message translates to:
+  /// **'Years'**
+  String get years;
+
+  /// No description provided for @year.
+  ///
+  /// In en, this message translates to:
+  /// **'Year'**
+  String get year;
+
+  /// No description provided for @edit_warranty.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Warranty'**
+  String get edit_warranty;
+
+  /// No description provided for @delete_warranty_question.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Warranty?'**
+  String get delete_warranty_question;
+
+  /// No description provided for @save_changes.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Changes'**
+  String get save_changes;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @customer_name_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Customer Name *'**
+  String get customer_name_required;
+
+  /// No description provided for @phone_number_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone Number *'**
+  String get phone_number_required;
+
+  /// No description provided for @purchase_date_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Purchase Date *'**
+  String get purchase_date_required;
+
+  /// No description provided for @warranty_delete_condition.
+  ///
+  /// In en, this message translates to:
+  /// **'Note: Only warranties activated in the last 14 days can be deleted.'**
+  String get warranty_delete_condition;
+
+  /// No description provided for @warranty_deleted_successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Warranty deleted successfully'**
+  String get warranty_deleted_successfully;
+
+  /// No description provided for @warranty_updated_successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Warranty updated successfully'**
+  String get warranty_updated_successfully;
+
+  /// No description provided for @please_fill_required_fields.
+  ///
+  /// In en, this message translates to:
+  /// **'Please fill all required fields'**
+  String get please_fill_required_fields;
+
+  /// No description provided for @search_by_serial_or_phone.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by serial number or phone...'**
+  String get search_by_serial_or_phone;
+
+  /// No description provided for @cannot_delete_old_warranty.
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot delete warranty. Only warranties activated in the last 14 days can be deleted.'**
+  String get cannot_delete_old_warranty;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
