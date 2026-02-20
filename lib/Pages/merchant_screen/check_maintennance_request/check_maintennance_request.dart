@@ -32,15 +32,15 @@ class _CheckMaintennanceRequestState extends State<CheckMaintennanceRequest> {
   String maintenceStatus = "";
   var maintenceStatusTranslate = {
     "ar": {
-      "pending": "بانتظار التوصيل للصيانة",
-      "in_progress": "في الصيانة",
-      "done": "تم الصيانة",
-      "delivered": "تم التسليم للتاجر"
+      "pending": "قيدالانتظار",
+      "in_progress": "قيدالصيانة",
+      "done": "مكتمل",
+      "delivered": "مسلّم"
     },
     "en": {
-      "pending": "Pending",
-      "in_progress": "In Progress",
-      "done": "Done",
+      "pending": "Waiting",
+      "in_progress": "Maintenance",
+      "done": "Completed",
       "delivered": "Delivered"
     }
   };

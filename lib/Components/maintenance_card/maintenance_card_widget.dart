@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
-import '../../Constants/constants.dart';
 import '../../l10n/app_localizations.dart';
 import '../../main.dart';
 
-class MaintenanceCardWidget extends StatelessWidget {
+class MaintenanceCardWidget extends StatefulWidget {
   final String productImage;
   final String productName;
   final String productSerialNumber;
@@ -16,6 +15,7 @@ class MaintenanceCardWidget extends StatelessWidget {
   final String maintenanceCategoryNotes;
   final String notes;
   final VoidCallback onViewReport;
+  final VoidCallback onEdit;
 
   const MaintenanceCardWidget({
     Key? key,
@@ -29,18 +29,26 @@ class MaintenanceCardWidget extends StatelessWidget {
     required this.maintenanceCategoryNotes,
     required this.notes,
     required this.onViewReport,
+    required this.onEdit,
   }) : super(key: key);
 
+  @override
+  State<MaintenanceCardWidget> createState() => _MaintenanceCardWidgetState();
+}
+
+class _MaintenanceCardWidgetState extends State<MaintenanceCardWidget> {
+  bool isExpanded = false;
+
   Color _getStatusColor() {
-    switch (status.toLowerCase()) {
+    switch (widget.status.toLowerCase()) {
       case 'pending':
         return Color(0xFF2196F3); // Blue
       case 'in_progress':
-        return Color(0xFF4CAF50); // Green
+        return Color(0xFFFF9800); // Orange
       case 'done':
         return Color(0xFF4CAF50); // Green
       case 'delivered':
-        return Color(0xFFFF9800); // Orange
+        return Color(0xFF2E7D32); // Bold Dark Green
       default:
         return Colors.grey;
     }
@@ -71,49 +79,43 @@ class MaintenanceCardWidget extends StatelessWidget {
     }
   }
 
-  Widget _buildInfoRow(IconData icon, String label, String value, bool isRTL, {bool keepValueLTR = false}) {
+  Widget _buildHorizontalInfoItem(IconData icon, String label, String value, bool isRTL, {bool keepValueLTR = false}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
         children: [
-          Icon(icon, size: 20, color: Colors.grey[600]),
-          SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: isRTL ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: double.infinity,
-                  child: Text(
-                    label,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[600],
-                      fontWeight: FontWeight.w500,
-                    ),
-                    textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
-                    textAlign: isRTL ? TextAlign.right : TextAlign.left,
-                  ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
+            children: [
+              Icon(icon, size: 18, color: Colors.grey[600]),
+              SizedBox(width: 8),
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey[600],
+                  fontWeight: FontWeight.w500,
                 ),
-                SizedBox(height: 4),
-                SizedBox(
-                  width: double.infinity,
-                  child: Text(
-                    value.isEmpty ? '-' : value,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.black87,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    textDirection: keepValueLTR ? TextDirection.ltr : (isRTL ? TextDirection.rtl : TextDirection.ltr),
-                    textAlign: isRTL ? TextAlign.right : TextAlign.left,
-                  ),
-                ),
-              ],
+                textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
+              ),
+            ],
+          ),
+          Flexible(
+            child: Text(
+              value.isEmpty ? '-' : value,
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.black87,
+                fontWeight: FontWeight.bold,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textDirection: keepValueLTR ? TextDirection.ltr : (isRTL ? TextDirection.rtl : TextDirection.ltr),
+              textAlign: isRTL ? TextAlign.left : TextAlign.right,
             ),
           ),
         ],
@@ -149,9 +151,9 @@ class MaintenanceCardWidget extends StatelessWidget {
                     width: 80,
                     height: 80,
                     color: Colors.grey[200],
-                    child: productImage.isNotEmpty
+                    child: widget.productImage.isNotEmpty
                         ? FancyShimmerImage(
-                            imageUrl: productImage,
+                            imageUrl: widget.productImage,
                             boxFit: BoxFit.cover,
                             errorWidget: Icon(Icons.image_not_supported,
                                 size: 40, color: Colors.grey),
@@ -165,17 +167,50 @@ class MaintenanceCardWidget extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: isRTL ? CrossAxisAlignment.end : CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        productName,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
+                      // Product name with status badge on same line
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
-                        textAlign: isRTL ? TextAlign.right : TextAlign.left,
+                        children: [
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  isExpanded = !isExpanded;
+                                });
+                              },
+                              child: Text(
+                                widget.productName,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black87,
+                                ),
+                                maxLines: isExpanded ? null : 2,
+                                overflow: isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
+                                textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
+                                textAlign: isRTL ? TextAlign.right : TextAlign.left,
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          // Status Badge beside title
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: _getStatusColor(),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Text(
+                              _getStatusLabel(context, widget.status),
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       SizedBox(height: 6),
                       Align(
@@ -193,7 +228,7 @@ class MaintenanceCardWidget extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              productSerialNumber,
+                              widget.productSerialNumber,
                               style: TextStyle(
                                 fontSize: 13,
                                 color: Colors.grey[600],
@@ -206,45 +241,22 @@ class MaintenanceCardWidget extends StatelessWidget {
                       ),
                       SizedBox(height: 8),
                       // Notes in orange
-                      if (notes.isNotEmpty)
+                      if (widget.notes.isNotEmpty)
                         Align(
                           alignment: isRTL ? Alignment.centerRight : Alignment.centerLeft,
-                          child: Padding(
-                            padding: EdgeInsets.only(bottom: 6),
-                            child: Text(
-                              notes,
-                              style: TextStyle(
-                                fontSize: 13,
-                                color: Color(0xFFFF9800),
-                                fontWeight: FontWeight.w600,
-                              ),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
-                              textAlign: isRTL ? TextAlign.right : TextAlign.left,
-                            ),
-                          ),
-                        ),
-                      // Status Badge
-                      Align(
-                        alignment: isRTL ? Alignment.centerRight : Alignment.centerLeft,
-                        child: Container(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                          decoration: BoxDecoration(
-                            color: _getStatusColor(),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
                           child: Text(
-                            _getStatusLabel(context, status),
+                            widget.notes,
                             style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                              color: Color(0xFFFF9800),
+                              fontWeight: FontWeight.w600,
                             ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
+                            textAlign: isRTL ? TextAlign.right : TextAlign.left,
                           ),
                         ),
-                      ),
                     ],
                   ),
                 ),
@@ -252,33 +264,47 @@ class MaintenanceCardWidget extends StatelessWidget {
             ),
           ),
 
-          Divider(height: 1, thickness: 1, color: Colors.grey[200]),
-
           // Details Section
           Padding(
             padding: EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: isRTL ? CrossAxisAlignment.end : CrossAxisAlignment.start,
               children: [
-                _buildInfoRow(
-                  Icons.calendar_today,
-                  AppLocalizations.of(context)!.scheduled_date,
-                  _formatDate(scheduledDate),
-                  isRTL,
-                  keepValueLTR: true,
-                ),
-                _buildInfoRow(
-                  Icons.person,
-                  AppLocalizations.of(context)!.customer_name,
-                  customerName,
-                  isRTL,
-                ),
-                _buildInfoRow(
-                  Icons.phone,
-                  AppLocalizations.of(context)!.phone_number,
-                  customerPhone,
-                  isRTL,
-                  keepValueLTR: true,
+                // Gray container with information
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Color(0xFFFAFAFA).withOpacity(0.5),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.grey[200]!.withOpacity(0.5), width: 1),
+                  ),
+                  child: Column(
+                    children: [
+                      _buildHorizontalInfoItem(
+                        Icons.calendar_today,
+                        AppLocalizations.of(context)!.scheduled_date,
+                        _formatDate(widget.scheduledDate),
+                        isRTL,
+                        keepValueLTR: true,
+                      ),
+                      SizedBox(height: 8),
+                      _buildHorizontalInfoItem(
+                        Icons.person,
+                        AppLocalizations.of(context)!.customer_name,
+                        widget.customerName,
+                        isRTL,
+                      ),
+                      SizedBox(height: 8),
+                      _buildHorizontalInfoItem(
+                        Icons.phone,
+                        AppLocalizations.of(context)!.phone_number,
+                        widget.customerPhone,
+                        isRTL,
+                        keepValueLTR: true,
+                      ),
+                    ],
+                  ),
                 ),
                 // Service Notes Section
                 Padding(
@@ -287,7 +313,7 @@ class MaintenanceCardWidget extends StatelessWidget {
                     width: double.infinity,
                     padding: EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Color(0xFFF5F5F5),
+                      color: Color(0xFFEFF6FF),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Column(
@@ -301,46 +327,31 @@ class MaintenanceCardWidget extends StatelessWidget {
                             children: [
                               Icon(
                                 Icons.info_outline,
-                                size: 18,
-                                color: Colors.grey[700],
+                                size: 16,
+                                color: Colors.black87,
                               ),
                               SizedBox(width: 6),
                               Text(
                                 AppLocalizations.of(context)!.service_notes,
                                 style: TextStyle(
                                   fontSize: 13,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey[800],
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black87,
                                 ),
                                 textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
                               ),
                             ],
                           ),
                         ),
-                        if (maintenanceCategoryNotes.isNotEmpty) ...[
+                        if (widget.maintenanceCategoryNotes.isNotEmpty) ...[
                           SizedBox(height: 6),
                           SizedBox(
                             width: double.infinity,
                             child: Text(
-                              maintenanceCategoryNotes,
+                              widget.maintenanceCategoryNotes,
                               style: TextStyle(
                                 fontSize: 13,
-                                color: Colors.grey[700],
-                                fontWeight: FontWeight.w500,
-                              ),
-                              textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
-                              textAlign: isRTL ? TextAlign.right : TextAlign.left,
-                            ),
-                          ),
-                        ] else ...[
-                          SizedBox(height: 6),
-                          SizedBox(
-                            width: double.infinity,
-                            child: Text(
-                              '-',
-                              style: TextStyle(
-                                fontSize: 13,
-                                color: Colors.grey[500],
+                                color: Colors.black87,
                                 fontWeight: FontWeight.w500,
                               ),
                               textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
@@ -356,31 +367,63 @@ class MaintenanceCardWidget extends StatelessWidget {
             ),
           ),
 
-          // View Report Button
+          // Action Buttons
           Padding(
             padding: EdgeInsets.fromLTRB(16, 8, 16, 16),
-            child: SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: onViewReport,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: MAIN_COLOR,
-                  foregroundColor: Colors.white,
-                  padding: EdgeInsets.symmetric(vertical: 12),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+            child: Row(
+              textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
+              children: [
+                // View Report Button
+                Expanded(
+                  flex: 3,
+                  child: ElevatedButton(
+                    onPressed: widget.onViewReport,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFFEF4444),
+                      foregroundColor: Colors.white,
+                      padding: EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      elevation: 0,
+                    ),
+                    child: Text(
+                      AppLocalizations.of(context)!.view_report,
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
-                  elevation: 2,
                 ),
-                child: Text(
-                  AppLocalizations.of(context)!.view_report,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                SizedBox(width: 10),
+                // Edit Button
+                Expanded(
+                  flex: 2,
+                  child: OutlinedButton(
+                    onPressed: widget.onEdit,
+                    style: OutlinedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: Colors.black87,
+                      padding: EdgeInsets.symmetric(vertical: 12),
+                      side: BorderSide(color: Colors.grey[300]!, width: 1),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      elevation: 0,
+                    ),
+                    child: Text(
+                      AppLocalizations.of(context)!.edit,
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
-                  textAlign: TextAlign.center,
                 ),
-              ),
+              ],
             ),
           ),
         ],

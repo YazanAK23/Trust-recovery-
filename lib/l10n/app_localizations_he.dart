@@ -99,6 +99,9 @@ class AppLocalizationsHe extends AppLocalizations {
   String get delivered => 'Delivered';
 
   @override
+  String get edit => 'ُEdit';
+
+  @override
   String get edit_selected => 'Edit Selected';
 
   @override
@@ -163,9 +166,6 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get no_notifications => 'No Notifications';
-
-  @override
-  String get edit => 'ُEdit';
 
   @override
   String get downloading => 'Downloading...';

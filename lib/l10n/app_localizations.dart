@@ -250,7 +250,7 @@ abstract class AppLocalizations {
   /// No description provided for @pending.
   ///
   /// In en, this message translates to:
-  /// **'Waiting for Delivery to Maintenance'**
+  /// **'Waiting'**
   String get pending;
 
   /// No description provided for @warranties_and_maintenances.
@@ -262,20 +262,26 @@ abstract class AppLocalizations {
   /// No description provided for @in_progress.
   ///
   /// In en, this message translates to:
-  /// **'In Maintenance'**
+  /// **'Maintenance'**
   String get in_progress;
 
   /// No description provided for @done.
   ///
   /// In en, this message translates to:
-  /// **'Maintenance Completed'**
+  /// **'Completed'**
   String get done;
 
   /// No description provided for @delivered.
   ///
   /// In en, this message translates to:
-  /// **'Delivered to Merchant'**
+  /// **'Delivered'**
   String get delivered;
+
+  /// No description provided for @edit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get edit;
 
   /// No description provided for @edit_selected.
   ///
@@ -408,12 +414,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No Notifications'**
   String get no_notifications;
-
-  /// No description provided for @edit.
-  ///
-  /// In en, this message translates to:
-  /// **'Edit'**
-  String get edit;
 
   /// No description provided for @downloading.
   ///

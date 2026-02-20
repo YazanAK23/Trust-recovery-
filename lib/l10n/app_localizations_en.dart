@@ -84,19 +84,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get add_waranty => 'Add Wareanty';
 
   @override
-  String get pending => 'Waiting for Delivery to Maintenance';
+  String get pending => 'Waiting';
 
   @override
   String get warranties_and_maintenances => 'Warranties And Maintenances';
 
   @override
-  String get in_progress => 'In Maintenance';
+  String get in_progress => 'Maintenance';
 
   @override
-  String get done => 'Maintenance Completed';
+  String get done => 'Completed';
 
   @override
-  String get delivered => 'Delivered to Merchant';
+  String get delivered => 'Delivered';
+
+  @override
+  String get edit => 'Edit';
 
   @override
   String get edit_selected => 'Edit Selected';
@@ -163,9 +166,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get no_notifications => 'No Notifications';
-
-  @override
-  String get edit => 'Edit';
 
   @override
   String get downloading => 'Downloading...';

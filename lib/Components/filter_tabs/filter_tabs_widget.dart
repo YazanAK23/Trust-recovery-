@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../Constants/constants.dart';
 import '../../l10n/app_localizations.dart';
 import '../../main.dart';
 
@@ -38,12 +37,8 @@ class FilterTabsWidget extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 18),
         decoration: BoxDecoration(
-          color: isSelected ? selectedColor : Colors.white,
+          color: isSelected ? selectedColor.withOpacity(0.85) : Colors.grey.shade300.withOpacity(0.7),
           borderRadius: BorderRadius.circular(25),
-          border: Border.all(
-            color: isSelected ? selectedColor : Colors.grey.shade300,
-            width: 1,
-          ),
         ),
         child: Center(
           child: Text(
@@ -71,14 +66,7 @@ class FilterTabsWidget extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 6,
-            offset: Offset(0, 2),
-          ),
-        ],
+        color: Colors.transparent,
       ),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
@@ -90,7 +78,7 @@ class FilterTabsWidget extends StatelessWidget {
               label: AppLocalizations.of(context)!.all,
               value: 'all',
               count: allCount,
-              selectedColor: MAIN_COLOR,
+              selectedColor: Color(0xFFEF4444),
             ),
             SizedBox(width: 8),
             _buildTab(
@@ -122,7 +110,7 @@ class FilterTabsWidget extends StatelessWidget {
               label: AppLocalizations.of(context)!.delivered,
               value: 'delivered',
               count: overdueCount,
-              selectedColor: Color(0xFF9C27B0), // Purple
+              selectedColor: Color(0xFF2E7D32), // Bold Dark Green
             ),
           ],
         ),

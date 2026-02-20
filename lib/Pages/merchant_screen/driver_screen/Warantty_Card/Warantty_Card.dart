@@ -442,14 +442,14 @@ class _WarrantyCardState extends State<WarrantyCard> {
                                       child: Text(
                                         locale.toString() == "ar"
                                             ? widget.initialStatus == "pending"
-                                                ? "بانتظار التوصيل للصيانة"
+                                                ? "قيدالانتظار"
                                                 : widget.initialStatus ==
                                                         "in_progress"
-                                                    ? "في الصيانة"
+                                                    ? "قيدالصيانة"
                                                     : widget.initialStatus ==
                                                             "done"
-                                                        ? "تم الصيانة"
-                                                        : "تم التسليم للتاجر"
+                                                        ? "مكتمل"
+                                                        : "مسلّم"
                                             : widget.initialStatus,
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,

@@ -23,10 +23,10 @@ class MaintenanceRequests extends StatefulWidget {
 class _MaintenanceRequestsState extends State<MaintenanceRequests> {
   // Status translations
   final Map<String, String> statusTranslations = {
-    "pending": "بانتظار التوصيل للصيانة",
-    "in_progress": "في الصيانة",
-    "done": "تم الصيانة",
-    "delivered": "تم التسليم للتاجر"
+    "pending": "قيدالانتظار",
+    "in_progress": "قيدالصيانة",
+    "done": "مكتمل",
+    "delivered": "مسلّم"
   };
 
   // Data variables
@@ -265,6 +265,23 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
     );
   }
 
+  void _handleEdit(dynamic request) {
+    // TODO: Navigate to edit maintenance request screen
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(AppLocalizations.of(context)!.edit),
+        content: Text('${AppLocalizations.of(context)!.edit} ${request['productSerialNumber']}'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(AppLocalizations.of(context)!.close),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isRTL = locale.toString() == 'ar';
@@ -279,170 +296,176 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
               await fetchMaintenanceRequests();
             },
           ),
-          body: Column(
-            children: [
-              // Header
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                decoration: BoxDecoration(
+          body: isLoading
+              ? Center(
+                  child: SpinKitCircle(
+                    color: MAIN_COLOR,
+                    size: 50.0,
+                  ),
+                )
+              : RefreshIndicator(
+                  onRefresh: fetchMaintenanceRequests,
                   color: MAIN_COLOR,
-                ),
-                child: Builder(
-                  builder: (BuildContext context) {
-                    return Row(
-                      textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
-                      children: [
-                        IconButton(
-                          onPressed: () => Navigator.pop(context),
-                          icon: Icon(Icons.arrow_back, color: Colors.white),
-                        ),
-                        Expanded(
-                          child: Text(
-                            AppLocalizations.of(context)!.maintenance_requests,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            textAlign: TextAlign.center,
-                            textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
-                          ),
-                        ),
-                        Container(
-                          width: 40,
-                          height: 40,
-                          child: IconButton(
-                            padding: EdgeInsets.zero,
-                            onPressed: () {
-                              Scaffold.of(context).openDrawer();
-                            },
-                            icon: SvgPicture.asset(
-                              'assets/images/Menu.svg',
-                              width: 25,
-                              height: 25,
-                              fit: BoxFit.contain,
-                              colorFilter: ColorFilter.mode(
-                                Colors.white,
-                                BlendMode.srcIn,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              ),
-
-              // Status Summary with unified background
-              Container(
-                color: MAIN_COLOR,
-                child: !isLoading
-                    ? StatusSummaryWidget(
-                        scheduledCount: pendingCount,
-                        inProgressCount: inProgressCount,
-                        completedCount: doneCount,
-                      )
-                    : SizedBox.shrink(),
-              ),
-
-              // Filter Tabs
-              if (!isLoading)
-                FilterTabsWidget(
-                  selectedTab: selectedFilter,
-                  onTabSelected: onFilterChanged,
-                  allCount: allMaintenanceRequests.length,
-                  scheduledCount: pendingCount,
-                  inProgressCount: inProgressCount,
-                  completedCount: doneCount,
-                  overdueCount: deliveredCount,
-                ),
-
-              // List of Maintenance Requests
-              Expanded(
-                child: isLoading
-                    ? Center(
-                        child: SpinKitCircle(
-                          color: MAIN_COLOR,
-                          size: 50.0,
-                        ),
-                      )
-                    : filteredRequests.isEmpty
-                        ? Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.inbox_outlined,
-                                  size: 80,
-                                  color: Colors.grey[400],
-                                ),
-                                SizedBox(height: 16),
-                                Text(
-                                  AppLocalizations.of(context)!.empty_maintencaes,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.grey[600],
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                  textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
-                                ),
-                              ],
-                            ),
-                          )
-                        : RefreshIndicator(
-                            onRefresh: fetchMaintenanceRequests,
+                  child: CustomScrollView(
+                    controller: scrollController,
+                    physics: AlwaysScrollableScrollPhysics(),
+                    slivers: [
+                      // Header
+                      SliverToBoxAdapter(
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          decoration: BoxDecoration(
                             color: MAIN_COLOR,
-                            child: ListView.builder(
-                              controller: scrollController,
-                              physics: AlwaysScrollableScrollPhysics(),
-                              itemCount: filteredRequests.length +
-                                  (isLoadingMore ? 1 : 0),
-                              itemBuilder: (context, index) {
-                                if (index < filteredRequests.length) {
-                                  final request = filteredRequests[index];
-                                  final product = request['product'];
-                                  
-                                  String productImage = '';
-                                  if (product != null && product['image'] != null) {
-                                    productImage = _extractImageUrl(product['image']);
-                                  }
-
-                                  return MaintenanceCardWidget(
-                                    productImage: productImage,
-                                    productName: _getProductName(request),
-                                    productSerialNumber:
-                                        request['productSerialNumber'] ?? '',
-                                    status: request['status'] ?? '',
-                                    scheduledDate:
-                                        request['createdAt'] ?? '',
-                                    customerName:
-                                        request['customerName'] ?? '',
-                                    customerPhone:
-                                        request['customerPhone'] ?? '',
-                                    maintenanceCategoryNotes:
-                                        request['maintenanceCategoryNotes'] ?? '',
-                                    notes: request['notes'] ?? '',
-                                    onViewReport: () =>
-                                        _handleViewReport(request),
-                                  );
-                                } else {
-                                  return Padding(
-                                    padding: EdgeInsets.all(16),
-                                    child: Center(
-                                      child: SpinKitCircle(
-                                        color: MAIN_COLOR,
-                                        size: 30.0,
+                          ),
+                          child: Builder(
+                            builder: (BuildContext context) {
+                              return Row(
+                                textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
+                                children: [
+                                  IconButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    icon: Icon(Icons.arrow_back, color: Colors.white),
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      AppLocalizations.of(context)!.maintenance_requests,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                      textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 40,
+                                    height: 40,
+                                    child: IconButton(
+                                      padding: EdgeInsets.zero,
+                                      onPressed: () {
+                                        Scaffold.of(context).openDrawer();
+                                      },
+                                      icon: SvgPicture.asset(
+                                        'assets/images/Menu.svg',
+                                        width: 25,
+                                        height: 25,
+                                        fit: BoxFit.contain,
+                                        colorFilter: ColorFilter.mode(
+                                          Colors.white,
+                                          BlendMode.srcIn,
+                                        ),
                                       ),
                                     ),
-                                  );
-                                }
-                              },
-                            ),
+                                  ),
+                                ],
+                              );
+                            },
                           ),
-              ),
-            ],
-          ),
+                        ),
+                      ),
+
+                      // Status Summary
+                      SliverToBoxAdapter(
+                        child: Container(
+                          color: MAIN_COLOR,
+                          child: StatusSummaryWidget(
+                            scheduledCount: pendingCount,
+                            inProgressCount: inProgressCount,
+                            completedCount: doneCount,
+                          ),
+                        ),
+                      ),
+
+                      // Filter Tabs
+                      SliverToBoxAdapter(
+                        child: FilterTabsWidget(
+                          selectedTab: selectedFilter,
+                          onTabSelected: onFilterChanged,
+                          allCount: allMaintenanceRequests.length,
+                          scheduledCount: pendingCount,
+                          inProgressCount: inProgressCount,
+                          completedCount: doneCount,
+                          overdueCount: deliveredCount,
+                        ),
+                      ),
+
+                      // List of Maintenance Requests
+                      filteredRequests.isEmpty
+                          ? SliverFillRemaining(
+                              child: Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.inbox_outlined,
+                                      size: 80,
+                                      color: Colors.grey[400],
+                                    ),
+                                    SizedBox(height: 16),
+                                    Text(
+                                      AppLocalizations.of(context)!.empty_maintencaes,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.grey[600],
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                      textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )
+                          : SliverList(
+                              delegate: SliverChildBuilderDelegate(
+                                (context, index) {
+                                  if (index < filteredRequests.length) {
+                                    final request = filteredRequests[index];
+                                    final product = request['product'];
+                                    
+                                    String productImage = '';
+                                    if (product != null && product['image'] != null) {
+                                      productImage = _extractImageUrl(product['image']);
+                                    }
+
+                                    return MaintenanceCardWidget(
+                                      productImage: productImage,
+                                      productName: _getProductName(request),
+                                      productSerialNumber:
+                                          request['productSerialNumber'] ?? '',
+                                      status: request['status'] ?? '',
+                                      scheduledDate:
+                                          request['createdAt'] ?? '',
+                                      customerName:
+                                          request['customerName'] ?? '',
+                                      customerPhone:
+                                          request['customerPhone'] ?? '',
+                                      maintenanceCategoryNotes:
+                                          request['maintenanceCategoryNotes'] ?? '',
+                                      notes: request['notes'] ?? '',
+                                      onViewReport: () =>
+                                          _handleViewReport(request),
+                                      onEdit: () =>
+                                          _handleEdit(request),
+                                    );
+                                  } else {
+                                    return Padding(
+                                      padding: EdgeInsets.all(16),
+                                      child: Center(
+                                        child: SpinKitCircle(
+                                          color: MAIN_COLOR,
+                                          size: 30.0,
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                },
+                                childCount: filteredRequests.length + (isLoadingMore ? 1 : 0),
+                              ),
+                            ),
+                    ],
+                  ),
+                ),
           floatingActionButton: FloatingActionButton(
             onPressed: () async {
               await Navigator.push(
@@ -456,7 +479,7 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
                 await fetchMaintenanceRequests();
               }
             },
-            backgroundColor: MAIN_COLOR,
+            backgroundColor: Color(0xFFEF4444),
             child: Icon(
               Icons.add,
               color: Colors.white,

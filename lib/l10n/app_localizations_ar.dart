@@ -84,19 +84,22 @@ class AppLocalizationsAr extends AppLocalizations {
   String get add_waranty => 'اضافة كفالة';
 
   @override
-  String get pending => 'بانتظار التوصيل للصيانة';
+  String get pending => 'قيدالانتظار';
 
   @override
   String get warranties_and_maintenances => 'الكفالات و الصيانة';
 
   @override
-  String get in_progress => 'في الصيانة';
+  String get in_progress => 'قيدالصيانة';
 
   @override
-  String get done => 'تم الصيانة';
+  String get done => 'مكتمل';
 
   @override
-  String get delivered => 'تم التسليم للتاجر';
+  String get delivered => 'مسلّم';
+
+  @override
+  String get edit => 'تعديل';
 
   @override
   String get edit_selected => 'تعديل متعدد';
@@ -163,9 +166,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get no_notifications => 'لا يوجد أية اشعارات';
-
-  @override
-  String get edit => 'تعديل';
 
   @override
   String get downloading => 'يتم التنزيل ....';
