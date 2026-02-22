@@ -3,7 +3,7 @@ import 'package:trust_app_updated/l10n/app_localizations.dart';
 import 'package:trust_app_updated/Server/domains/domains.dart';
 
 /// Reusable warranty card widget
-class WarrantyCard extends StatelessWidget {
+class WarrantyCard extends StatefulWidget {
   final String productName;
   final String productSerialNumber;
   final String productImage;
@@ -28,6 +28,13 @@ class WarrantyCard extends StatelessWidget {
     required this.onEdit,
     required this.onDelete,
   }) : super(key: key);
+
+  @override
+  State<WarrantyCard> createState() => _WarrantyCardState();
+}
+
+class _WarrantyCardState extends State<WarrantyCard> {
+  bool isExpanded = false;
 
   @override
   Widget build(BuildContext context) {
@@ -63,9 +70,9 @@ class WarrantyCard extends StatelessWidget {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8),
-                    child: productImage.isNotEmpty
+                    child: widget.productImage.isNotEmpty
                         ? Image.network(
-                            URLIMAGE + productImage,
+                            URLIMAGE + widget.productImage,
                             fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) {
                               return const Icon(
@@ -89,21 +96,28 @@ class WarrantyCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        productName,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            isExpanded = !isExpanded;
+                          });
+                        },
+                        child: Text(
+                          widget.productName,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
+                          maxLines: isExpanded ? null : 2,
+                          overflow: isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
                         ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        productSerialNumber,
+                        widget.productSerialNumber,
                         style: TextStyle(
-                          fontSize: 13,
+                          fontSize: 12,
                           color: Colors.grey[600],
                         ),
                       ),
@@ -133,7 +147,7 @@ class WarrantyCard extends StatelessWidget {
                       child: _buildInfoRow(
                         context,
                         label: AppLocalizations.of(context)!.customer,
-                        value: customerName,
+                        value: widget.customerName,
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -141,7 +155,7 @@ class WarrantyCard extends StatelessWidget {
                       child: _buildInfoRow(
                         context,
                         label: AppLocalizations.of(context)!.phone,
-                        value: customerPhone,
+                        value: widget.customerPhone,
                       ),
                     ),
                   ],
@@ -153,7 +167,7 @@ class WarrantyCard extends StatelessWidget {
                       child: _buildInfoRow(
                         context,
                         label: AppLocalizations.of(context)!.purchase_date,
-                        value: purchaseDate,
+                        value: widget.purchaseDate,
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -161,9 +175,9 @@ class WarrantyCard extends StatelessWidget {
                       child: _buildInfoRow(
                         context,
                         label: AppLocalizations.of(context)!.warranty_period,
-                        value: warrantyYears == 1
+                        value: widget.warrantyYears == 1
                             ? '1 ${AppLocalizations.of(context)!.year}'
-                            : '$warrantyYears ${AppLocalizations.of(context)!.years}',
+                            : '${widget.warrantyYears} ${AppLocalizations.of(context)!.years}',
                       ),
                     ),
                   ],
@@ -182,7 +196,7 @@ class WarrantyCard extends StatelessWidget {
                     context,
                     label: AppLocalizations.of(context)!.edit,
                     icon: Icons.edit_outlined,
-                    onTap: onEdit,
+                    onTap: widget.onEdit,
                     backgroundColor: Colors.black,
                   ),
                 ),
@@ -192,7 +206,7 @@ class WarrantyCard extends StatelessWidget {
                     context,
                     label: AppLocalizations.of(context)!.delete,
                     icon: Icons.delete_outline,
-                    onTap: onDelete,
+                    onTap: widget.onDelete,
                     backgroundColor: const Color(0xFFFFEBEE),
                     textColor: const Color(0xffD51C29),
                     borderColor: Colors.transparent,
@@ -211,7 +225,7 @@ class WarrantyCard extends StatelessWidget {
     Color textColor;
     String statusText;
 
-    switch (status.toLowerCase()) {
+    switch (widget.status.toLowerCase()) {
       case 'active':
         backgroundColor = const Color(0xFFE8F5E9);
         textColor = const Color(0xFF4CAF50);
@@ -230,7 +244,7 @@ class WarrantyCard extends StatelessWidget {
       default:
         backgroundColor = Colors.grey[200]!;
         textColor = Colors.grey[700]!;
-        statusText = status;
+        statusText = widget.status;
     }
 
     return Container(
@@ -277,7 +291,7 @@ class WarrantyCard extends StatelessWidget {
           value,
           style: const TextStyle(
             fontSize: 14,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.bold,
             color: Colors.black87,
           ),
         ),

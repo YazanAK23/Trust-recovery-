@@ -1,9 +1,8 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trust_app_updated/Components/button_widget/button_widget.dart';
-import 'package:trust_app_updated/Components/text_field_widget/text_field_widget.dart';
 import 'package:trust_app_updated/Constants/constants.dart';
 import 'package:trust_app_updated/Models/warranty_product_model.dart';
 import 'package:trust_app_updated/Server/domains/domains.dart';
@@ -102,12 +101,10 @@ class _WarrantyActivationScreenState extends State<WarrantyActivationScreen> {
         '$URL_PRODUCT_BY_FIRST_SERIAL_PART/$firstTwoParts',
       );
 
-      String? productName;
       int? productId;
 
       if (productResponse.containsKey('response')) {
         final product = productResponse['response'];
-        productName = product['name'];
         productId = product['id'];
       } else {
         _showError('Product not found');
@@ -174,7 +171,7 @@ class _WarrantyActivationScreenState extends State<WarrantyActivationScreen> {
   /// Scan from image
   Future<void> _scanFromImage() async {
     setState(() => _isLoading = true);
-    final result = await ScanningService.scanFromImage(context);
+    final result = await ScanningService.scanFromCamera(context);
     setState(() => _isLoading = false);
 
     if (result != null) {
@@ -275,35 +272,40 @@ class _WarrantyActivationScreenState extends State<WarrantyActivationScreen> {
     final isRTL = locale.toString() == 'ar';
 
     return Container(
-      color: const Color(0xffD51C29),
+      color: const Color(0xffe33131),
       child: SafeArea(
         child: Scaffold(
-          backgroundColor: const Color(0xffD51C29),
+          backgroundColor: const Color(0xffe33131),
           body: SingleChildScrollView(
-            child: Column(
+            child: Stack(
               children: [
-                _buildHeader(isRTL),
-                _buildTopButtons(),
-                Container(
-                  width: double.infinity,
-                  decoration: const BoxDecoration(
-                    color: Color(0xffF0F0F0),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(30),
-                      topRight: Radius.circular(30),
+                Column(
+                  children: [
+                    _buildHeader(isRTL),
+                    _buildTopButtons(),
+                    Container(
+                      width: double.infinity,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFF5F5F5),
+                      ),
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 220),
+                          _buildAddProducts(),
+                          if (_products.isNotEmpty) _buildProductsList(),
+                          const SizedBox(height: 20),
+                          if (_products.isNotEmpty) _buildSubmitButton(),
+                          const SizedBox(height: 40),
+                        ],
+                      ),
                     ),
-                  ),
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 20),
-                      _buildCustomerInformation(),
-                      _buildAddProducts(),
-                      if (_products.isNotEmpty) _buildProductsList(),
-                      const SizedBox(height: 20),
-                      if (_products.isNotEmpty) _buildSubmitButton(),
-                      const SizedBox(height: 40),
-                    ],
-                  ),
+                  ],
+                ),
+                Positioned(
+                  top: 165,
+                  left: 20,
+                  right: 20,
+                  child: _buildCustomerInformation(),
                 ),
               ],
             ),
@@ -316,18 +318,18 @@ class _WarrantyActivationScreenState extends State<WarrantyActivationScreen> {
   /// Build header
   Widget _buildHeader(bool isRTL) {
     return Container(
-      height: 70,
+      height: 60,
       width: double.infinity,
-      decoration: const BoxDecoration(color: Color(0xffD51C29)),
+      decoration: const BoxDecoration(color: Color(0xffe33131)),
       child: Stack(
         alignment: Alignment.center,
         children: [
           Positioned(
-            left: isRTL ? null : 0,
-            right: isRTL ? 0 : null,
+            left: isRTL ? null : 8,
+            right: isRTL ? 8 : null,
             child: IconButton(
               onPressed: () => Navigator.pop(context),
-              icon: const Icon(Icons.arrow_back, size: 28, color: Colors.white),
+              icon: const Icon(Icons.arrow_back, size: 24, color: Colors.white),
             ),
           ),
           Center(
@@ -335,7 +337,7 @@ class _WarrantyActivationScreenState extends State<WarrantyActivationScreen> {
               AppLocalizations.of(context)!.warranty_activation,
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 22,
+                fontSize: 18,
                 color: Colors.white,
               ),
             ),
@@ -348,22 +350,22 @@ class _WarrantyActivationScreenState extends State<WarrantyActivationScreen> {
   /// Build top action buttons
   Widget _buildTopButtons() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 30),
+      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 18),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          _buildCircleButton(
-            icon: Icons.security,
+          _buildActionButton(
+            icon: Icons.shield_outlined,
             label: AppLocalizations.of(context)!.protect,
             onTap: () {},
           ),
-          _buildCircleButton(
-            icon: Icons.qr_code_scanner,
+          _buildActionButtonSvg(
+            svgPath: 'assets/icon/scan.svg',
             label: AppLocalizations.of(context)!.scan,
             onTap: () {},
           ),
-          _buildCircleButton(
-            icon: Icons.check_circle,
+          _buildActionButton(
+            icon: Icons.check_circle_outline,
             label: AppLocalizations.of(context)!.activate,
             onTap: () {},
           ),
@@ -372,8 +374,8 @@ class _WarrantyActivationScreenState extends State<WarrantyActivationScreen> {
     );
   }
 
-  /// Build circle button
-  Widget _buildCircleButton({
+  /// Build action button
+  Widget _buildActionButton({
     required IconData icon,
     required String label,
     required VoidCallback onTap,
@@ -383,20 +385,60 @@ class _WarrantyActivationScreenState extends State<WarrantyActivationScreen> {
       child: Column(
         children: [
           Container(
-            width: 70,
-            height: 70,
+            width: 54,
+            height: 54,
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
-              shape: BoxShape.circle,
+              color: Colors.white.withOpacity(0.25),
+              borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(icon, color: Colors.white, size: 32),
+            child: Icon(icon, color: Colors.white, size: 24),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 6),
           Text(
             label,
             style: const TextStyle(
               color: Colors.white,
-              fontSize: 14,
+              fontSize: 11,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Build action button with SVG icon
+  Widget _buildActionButtonSvg({
+    required String svgPath,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        children: [
+          Container(
+            width: 54,
+            height: 54,
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.25),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Center(
+              child: SvgPicture.asset(
+                svgPath,
+                colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                width: 24,
+                height: 24,
+              ),
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            label,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 11,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -407,15 +449,20 @@ class _WarrantyActivationScreenState extends State<WarrantyActivationScreen> {
 
   /// Build customer information section
   Widget _buildCustomerInformation() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(15),
           child: Form(
             key: _formKey,
             child: Column(
@@ -423,25 +470,53 @@ class _WarrantyActivationScreenState extends State<WarrantyActivationScreen> {
               children: [
                 Row(
                   children: [
-                    const Icon(Icons.person, color: Color(0xffD51C29), size: 24),
-                    const SizedBox(width: 10),
+                    const Icon(Icons.person_outline, color: Color(0xffEF4444), size: 16),
+                    const SizedBox(width: 6),
                     Text(
                       AppLocalizations.of(context)!.customer_information,
                       style: const TextStyle(
-                        fontSize: 18,
+                        fontSize: 13,
                         fontWeight: FontWeight.bold,
+                        color: Colors.black87,
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
-                CustomTextField(
+                const SizedBox(height: 12),
+                Text(
+                  '${AppLocalizations.of(context)!.customer_name} *',
+                  style: const TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black87,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                TextFormField(
                   controller: _customerNameController,
-                  hintText: AppLocalizations.of(context)!.enter_customer_full_name,
-                  backgroundColor: const Color(0xffF7F9FA),
-                  borderColor: const Color(0xffEBEBEB),
-                  borderRadius: 15,
-                  height: 55,
+                  style: const TextStyle(fontSize: 12),
+                  decoration: InputDecoration(
+                    hintText: AppLocalizations.of(context)!.enter_customer_full_name,
+                    hintStyle: TextStyle(fontSize: 12, color: Colors.grey[400]),
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(color: Colors.grey[300]!),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(color: Colors.grey[300]!),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: const BorderSide(color: Color(0xffEF4444)),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 12,
+                    ),
+                  ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return AppLocalizations.of(context)!
@@ -450,14 +525,42 @@ class _WarrantyActivationScreenState extends State<WarrantyActivationScreen> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 15),
-                CustomTextField(
+                const SizedBox(height: 12),
+                Text(
+                  '${AppLocalizations.of(context)!.phone_number} *',
+                  style: const TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black87,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                TextFormField(
                   controller: _customerPhoneController,
-                  hintText: AppLocalizations.of(context)!.enter_phone_number,
-                  backgroundColor: const Color(0xffF7F9FA),
-                  borderColor: const Color(0xffEBEBEB),
-                  borderRadius: 15,
-                  height: 55,
+                  keyboardType: TextInputType.phone,
+                  style: const TextStyle(fontSize: 12),
+                  decoration: InputDecoration(
+                    hintText: AppLocalizations.of(context)!.enter_phone_number,
+                    hintStyle: TextStyle(fontSize: 12, color: Colors.grey[400]),
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(color: Colors.grey[300]!),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(color: Colors.grey[300]!),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: const BorderSide(color: Color(0xffEF4444)),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 12,
+                    ),
+                  ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return AppLocalizations.of(context)!
@@ -466,142 +569,199 @@ class _WarrantyActivationScreenState extends State<WarrantyActivationScreen> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 15),
-                CustomTextField(
-                  controller: _idNumberController,
-                  hintText: AppLocalizations.of(context)!.id_number,
-                  backgroundColor: const Color(0xffF7F9FA),
-                  borderColor: const Color(0xffEBEBEB),
-                  borderRadius: 15,
-                  height: 55,
-                  validator: null,
-                ),
               ],
             ),
           ),
         ),
-      ),
     );
   }
 
   /// Build add products section
   Widget _buildAddProducts() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(15),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
-                  const Icon(Icons.inventory_2, color: Color(0xffD51C29), size: 24),
-                  const SizedBox(width: 10),
+                  Container(
+                    padding: const EdgeInsets.all(3),
+                    decoration: BoxDecoration(
+                      color: const Color(0xffEF4444),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: const Icon(Icons.add, color: Colors.white, size: 12),
+                  ),
+                  const SizedBox(width: 6),
                   Text(
                     AppLocalizations.of(context)!.add_products,
                     style: const TextStyle(
-                      fontSize: 18,
+                      fontSize: 13,
                       fontWeight: FontWeight.bold,
+                      color: Colors.black87,
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 12),
               Text(
                 AppLocalizations.of(context)!.serial_number,
                 style: const TextStyle(
-                  fontSize: 14,
+                  fontSize: 11,
                   fontWeight: FontWeight.w500,
+                  color: Colors.black87,
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 6),
               Row(
                 children: [
                   Expanded(
-                    child: CustomTextField(
+                    child: TextFormField(
                       controller: _serialNumberController,
-                      hintText: AppLocalizations.of(context)!
-                          .enter_or_scan_serial_number,
-                      backgroundColor: const Color(0xffF7F9FA),
-                      borderColor: const Color(0xffEBEBEB),
-                      borderRadius: 15,
-                      height: 55,
-                      validator: null,
+                      style: const TextStyle(fontSize: 12),
+                      decoration: InputDecoration(
+                        hintText: AppLocalizations.of(context)!
+                            .enter_or_scan_serial_number,
+                        hintStyle: TextStyle(fontSize: 12, color: Colors.grey[400]),
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(color: Colors.grey[300]!),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(color: Colors.grey[300]!),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: const BorderSide(color: Color(0xffEF4444)),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 12,
+                        ),
+                      ),
                     ),
                   ),
-                  const SizedBox(width: 10),
+                  const SizedBox(width: 8),
                   Container(
-                    width: 55,
-                    height: 55,
+                    width: 42,
+                    height: 42,
                     decoration: BoxDecoration(
-                      color: MAIN_COLOR,
-                      borderRadius: BorderRadius.circular(15),
+                      color: const Color(0xffEF4444),
+                      borderRadius: BorderRadius.circular(8),
                     ),
                     child: IconButton(
                       onPressed: _isLoading ? null : _addProduct,
                       icon: _isLoading
-                          ? const CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 2,
+                          ? const SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
                             )
-                          : const Icon(Icons.add, color: Colors.white),
+                          : const Icon(Icons.add, color: Colors.white, size: 20),
+                      padding: EdgeInsets.zero,
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 15),
+              const SizedBox(height: 12),
               Center(
                 child: Text(
                   'OR',
                   style: TextStyle(
                     color: Colors.grey[600],
-                    fontSize: 14,
+                    fontSize: 12,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
               ),
-              const SizedBox(height: 15),
-              Row(
-                children: [
-                  Expanded(
-                    child: _buildScanButton(
-                      icon: Icons.qr_code_scanner,
-                      label: AppLocalizations.of(context)!.scan_barcode,
-                      onTap: _scanBarcode,
+              const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: _scanBarcode,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
+                    foregroundColor: Colors.white,
+                    elevation: 0,
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: _buildScanButton(
-                      icon: Icons.image,
-                      label: AppLocalizations.of(context)!.scan_from_image,
-                      onTap: _scanFromImage,
+                  icon: const Icon(Icons.camera_alt, size: 16),
+                  label: Text(
+                    AppLocalizations.of(context)!.scan_with_camera,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
-                ],
+                ),
               ),
-              const SizedBox(height: 15),
+              const SizedBox(height: 10),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: _scanFromImage,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
+                    foregroundColor: Colors.white,
+                    elevation: 0,
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  icon: const Icon(Icons.image, size: 16),
+                  label: Text(
+                    AppLocalizations.of(context)!.scan_from_image,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: const Color(0xffE8F4FD),
-                  borderRadius: BorderRadius.circular(12),
+                  color: const Color(0xffEFF6FF),
+                  borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Icon(Icons.info_outline, color: Colors.blue, size: 20),
-                    const SizedBox(width: 10),
+                    const Icon(Icons.info_outline, color: Color(0xff3B82F6), size: 14),
+                    const SizedBox(width: 6),
                     Expanded(
                       child: Text(
                         AppLocalizations.of(context)!.multiple_products_info,
                         style: const TextStyle(
-                          fontSize: 12,
-                          color: Colors.blue,
+                          fontSize: 11,
+                          color: Color(0xff3B82F6),
+                          height: 1.4,
                         ),
                       ),
                     ),
@@ -610,44 +770,6 @@ class _WarrantyActivationScreenState extends State<WarrantyActivationScreen> {
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  /// Build scan button
-  Widget _buildScanButton({
-    required IconData icon,
-    required String label,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 15),
-        decoration: BoxDecoration(
-          color: Colors.black,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: Colors.white, size: 20),
-            const SizedBox(width: 8),
-            Flexible(
-              child: Text(
-                label,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
-                ),
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ],
         ),
       ),
     );
@@ -669,14 +791,14 @@ class _WarrantyActivationScreenState extends State<WarrantyActivationScreen> {
   /// Build product card
   Widget _buildProductCard(WarrantyProductModel product, int index) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 15),
-      padding: const EdgeInsets.all(15),
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: product.isActive ? Colors.orange : Colors.green,
-          width: 2,
+          width: 1.5,
         ),
       ),
       child: Column(
@@ -685,20 +807,21 @@ class _WarrantyActivationScreenState extends State<WarrantyActivationScreen> {
           Row(
             children: [
               Container(
-                width: 50,
-                height: 50,
+                width: 42,
+                height: 42,
                 decoration: BoxDecoration(
                   color: product.isActive
                       ? Colors.orange.withOpacity(0.1)
                       : Colors.green.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
                   product.isActive ? Icons.warning : Icons.check_circle,
                   color: product.isActive ? Colors.orange : Colors.green,
+                  size: 22,
                 ),
               ),
-              const SizedBox(width: 15),
+              const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -707,16 +830,16 @@ class _WarrantyActivationScreenState extends State<WarrantyActivationScreen> {
                       product.productName ?? 'Unknown Product',
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 16,
+                        fontSize: 14,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 5),
+                    const SizedBox(height: 4),
                     Text(
                       product.serialNumber,
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: 12,
                         color: Colors.grey[600],
                       ),
                     ),
@@ -725,27 +848,29 @@ class _WarrantyActivationScreenState extends State<WarrantyActivationScreen> {
               ),
               IconButton(
                 onPressed: () => _removeProduct(index),
-                icon: const Icon(Icons.close, color: Colors.red),
+                icon: const Icon(Icons.close, color: Colors.red, size: 20),
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
               ),
             ],
           ),
           if (product.isActive) ...[
-            const SizedBox(height: 10),
+            const SizedBox(height: 8),
             Container(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(7),
               decoration: BoxDecoration(
                 color: Colors.orange.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(6),
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.info, color: Colors.orange, size: 16),
-                  const SizedBox(width: 8),
+                  const Icon(Icons.info, color: Colors.orange, size: 14),
+                  const SizedBox(width: 6),
                   Expanded(
                     child: Text(
                       product.errorMessage ?? 'Already Active',
                       style: const TextStyle(
-                        fontSize: 12,
+                        fontSize: 11,
                         color: Colors.orange,
                       ),
                     ),
@@ -765,12 +890,12 @@ class _WarrantyActivationScreenState extends State<WarrantyActivationScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 25),
       child: ButtonWidget(
         name: AppLocalizations.of(context)!.submit_warranties,
-        height: 55,
+        height: 48,
         width: double.infinity,
         BorderColor: MAIN_COLOR,
-        FontSize: 18,
+        FontSize: 15,
         OnClickFunction: _isSubmitting ? () {} : _submitWarranties,
-        BorderRaduis: 15,
+        BorderRaduis: 12,
         ButtonColor: MAIN_COLOR,
         NameColor: Colors.white,
       ),

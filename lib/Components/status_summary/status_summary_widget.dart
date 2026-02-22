@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../../Constants/constants.dart';
 import '../../l10n/app_localizations.dart';
 import '../../main.dart';
@@ -87,6 +88,82 @@ class StatusSummaryWidget extends StatelessWidget {
     );
   }
 
+  Widget _buildStatusBoxSvg({
+    required BuildContext context,
+    required String svgPath,
+    required String label,
+    required int count,
+    required Color backgroundColor,
+    required Color iconColor,
+  }) {
+    final isRTL = locale.toString() == 'ar';
+    return Expanded(
+      child: Container(
+        height: 115,
+        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 6),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.25),
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 4,
+              offset: Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: iconColor,
+                shape: BoxShape.circle,
+              ),
+              child: SvgPicture.asset(
+                svgPath,
+                width: 22,
+                height: 22,
+                colorFilter: ColorFilter.mode(
+                  Colors.white,
+                  BlendMode.srcIn,
+                ),
+              ),
+            ),
+            SizedBox(height: 6),
+            Text(
+              count.toString(),
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(height: 3),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 2),
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white,
+                  height: 1.15,
+                ),
+                textAlign: TextAlign.center,
+                textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isRTL = locale.toString() == 'ar';
@@ -103,9 +180,9 @@ class StatusSummaryWidget extends StatelessWidget {
       child: Row(
         textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
         children: [
-          _buildStatusBox(
+          _buildStatusBoxSvg(
             context: context,
-            icon: Icons.schedule,
+            svgPath: 'assets/icon/scheduled.svg',
             label: AppLocalizations.of(context)!.pending,
             count: scheduledCount,
             backgroundColor: Colors.white,
