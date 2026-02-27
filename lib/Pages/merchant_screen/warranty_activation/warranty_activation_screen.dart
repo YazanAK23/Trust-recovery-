@@ -828,7 +828,7 @@ class _WarrantyActivationScreenState extends State<WarrantyActivationScreen> {
     );
   }
 
-  /// Build product card with image
+  /// Build product card with image - Consistent design for all products
   Widget _buildProductCard(WarrantyProductModel product, int index) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -837,14 +837,14 @@ class _WarrantyActivationScreenState extends State<WarrantyActivationScreen> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: product.isValid ? const Color(0xFF10B981) : const Color(0xFFF59E0B),
-          width: 1,
+          color: const Color(0xFFE5E7EB),
+          width: 1.5,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 3),
           ),
         ],
       ),
@@ -852,69 +852,91 @@ class _WarrantyActivationScreenState extends State<WarrantyActivationScreen> {
         children: [
           // Product image
           Container(
-            width: 60,
-            height: 60,
+            width: 65,
+            height: 65,
             decoration: BoxDecoration(
-              color: Colors.grey[100],
-              borderRadius: BorderRadius.circular(8),
+              color: const Color(0xFFF9FAFB),
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(
+                color: const Color(0xFFE5E7EB),
+                width: 1,
+              ),
             ),
             child: product.productImage != null
                 ? ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(9),
                     child: Image.network(
                       product.productImage!,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
-                        return const Icon(Icons.image_not_supported, color: Colors.grey);
+                        return const Icon(Icons.image_not_supported, color: Colors.grey, size: 28);
                       },
                     ),
                   )
-                : const Icon(Icons.inventory_2_outlined, color: Colors.grey, size: 30),
+                : const Icon(Icons.inventory_2_outlined, color: Colors.grey, size: 32),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 14),
           // Product details
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   product.productName ?? 'Unknown Product',
                   style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 13,
-                    color: Colors.black87,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                    color: Color(0xFF111827),
                   ),
-                  maxLines: 1,
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  product.serialNumber,
-                  style: TextStyle(
-                    fontSize: 11,
-                    color: Colors.grey[600],
-                  ),
-                ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 6),
+                // Serial number and status side by side
                 Row(
                   children: [
-                    Container(
-                      width: 8,
-                      height: 8,
-                      decoration: BoxDecoration(
-                        color: product.isValid ? const Color(0xFF10B981) : const Color(0xFFF59E0B),
-                        shape: BoxShape.circle,
+                    Text(
+                      product.serialNumber,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Color(0xFF6B7280),
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
-                    const SizedBox(width: 4),
-                    Text(
-                      product.isValid 
-                          ? AppLocalizations.of(context)!.valid 
-                          : AppLocalizations.of(context)!.warranty_already_active,
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w500,
-                        color: product.isValid ? const Color(0xFF10B981) : const Color(0xFFF59E0B),
+                    const SizedBox(width: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      decoration: BoxDecoration(
+                        color: product.isValid 
+                            ? const Color(0xFFD1FAE5) 
+                            : const Color(0xFFFEF3C7),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            product.isValid ? Icons.check_circle : Icons.warning,
+                            size: 12,
+                            color: product.isValid 
+                                ? const Color(0xFF059669) 
+                                : const Color(0xFFD97706),
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            product.isValid 
+                                ? AppLocalizations.of(context)!.valid 
+                                : AppLocalizations.of(context)!.warranty_already_active,
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w600,
+                              color: product.isValid 
+                                  ? const Color(0xFF059669) 
+                                  : const Color(0xFFD97706),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -922,11 +944,12 @@ class _WarrantyActivationScreenState extends State<WarrantyActivationScreen> {
               ],
             ),
           ),
-          // Delete button
+          const SizedBox(width: 8),
+          // Delete button - gray without background
           IconButton(
             onPressed: () => _removeProduct(index),
-            icon: const Icon(Icons.delete_outline, color: Color(0xffEF4444), size: 20),
-            padding: EdgeInsets.zero,
+            icon: const Icon(Icons.delete_outline, color: Color(0xFF9CA3AF), size: 22),
+            padding: const EdgeInsets.all(4),
             constraints: const BoxConstraints(),
           ),
         ],
