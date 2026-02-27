@@ -1,3 +1,4 @@
+import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -266,19 +267,329 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
   }
 
   void _handleEdit(dynamic request) {
-    // TODO: Navigate to edit maintenance request screen
+    final isRTL = locale.toString() == 'ar';
+    final customerNameController = TextEditingController(text: request['customerName'] ?? '');
+    final customerPhoneController = TextEditingController(text: request['customerPhone'] ?? '');
+    final notesController = TextEditingController(text: request['notes'] ?? '');
+    final malfunctionController = TextEditingController(text: request['maintenanceCategoryNotes'] ?? '');
+    bool isSubmitting = false;
+
+    // Extract product info
+    final product = request['product'];
+    String productImage = '';
+    if (product != null && product['image'] != null) {
+      productImage = _extractImageUrl(product['image']);
+    }
+    final productName = _getProductName(request);
+    final productSerial = request['productSerialNumber'] ?? '';
+
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(AppLocalizations.of(context)!.edit),
-        content: Text('${AppLocalizations.of(context)!.edit} ${request['productSerialNumber']}'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(AppLocalizations.of(context)!.close),
-          ),
-        ],
+      barrierDismissible: false,
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (context, setDialogState) {
+          return Dialog(
+            backgroundColor: Colors.grey[50],
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            child: Container(
+              constraints: BoxConstraints(maxWidth: 400, maxHeight: 650),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Header with close button
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(20, 16, 16, 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            '${AppLocalizations.of(context)!.edit} ${AppLocalizations.of(context)!.maintenance_requests}',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87,
+                            ),
+                            textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
+                          ),
+                        ),
+                        SizedBox(width: 8),
+                        IconButton(
+                          onPressed: isSubmitting ? null : () => Navigator.pop(dialogContext),
+                          icon: Icon(Icons.close, color: Colors.grey[600], size: 22),
+                          padding: EdgeInsets.zero,
+                          constraints: BoxConstraints(),
+                        ),
+                      ],
+                    ),
+                  ),
+                  
+                  // Form Content
+                  Flexible(
+                    child: SingleChildScrollView(
+                      padding: EdgeInsets.all(20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Product Card
+                          Container(
+                            padding: EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[100],
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Row(
+                              textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
+                              children: [
+                                // Product Image
+                                Container(
+                                  width: 60,
+                                  height: 60,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: productImage.isNotEmpty
+                                        ? FancyShimmerImage(
+                                            imageUrl: productImage,
+                                            boxFit: BoxFit.contain,
+                                            errorWidget: Icon(Icons.image, size: 30, color: Colors.grey),
+                                          )
+                                        : Icon(Icons.image, size: 30, color: Colors.grey),
+                                  ),
+                                ),
+                                SizedBox(width: 12),
+                                // Product Details
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: isRTL ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        productName,
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.black87,
+                                        ),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
+                                      ),
+                                      SizedBox(height: 4),
+                                      Text(
+                                        productSerial,
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          color: Colors.grey[600],
+                                        ),
+                                        textDirection: TextDirection.ltr,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 20),
+                          
+                          // Customer Name
+                          _buildSimpleField(
+                            context,
+                            AppLocalizations.of(context)!.customer_name,
+                            customerNameController,
+                            isRTL,
+                          ),
+                          SizedBox(height: 16),
+                          
+                          // Customer Phone
+                          _buildSimpleField(
+                            context,
+                            AppLocalizations.of(context)!.customer_phone,
+                            customerPhoneController,
+                            isRTL,
+                            keyboardType: TextInputType.phone,
+                          ),
+                          SizedBox(height: 16),
+                          
+                          // Malfunction Description
+                          _buildSimpleField(
+                            context,
+                            AppLocalizations.of(context)!.malfunction_description,
+                            malfunctionController,
+                            isRTL,
+                            maxLines: 3,
+                          ),
+                          SizedBox(height: 16),
+                          
+                          // Notes
+                          _buildSimpleField(
+                            context,
+                            AppLocalizations.of(context)!.notes,
+                            notesController,
+                            isRTL,
+                            maxLines: 3,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  
+                  // Action Buttons
+                  Container(
+                    padding: EdgeInsets.fromLTRB(20, 16, 20, 20),
+                    child: Row(
+                      textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
+                      children: [
+                        Expanded(
+                          child: OutlinedButton(
+                            onPressed: isSubmitting ? null : () => Navigator.pop(dialogContext),
+                            style: OutlinedButton.styleFrom(
+                              padding: EdgeInsets.symmetric(vertical: 14),
+                              side: BorderSide(color: Colors.grey[400]!),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            child: Text(
+                              AppLocalizations.of(context)!.cancel,
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.grey[700],
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 12),
+                        Expanded(
+                          flex: 2,
+                          child: ElevatedButton(
+                            onPressed: isSubmitting ? null : () async {
+                              // Validate
+                              if (customerNameController.text.trim().isEmpty ||
+                                  customerPhoneController.text.trim().isEmpty) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      AppLocalizations.of(context)!.please_fill_required_fields,
+                                      textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
+                                    ),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                                return;
+                              }
+
+                              setDialogState(() => isSubmitting = true);
+
+                              try {
+                                await editMaintanenceRequest(
+                                  request['id'],
+                                  customerPhoneController.text.trim(),
+                                  customerNameController.text.trim(),
+                                  notesController.text.trim(),
+                                  malfunctionController.text.trim(),
+                                  context,
+                                );
+
+                                Navigator.pop(dialogContext);
+                                await fetchMaintenanceRequests();
+                              } catch (e) {
+                                if (kDebugMode) {
+                                  print('Error updating maintenance request: $e');
+                                }
+                                setDialogState(() => isSubmitting = false);
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: MAIN_COLOR,
+                              padding: EdgeInsets.symmetric(vertical: 14),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            child: isSubmitting
+                                ? SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                    ),
+                                  )
+                                : Text(
+                                    AppLocalizations.of(context)!.save_changes,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
       ),
+    );
+  }
+
+  Widget _buildSimpleField(
+    BuildContext context,
+    String label,
+    TextEditingController controller,
+    bool isRTL, {
+    int maxLines = 1,
+    TextInputType? keyboardType,
+  }) {
+    return Column(
+      crossAxisAlignment: isRTL ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.only(bottom: 8),
+          child: Text(
+            '$label *',
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+              color: Colors.black87,
+            ),
+            textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
+          ),
+        ),
+        TextField(
+          controller: controller,
+          maxLines: maxLines,
+          keyboardType: keyboardType,
+          textDirection: keyboardType == TextInputType.phone ? TextDirection.ltr : (isRTL ? TextDirection.rtl : TextDirection.ltr),
+          style: TextStyle(fontSize: 15),
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.white,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(color: Colors.grey[300]!),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(color: Colors.grey[300]!),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(color: Colors.grey[400]!, width: 1.5),
+            ),
+            contentPadding: EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+          ),
+        ),
+      ],
     );
   }
 
@@ -479,11 +790,12 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
                 await fetchMaintenanceRequests();
               }
             },
+            // mini: true,
             backgroundColor: Color(0xFFEF4444),
             child: Icon(
               Icons.add,
               color: Colors.white,
-              size: 30,
+              size: 20,
             ),
             tooltip: AppLocalizations.of(context)!.new_maintenance_requests,
           ),

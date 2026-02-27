@@ -174,6 +174,7 @@
 		"order_id_label": "رقم الطلب",
 		"scheduled_date": "التاريخ المحدد",
 		"customer_name": "إسم العميل",
+		"customer_phone": "رقم هاتف العميل",
 		"phone_number": "رقم الهاتف",
 		"service_notes": "ملاحظات الصيانة",
 		"view_report": "عرض التقرير",
@@ -184,7 +185,11 @@
 		"no_maintenance_requests": "لا توجد طلبات صيانة",
 		"report_details": "تفاصيل التقرير",
 		"close": "إغلاق",
-		"full_report_for": "التقرير الكامل لـ"
+		"full_report_for": "التقرير الكامل لـ",
+		"save_changes": "حفظ التغييرات",
+		"malfunction_description": "وصف العطل",
+		"please_fill_all_fields": "الرجاء ملء جميع الحقول المطلوبة",
+		"product_serial_number": "الرقم التسلسلي للمنتج"
 	},
 	"Your cart is empty": "عربة التسوق فارغة",
 	"Go To Home": "اذهب الى الصفحة الرئيسية",
@@ -236,5 +241,12 @@
 	"edit": "تعديل",
 	"delete": "حذف",
 	"years": "سنوات",
-	"year": "سنة"
+	"year": "سنة",
+	"save_changes": "حفظ التغييرات",
+	"malfunction_description": "وصف العطل",
+	"please_fill_required_fields": "الرجاء ملء جميع الحقول المطلوبة",
+	"product_serial_number": "الرقم التسلسلي للمنتج",
+	"customer_phone": "رقم هاتف العميل",
+	"customer_name": "إسم العميل",
+	"notes": "ملاحظات"
 }
