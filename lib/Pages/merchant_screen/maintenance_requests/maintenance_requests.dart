@@ -288,20 +288,21 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
       barrierDismissible: false,
       builder: (dialogContext) => StatefulBuilder(
         builder: (context, setDialogState) {
-          return Dialog(
-            backgroundColor: Colors.grey[50],
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            child: Container(
-              constraints: BoxConstraints(maxWidth: 400, maxHeight: 650),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
+          return Directionality(
+            textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
+            child: Dialog(
+              backgroundColor: Colors.grey[50],
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              child: Container(
+                constraints: BoxConstraints(maxWidth: 400, maxHeight: 650),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
                   // Header with close button
                   Padding(
                     padding: EdgeInsets.fromLTRB(20, 16, 16, 16),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
                       children: [
                         Expanded(
                           child: Text(
@@ -311,7 +312,7 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
                               fontWeight: FontWeight.bold,
                               color: Colors.black87,
                             ),
-                            textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
+                            textAlign: isRTL ? TextAlign.right : TextAlign.left,
                           ),
                         ),
                         SizedBox(width: 8),
@@ -330,7 +331,7 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
                     child: SingleChildScrollView(
                       padding: EdgeInsets.all(20),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: isRTL ? CrossAxisAlignment.end : CrossAxisAlignment.start,
                         children: [
                           // Product Card
                           Container(
@@ -340,7 +341,6 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Row(
-                              textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
                               children: [
                                 // Product Image
                                 Container(
@@ -376,7 +376,7 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
                                         ),
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
-                                        textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
+                                        textAlign: isRTL ? TextAlign.right : TextAlign.left,
                                       ),
                                       SizedBox(height: 4),
                                       Text(
@@ -385,7 +385,7 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
                                           fontSize: 13,
                                           color: Colors.grey[600],
                                         ),
-                                        textDirection: TextDirection.ltr,
+                                        textAlign: isRTL ? TextAlign.right : TextAlign.left,
                                       ),
                                     ],
                                   ),
@@ -441,29 +441,30 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
                   Container(
                     padding: EdgeInsets.fromLTRB(20, 16, 20, 20),
                     child: Row(
-                      textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
                       children: [
-                        Expanded(
-                          child: OutlinedButton(
-                            onPressed: isSubmitting ? null : () => Navigator.pop(dialogContext),
-                            style: OutlinedButton.styleFrom(
-                              padding: EdgeInsets.symmetric(vertical: 14),
-                              side: BorderSide(color: Colors.grey[400]!),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
+                        if (!isRTL) ...[
+                          Expanded(
+                            child: OutlinedButton(
+                              onPressed: isSubmitting ? null : () => Navigator.pop(dialogContext),
+                              style: OutlinedButton.styleFrom(
+                                padding: EdgeInsets.symmetric(vertical: 14),
+                                side: BorderSide(color: Colors.grey[400]!),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
                               ),
-                            ),
-                            child: Text(
-                              AppLocalizations.of(context)!.cancel,
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.grey[700],
+                              child: Text(
+                                AppLocalizations.of(context)!.cancel,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.grey[700],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        SizedBox(width: 12),
+                          SizedBox(width: 12),
+                        ],
                         Expanded(
                           flex: 2,
                           child: ElevatedButton(
@@ -530,11 +531,35 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
                                   ),
                           ),
                         ),
+                        if (isRTL) ...[
+                          SizedBox(width: 12),
+                          Expanded(
+                            child: OutlinedButton(
+                              onPressed: isSubmitting ? null : () => Navigator.pop(dialogContext),
+                              style: OutlinedButton.styleFrom(
+                                padding: EdgeInsets.symmetric(vertical: 14),
+                                side: BorderSide(color: Colors.grey[400]!),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              child: Text(
+                                AppLocalizations.of(context)!.cancel,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.grey[700],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ],
                     ),
                   ),
                 ],
               ),
+            ),
             ),
           );
         },
@@ -551,25 +576,29 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
     TextInputType? keyboardType,
   }) {
     return Column(
-      crossAxisAlignment: isRTL ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Padding(
-          padding: EdgeInsets.only(bottom: 8),
-          child: Text(
-            '$label *',
-            style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
-              color: Colors.black87,
+        Align(
+          alignment: isRTL ? Alignment.centerRight : Alignment.centerLeft,
+          child: Padding(
+            padding: EdgeInsets.only(bottom: 8),
+            child: Text(
+              '$label *',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: Colors.black87,
+              ),
+              textAlign: isRTL ? TextAlign.right : TextAlign.left,
             ),
-            textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
           ),
         ),
         TextField(
           controller: controller,
           maxLines: maxLines,
           keyboardType: keyboardType,
-          textDirection: keyboardType == TextInputType.phone ? TextDirection.ltr : (isRTL ? TextDirection.rtl : TextDirection.ltr),
+          textDirection: keyboardType == TextInputType.phone ? TextDirection.ltr : null,
+          textAlign: keyboardType == TextInputType.phone ? TextAlign.left : (isRTL ? TextAlign.right : TextAlign.left),
           style: TextStyle(fontSize: 15),
           decoration: InputDecoration(
             filled: true,
