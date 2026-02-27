@@ -2250,6 +2250,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Preview'**
   String get preview;
+
+  /// No description provided for @products_to_activate.
+  ///
+  /// In en, this message translates to:
+  /// **'Products to Activate'**
+  String get products_to_activate;
+
+  /// No description provided for @valid.
+  ///
+  /// In en, this message translates to:
+  /// **'Valid'**
+  String get valid;
+
+  /// No description provided for @ready_to_activate.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to Activate'**
+  String get ready_to_activate;
+
+  /// No description provided for @of_products.
+  ///
+  /// In en, this message translates to:
+  /// **'of'**
+  String get of_products;
+
+  /// No description provided for @products_text.
+  ///
+  /// In en, this message translates to:
+  /// **'products'**
+  String get products_text;
+
+  /// No description provided for @important_note.
+  ///
+  /// In en, this message translates to:
+  /// **'Important Note'**
+  String get important_note;
+
+  /// No description provided for @important_note_message.
+  ///
+  /// In en, this message translates to:
+  /// **'If the product does not have a serial number, please enter the phone number after the model number in this format:'**
+  String get important_note_message;
+
+  /// No description provided for @activate_warranties.
+  ///
+  /// In en, this message translates to:
+  /// **'Activate Warrantys'**
+  String get activate_warranties;
+
+  /// No description provided for @warranty_already_active.
+  ///
+  /// In en, this message translates to:
+  /// **'Warranty already activated'**
+  String get warranty_already_active;
+
+  /// No description provided for @product_not_found.
+  ///
+  /// In en, this message translates to:
+  /// **'Product not found'**
+  String get product_not_found;
+
+  /// No description provided for @checking_product.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking product...'**
+  String get checking_product;
+
+  /// No description provided for @enter_serial_number.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter serial number'**
+  String get enter_serial_number;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

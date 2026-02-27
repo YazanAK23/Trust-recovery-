@@ -6,6 +6,7 @@ class WarrantyProductModel {
   final int? productId;
   bool isValidated;
   bool isActive;
+  bool isValid; // Valid means the product exists and warranty is not active yet
   String? errorMessage;
 
   WarrantyProductModel({
@@ -15,6 +16,7 @@ class WarrantyProductModel {
     this.productId,
     this.isValidated = false,
     this.isActive = false,
+    this.isValid = false,
     this.errorMessage,
   });
 
@@ -49,6 +51,7 @@ class WarrantyProductModel {
     int? productId,
     bool? isValidated,
     bool? isActive,
+    bool? isValid,
     String? errorMessage,
   }) {
     return WarrantyProductModel(
@@ -58,6 +61,7 @@ class WarrantyProductModel {
       productId: productId ?? this.productId,
       isValidated: isValidated ?? this.isValidated,
       isActive: isActive ?? this.isActive,
+      isValid: isValid ?? this.isValid,
       errorMessage: errorMessage ?? this.errorMessage,
     );
   }

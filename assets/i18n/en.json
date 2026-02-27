@@ -248,5 +248,17 @@
 	"product_serial_number": "Product Serial Number",
 	"customer_phone": "Customer Phone",
 	"customer_name": "Customer Name",
-	"notes": "Notes"
+	"notes": "Notes",
+	"products_to_activate": "Products to Activate",
+	"valid": "Valid",
+	"ready_to_activate": "Ready to Activate",
+	"of_products": "of",
+	"products_text": "products",
+	"important_note": "Important Note",
+	"important_note_message": "If the product does not have a serial number, please enter the phone number after the model number in this format:",
+	"activate_warranties": "Activate Warrantys",
+	"warranty_already_active": "Warranty already activated",
+	"product_not_found": "Product not found",
+	"checking_product": "Checking product...",
+	"enter_serial_number": "Enter serial number"
 }

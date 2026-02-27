@@ -1084,4 +1084,40 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get preview => 'معاينة';
+
+  @override
+  String get products_to_activate => 'المنتجات للتفعيل';
+
+  @override
+  String get valid => 'صالح';
+
+  @override
+  String get ready_to_activate => 'جاهز للتفعيل';
+
+  @override
+  String get of_products => 'من';
+
+  @override
+  String get products_text => 'منتجات';
+
+  @override
+  String get important_note => 'ملاحظة مهمة';
+
+  @override
+  String get important_note_message => 'إذا لم يكن المنتج يحتوي على رقم تسلسلي، يرجى إدخال رقم الهاتف بعد رقم الموديل بهذا التنسيق:';
+
+  @override
+  String get activate_warranties => 'تفعيل الكفالات';
+
+  @override
+  String get warranty_already_active => 'الكفالة مفعلة بالفعل';
+
+  @override
+  String get product_not_found => 'المنتج غير موجود';
+
+  @override
+  String get checking_product => 'جاري التحقق من المنتج...';
+
+  @override
+  String get enter_serial_number => 'أدخل الرقم التسلسلي';
 }

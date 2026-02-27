@@ -1084,4 +1084,40 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get preview => 'Preview';
+
+  @override
+  String get products_to_activate => 'Products to Activate';
+
+  @override
+  String get valid => 'Valid';
+
+  @override
+  String get ready_to_activate => 'Ready to Activate';
+
+  @override
+  String get of_products => 'of';
+
+  @override
+  String get products_text => 'products';
+
+  @override
+  String get important_note => 'Important Note';
+
+  @override
+  String get important_note_message => 'If the product does not have a serial number, please enter the phone number after the model number in this format:';
+
+  @override
+  String get activate_warranties => 'Activate Warrantys';
+
+  @override
+  String get warranty_already_active => 'Warranty already activated';
+
+  @override
+  String get product_not_found => 'Product not found';
+
+  @override
+  String get checking_product => 'Checking product...';
+
+  @override
+  String get enter_serial_number => 'Enter serial number';
 }
