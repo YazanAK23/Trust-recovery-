@@ -114,11 +114,18 @@ class _WarrantyCardState extends State<WarrantyCard> {
                         ),
                       ),
                       const SizedBox(height: 4),
-                      Text(
-                        widget.productSerialNumber,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey[600],
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF5F5F5),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          widget.productSerialNumber,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey[700],
+                          ),
                         ),
                       ),
                     ],
@@ -133,8 +140,8 @@ class _WarrantyCardState extends State<WarrantyCard> {
           
           // Customer info in light gray container
           Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            padding: const EdgeInsets.all(16),
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: const Color(0xFFFAFAFA),
               borderRadius: BorderRadius.circular(8),
@@ -160,7 +167,7 @@ class _WarrantyCardState extends State<WarrantyCard> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 10),
                 Row(
                   children: [
                     Expanded(
@@ -188,7 +195,7 @@ class _WarrantyCardState extends State<WarrantyCard> {
           
           // Action buttons
           Padding(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
             child: Row(
               children: [
                 Expanded(
@@ -310,12 +317,12 @@ class _WarrantyCardState extends State<WarrantyCard> {
   }) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(10),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12),
+        padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 12),
         decoration: BoxDecoration(
           color: backgroundColor,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(10),
           border: borderColor != null ? Border.all(color: borderColor) : null,
         ),
         child: Row(

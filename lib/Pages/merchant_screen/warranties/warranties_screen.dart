@@ -856,64 +856,65 @@ class _WarrantiesScreenState extends State<WarrantiesScreen> {
     final isRTL = locale.toString() == 'ar';
 
     return Container(
-      color: const Color(0xffD51C29),
+      color: const Color(0xFFE53935),
       child: SafeArea(
         child: Scaffold(
           backgroundColor: const Color(0xFFF5F5F5),
-          body: CustomScrollView(
+          body: SingleChildScrollView(
             controller: _scrollController,
-            slivers: [
-              // Header area (red container with header, search, and filters)
-              SliverToBoxAdapter(
-                child: _buildHeaderArea(isRTL, filterCounts),
-              ),
+            child: Column(
+              children: [
+                // Red header area at the top
+                _buildHeaderArea(isRTL, filterCounts),
+                
+                // Warranties list or loading/empty state
+                _isLoading
+                    ? SizedBox(
+                        height: MediaQuery.of(context).size.height - 200,
+                        child: const Center(child: CircularProgressIndicator()),
+                      )
+                    : _filteredWarranties.isEmpty
+                        ? SizedBox(
+                            height: MediaQuery.of(context).size.height - 200,
+                            child: _buildEmptyState(),
+                          )
+                        : Column(
+                            children: [
+                              ...List.generate(
+                                _filteredWarranties.length,
+                                (index) {
+                                  final warranty = _filteredWarranties[index];
+                                  final product = warranty['product'];
 
-              // Warranties list or loading/empty state
-              _isLoading
-                  ? SliverFillRemaining(
-                      child: const Center(child: CircularProgressIndicator()),
-                    )
-                  : _filteredWarranties.isEmpty
-                      ? SliverFillRemaining(
-                          child: _buildEmptyState(),
-                        )
-                      : SliverPadding(
-                          padding: const EdgeInsets.only(top: 16, bottom: 16),
-                          sliver: SliverList(
-                            delegate: SliverChildBuilderDelegate(
-                              (context, index) {
-                                final warranty = _filteredWarranties[index];
-                                final product = warranty['product'];
-
-                                return WarrantyCard(
-                                  productName: _getProductName(warranty),
-                                  productSerialNumber: warranty['productSerialNumber'] ?? '-',
-                                  productImage: _getProductImagePath(warranty),
-                                  customerName: warranty['customerName'] ?? '-',
-                                  customerPhone: warranty['customerPhone'] ?? '-',
-                                  purchaseDate: warranty['createdAt'] != null
-                                      ? warranty['createdAt'].toString().substring(0, 10)
-                                      : '-',
-                                  warrantyYears: product?['warranty_period'] ?? 2,
-                                  status: _getWarrantyStatus(warranty),
-                                  onEdit: () => _handleEdit(warranty),
-                                  onDelete: () => _handleDelete(warranty['id']),
-                                );
-                              },
-                              childCount: _filteredWarranties.length,
-                            ),
+                                  return Transform.translate(
+                                    offset: const Offset(0, -28),
+                                    child: WarrantyCard(
+                                      productName: _getProductName(warranty),
+                                      productSerialNumber: warranty['productSerialNumber'] ?? '-',
+                                      productImage: _getProductImagePath(warranty),
+                                      customerName: warranty['customerName'] ?? '-',
+                                      customerPhone: warranty['customerPhone'] ?? '-',
+                                      purchaseDate: warranty['createdAt'] != null
+                                          ? warranty['createdAt'].toString().substring(0, 10)
+                                          : '-',
+                                      warrantyYears: product?['warranty_period'] ?? 2,
+                                      status: _getWarrantyStatus(warranty),
+                                      onEdit: () => _handleEdit(warranty),
+                                      onDelete: () => _handleDelete(warranty['id']),
+                                    ),
+                                  );
+                                },
+                              ),
+                              if (_isLoadingMore)
+                                const Padding(
+                                  padding: EdgeInsets.all(16),
+                                  child: Center(child: CircularProgressIndicator()),
+                                ),
+                              const SizedBox(height: 16),
+                            ],
                           ),
-                        ),
-
-              // Loading more indicator
-              if (_isLoadingMore)
-                SliverToBoxAdapter(
-                  child: const Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Center(child: CircularProgressIndicator()),
-                  ),
-                ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -924,7 +925,7 @@ class _WarrantiesScreenState extends State<WarrantiesScreen> {
     return Container(
       width: double.infinity,
       decoration: const BoxDecoration(
-        color: Color(0xffD51C29),
+        color: Color(0xFFE53935),
       ),
       child: Column(
         children: [
@@ -965,9 +966,11 @@ class _WarrantiesScreenState extends State<WarrantiesScreen> {
                   left: isRTL ? 8 : null,
                   right: isRTL ? null : 8,
                   child: Container(
+                    width: 32,
+                    height: 32,
                     decoration: BoxDecoration(
                       color: const Color(0xFFEF4444),
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(6),
                     ),
                     child: IconButton(
                       onPressed: () async {
@@ -981,10 +984,10 @@ class _WarrantiesScreenState extends State<WarrantiesScreen> {
                       },
                       icon: const Icon(
                         Icons.add,
-                        size: 20,
+                        size: 18,
                         color: Colors.white,
                       ),
-                      padding: const EdgeInsets.all(8),
+                      padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
                     ),
                   ),
@@ -997,6 +1000,7 @@ class _WarrantiesScreenState extends State<WarrantiesScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Container(
+              height: 42,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(8),
@@ -1004,11 +1008,16 @@ class _WarrantiesScreenState extends State<WarrantiesScreen> {
               child: TextField(
                 controller: _searchController,
                 onChanged: (_) => _applyFilters(),
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.normal,
+                ),
                 decoration: InputDecoration(
                   hintText: AppLocalizations.of(context)!.search_by_serial_product_customer,
                   hintStyle: TextStyle(
                     color: Colors.grey[400],
                     fontSize: 12,
+                    fontWeight: FontWeight.normal,
                   ),
                   prefixIcon: Icon(
                     Icons.search,
@@ -1018,7 +1027,7 @@ class _WarrantiesScreenState extends State<WarrantiesScreen> {
                   border: InputBorder.none,
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 16,
-                    vertical: 12,
+                    vertical: 10,
                   ),
                 ),
               ),
@@ -1027,7 +1036,7 @@ class _WarrantiesScreenState extends State<WarrantiesScreen> {
 
           // Filter chips
           Padding(
-            padding: const EdgeInsets.only(bottom: 12),
+            padding: const EdgeInsets.only(bottom: 28),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -1077,19 +1086,19 @@ class _WarrantiesScreenState extends State<WarrantiesScreen> {
         setState(() => _selectedFilter = value);
         _applyFilters();
       },
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(18),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.white : const Color(0xffE65656),
-          borderRadius: BorderRadius.circular(20),
+          color: isSelected ? Colors.white : const Color(0xFFEF5350),
+          borderRadius: BorderRadius.circular(18),
         ),
         child: Text(
           '$label ($count)',
           style: TextStyle(
-            color: isSelected ? const Color(0xffF36462) : Colors.white,
-            fontSize: 13,
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+            color: isSelected ? const Color(0xFFE53935) : Colors.white,
+            fontSize: 12,
+            fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
           ),
         ),
       ),
