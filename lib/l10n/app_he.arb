@@ -270,5 +270,16 @@
     "invalid_email": "You have to enter a valid email, please.",
     "please_enter_a_your_product_serial_number": "Please enter a your product serial number",
     "please_enter_a_your_phone_number": "Please enter a your phone number",
-    "instead": "instead"
+    "instead": "instead",
+    "report": "Report",
+    "submit": "Submit",
+    "malfunction_details": "Malfunction Details",
+    "product_details": "Product Details",
+    "warranty_status": "Warranty Status",
+    "warranty_owner": "Warranty Owner",
+    "owner_phone": "Owner Phone",
+    "submit_maintenance_request": "Submit Request",
+    "warranty_found": "Warranty found and customer information loaded",
+    "no_warranty_found": "No warranty found for this product",
+    "please_fill_all_required_fields": "Please fill all required fields"
 }

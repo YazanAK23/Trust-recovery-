@@ -852,7 +852,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get order_id_label => 'رقم الطلب';
 
   @override
-  String get scheduled_date => 'التاريخ المحدد';
+  String get scheduled_date => 'تاريخ الطلب';
 
   @override
   String get phone_number => 'رقم الهاتف';
@@ -1120,4 +1120,37 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get enter_serial_number => 'أدخل الرقم التسلسلي';
+
+  @override
+  String get report => 'تقرير';
+
+  @override
+  String get submit => 'إرسال';
+
+  @override
+  String get malfunction_details => 'تفاصيل العطل';
+
+  @override
+  String get product_details => 'تفاصيل المنتج';
+
+  @override
+  String get warranty_status => 'حالة الكفالة';
+
+  @override
+  String get warranty_owner => 'مالك الكفالة';
+
+  @override
+  String get owner_phone => 'هاتف المالك';
+
+  @override
+  String get submit_maintenance_request => 'إرسال الطلب';
+
+  @override
+  String get warranty_found => 'تم العثور على الكفالة وتحميل معلومات العميل';
+
+  @override
+  String get no_warranty_found => 'لم يتم العثور على كفالة لهذا المنتج';
+
+  @override
+  String get please_fill_all_required_fields => 'الرجاء ملء جميع الحقول المطلوبة';
 }

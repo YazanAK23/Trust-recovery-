@@ -374,5 +374,16 @@
     "warranty_already_active": "مفعلة",
     "product_not_found": "المنتج غير موجود",
     "checking_product": "جاري التحقق من المنتج...",
-    "enter_serial_number": "أدخل الرقم التسلسلي"
+    "enter_serial_number": "أدخل الرقم التسلسلي",
+    "report": "تقرير",
+    "submit": "إرسال",
+    "malfunction_details": "تفاصيل العطل",
+    "product_details": "تفاصيل المنتج",
+    "warranty_status": "حالة الكفالة",
+    "warranty_owner": "مالك الكفالة",
+    "owner_phone": "هاتف المالك",
+    "submit_maintenance_request": "إرسال الطلب",
+    "warranty_found": "تم العثور على الكفالة وتحميل معلومات العميل",
+    "no_warranty_found": "لم يتم العثور على كفالة لهذا المنتج",
+    "please_fill_all_required_fields": "الرجاء ملء جميع الحقول المطلوبة"
 }

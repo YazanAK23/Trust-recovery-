@@ -852,7 +852,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get order_id_label => 'Order ID';
 
   @override
-  String get scheduled_date => 'Scheduled Date';
+  String get scheduled_date => 'Request Date';
 
   @override
   String get phone_number => 'Phone Number';
@@ -1120,4 +1120,37 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get enter_serial_number => 'Enter serial number';
+
+  @override
+  String get report => 'Report';
+
+  @override
+  String get submit => 'Submit';
+
+  @override
+  String get malfunction_details => 'Malfunction Details';
+
+  @override
+  String get product_details => 'Product Details';
+
+  @override
+  String get warranty_status => 'Warranty Status';
+
+  @override
+  String get warranty_owner => 'Warranty Owner';
+
+  @override
+  String get owner_phone => 'Owner Phone';
+
+  @override
+  String get submit_maintenance_request => 'Submit Request';
+
+  @override
+  String get warranty_found => 'Warranty found and customer information loaded';
+
+  @override
+  String get no_warranty_found => 'No warranty found for this product';
+
+  @override
+  String get please_fill_all_required_fields => 'Please fill all required fields';
 }

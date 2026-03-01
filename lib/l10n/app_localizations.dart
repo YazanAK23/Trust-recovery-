@@ -292,19 +292,19 @@ abstract class AppLocalizations {
   /// No description provided for @cost.
   ///
   /// In en, this message translates to:
-  /// **'Cost : '**
+  /// **'Cost'**
   String get cost;
 
   /// No description provided for @desc_problem.
   ///
   /// In en, this message translates to:
-  /// **'Malfunction Description : '**
+  /// **'Malfunction Description'**
   String get desc_problem;
 
   /// No description provided for @notes_warranty.
   ///
   /// In en, this message translates to:
-  /// **'Notes : '**
+  /// **'Notes'**
   String get notes_warranty;
 
   /// No description provided for @my_location.
@@ -316,19 +316,19 @@ abstract class AppLocalizations {
   /// No description provided for @maintenance_status.
   ///
   /// In en, this message translates to:
-  /// **'maintenance Status : '**
+  /// **'Maintenance Status'**
   String get maintenance_status;
 
   /// No description provided for @maintenance_notes.
   ///
   /// In en, this message translates to:
-  /// **'maintenance Notes : '**
+  /// **'Maintenance Notes'**
   String get maintenance_notes;
 
   /// No description provided for @malfunction_description.
   ///
   /// In en, this message translates to:
-  /// **'Malfunction Description : '**
+  /// **'Malfunction Description'**
   String get malfunction_description;
 
   /// No description provided for @maintenance_department.
@@ -1786,7 +1786,7 @@ abstract class AppLocalizations {
   /// No description provided for @scheduled_date.
   ///
   /// In en, this message translates to:
-  /// **'Scheduled Date'**
+  /// **'Request Date'**
   String get scheduled_date;
 
   /// No description provided for @phone_number.
@@ -2322,6 +2322,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enter serial number'**
   String get enter_serial_number;
+
+  /// No description provided for @report.
+  ///
+  /// In en, this message translates to:
+  /// **'Report'**
+  String get report;
+
+  /// No description provided for @submit.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit'**
+  String get submit;
+
+  /// No description provided for @malfunction_details.
+  ///
+  /// In en, this message translates to:
+  /// **'Malfunction Details'**
+  String get malfunction_details;
+
+  /// No description provided for @product_details.
+  ///
+  /// In en, this message translates to:
+  /// **'Product Details'**
+  String get product_details;
+
+  /// No description provided for @warranty_status.
+  ///
+  /// In en, this message translates to:
+  /// **'Warranty Status'**
+  String get warranty_status;
+
+  /// No description provided for @warranty_owner.
+  ///
+  /// In en, this message translates to:
+  /// **'Warranty Owner'**
+  String get warranty_owner;
+
+  /// No description provided for @owner_phone.
+  ///
+  /// In en, this message translates to:
+  /// **'Owner Phone'**
+  String get owner_phone;
+
+  /// No description provided for @submit_maintenance_request.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit Request'**
+  String get submit_maintenance_request;
+
+  /// No description provided for @warranty_found.
+  ///
+  /// In en, this message translates to:
+  /// **'Warranty found and customer information loaded'**
+  String get warranty_found;
+
+  /// No description provided for @no_warranty_found.
+  ///
+  /// In en, this message translates to:
+  /// **'No warranty found for this product'**
+  String get no_warranty_found;
+
+  /// No description provided for @please_fill_all_required_fields.
+  ///
+  /// In en, this message translates to:
+  /// **'Please fill all required fields'**
+  String get please_fill_all_required_fields;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
