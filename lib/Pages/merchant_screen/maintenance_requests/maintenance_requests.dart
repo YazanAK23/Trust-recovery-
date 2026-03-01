@@ -293,8 +293,10 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
             child: Dialog(
               backgroundColor: Colors.grey[50],
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              insetPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 24),
               child: Container(
-                constraints: BoxConstraints(maxWidth: 400, maxHeight: 650),
+                width: double.infinity,
+                constraints: BoxConstraints(maxHeight: 650),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [

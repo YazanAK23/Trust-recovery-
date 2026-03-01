@@ -558,18 +558,28 @@ class _WarrantyActivationScreenState extends State<WarrantyActivationScreen> {
                 ],
               ),
             ),
+            actionsPadding: const EdgeInsets.all(16),
             actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                style: TextButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                ),
-                child: Text(
-                  isRTL ? 'حسناً' : 'OK',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF1F2937),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFEF4444),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    elevation: 2,
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                  ),
+                  child: Text(
+                    isRTL ? 'حسناً' : 'OK',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                      fontFamily: 'GESSTextMedium-edited',
+                    ),
                   ),
                 ),
               ),
@@ -702,23 +712,28 @@ class _WarrantyActivationScreenState extends State<WarrantyActivationScreen> {
               ],
             ),
           ),
+          actionsPadding: const EdgeInsets.all(16),
           actions: [
-            ElevatedButton(
-              onPressed: () => Navigator.of(context).pop(),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFEF4444),
-                foregroundColor: Colors.white,
-                elevation: 0,
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () => Navigator.of(context).pop(),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFEF4444),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  elevation: 2,
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
                 ),
-              ),
-              child: Text(
-                isRTL ? 'حسناً، سأقوم بالحذف' : 'OK, I Will Delete',
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
+                child: Text(
+                  isRTL ? 'حسناً' : 'OK',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                    fontFamily: 'GESSTextMedium-edited',
+                  ),
                 ),
               ),
             ),
@@ -739,6 +754,7 @@ class _WarrantyActivationScreenState extends State<WarrantyActivationScreen> {
 
     return Scaffold(
       key: _scaffoldKey,
+      resizeToAvoidBottomInset: true,
       backgroundColor: const Color(0xffe33131), // Red background for status bar area
       drawer: DrawerWell(
         Refresh: () {
@@ -783,27 +799,28 @@ class _WarrantyActivationScreenState extends State<WarrantyActivationScreen> {
               ],
             ),
           ),
-          // Fixed button at the bottom - ALWAYS VISIBLE
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: SafeArea(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 10,
-                      offset: const Offset(0, -2),
-                    ),
-                  ],
+          // Fixed button at the bottom - Hide when keyboard is visible
+          if (MediaQuery.of(context).viewInsets.bottom == 0)
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: SafeArea(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 10,
+                        offset: const Offset(0, -2),
+                      ),
+                    ],
+                  ),
+                  child: _buildActivateButton(),
                 ),
-                child: _buildActivateButton(),
               ),
             ),
-          ),
         ],
       ),
     );
@@ -1555,12 +1572,12 @@ class _WarrantyActivationScreenState extends State<WarrantyActivationScreen> {
         child: ElevatedButton(
           onPressed: _isSubmitting ? null : _handleActivateButtonPress,
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFFEF4444),  // Clean red color for activate
-            disabledBackgroundColor: hasValidProducts ? const Color(0xFFEF4444) : const Color(0xFFFFB4B4),  // Light pink/coral when no valid products
+            backgroundColor: const Color(0xFFEF4444),
+            disabledBackgroundColor: const Color(0xFFEF4444),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),
-            elevation: hasValidProducts ? 2 : 0,
+            elevation: 2,
           ),
           child: _isSubmitting
               ? const SizedBox(

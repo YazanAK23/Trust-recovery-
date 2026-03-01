@@ -351,7 +351,6 @@ class _WarrantiesScreenState extends State<WarrantiesScreen> {
   void _showDeleteDialog(int warrantyId, dynamic warranty) {
     final productName = _getProductName(warranty);
     final serialNumber = warranty['productSerialNumber'] ?? '-';
-    bool isExpanded = false;
 
     showDialog(
       context: context,
@@ -362,8 +361,9 @@ class _WarrantiesScreenState extends State<WarrantiesScreen> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
             ),
+            insetPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 24),
             child: Container(
-              constraints: const BoxConstraints(maxWidth: 320),
+              width: double.infinity,
               padding: const EdgeInsets.all(24),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -394,34 +394,97 @@ class _WarrantiesScreenState extends State<WarrantiesScreen> {
                       color: Colors.black87,
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 16),
                   
-                  // Product info - expandable
-                  GestureDetector(
-                    onTap: () {
-                      setDialogState(() {
-                        isExpanded = !isExpanded;
-                      });
-                    },
-                    child: Text(
-                      productName,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black87,
-                      ),
-                      maxLines: isExpanded ? null : 1,
-                      overflow: isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
+                  // Product Card
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFAFAFA),
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    'Serial: $serialNumber',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.grey[600],
+                    child: Row(
+                      children: [
+                        // Product image
+                        Container(
+                          width: 80,
+                          height: 80,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[200],
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Builder(
+                              builder: (context) {
+                                final imageUrl = _getProductImage(warranty);
+                                
+                                if (imageUrl.isEmpty) {
+                                  return Icon(
+                                    Icons.image_outlined,
+                                    color: Colors.grey[400],
+                                    size: 32,
+                                  );
+                                }
+                                
+                                return Image.network(
+                                  imageUrl,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Icon(
+                                      Icons.image_outlined,
+                                      color: Colors.grey[400],
+                                      size: 32,
+                                    );
+                                  },
+                                  loadingBuilder: (context, child, loadingProgress) {
+                                    if (loadingProgress == null) return child;
+                                    return Center(
+                                      child: SizedBox(
+                                        width: 24,
+                                        height: 24,
+                                        child: CircularProgressIndicator(
+                                          value: loadingProgress.expectedTotalBytes != null
+                                              ? loadingProgress.cumulativeBytesLoaded /
+                                                  loadingProgress.expectedTotalBytes!
+                                              : null,
+                                          strokeWidth: 2,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                productName,
+                                style: const TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black87,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(height: 6),
+                              Text(
+                                serialNumber,
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   const SizedBox(height: 24),
@@ -528,9 +591,9 @@ class _WarrantiesScreenState extends State<WarrantiesScreen> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
+          insetPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 24),
           child: Container(
-            width: 600,
-            constraints: const BoxConstraints(maxWidth: 600),
+            width: double.infinity,
             child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(24),

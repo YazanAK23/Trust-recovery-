@@ -44,15 +44,29 @@ class _AddMaintanenceRequestState extends State<AddMaintanenceRequest> {
   int warrantyID = 0;
   bool productAdded = false;
   bool _isLoading = false;
+  bool _serialChecked = false;
+  String _lastCheckedSerial = "";
   
   @override
   void initState() {
     super.initState();
     _initializeController();
+    // Add listener to track serial number changes
+    _serialNumberController.addListener(_onSerialNumberChanged);
+  }
+
+  void _onSerialNumberChanged() {
+    // If serial was checked and user is editing it, mark as needs refresh
+    if (_serialChecked && _serialNumberController.text != _lastCheckedSerial) {
+      setState(() {
+        _serialChecked = false;
+      });
+    }
   }
 
   @override
   void dispose() {
+    _serialNumberController.removeListener(_onSerialNumberChanged);
     _serialNumberController.dispose();
     _customerNameController.dispose();
     _customerPhoneController.dispose();
@@ -107,6 +121,7 @@ class _AddMaintanenceRequestState extends State<AddMaintanenceRequest> {
 
     return Scaffold(
       key: _scaffoldKey,
+      resizeToAvoidBottomInset: true,
       backgroundColor: const Color(0xffe33131), // Red background for status bar area
       drawer: DrawerWell(
         Refresh: () {
@@ -115,31 +130,35 @@ class _AddMaintanenceRequestState extends State<AddMaintanenceRequest> {
       ),
       body: Stack(
         children: [
-          Container(
-            color: const Color(0xFFF5F5F5),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  // Header
-                  Container(
-                    color: const Color(0xffe33131),
-                    child: SafeArea(
-                      bottom: false,
-                      child: _buildHeader(isRTL),
-                    ),
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                // Header and top section with red background
+                Container(
+                  color: const Color(0xffe33131),
+                  child: Column(
+                    children: [
+                      SafeArea(
+                        bottom: false,
+                        child: _buildHeader(isRTL),
+                      ),
+                      _buildTopButtons(),
+                      const SizedBox(height: 30), // Extra space for overlap
+                    ],
                   ),
-                  // Top action buttons
-                  Container(
-                    color: const Color(0xffe33131),
-                    child: _buildTopButtons(),
-                  ),
-                  // Content
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20, bottom: 100),
+                ),
+                // Content with gray background
+                Container(
+                  color: const Color(0xFFF5F5F5),
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 100),
                     child: Column(
                       children: [
-                        _buildSerialNumberSection(),
-                        const SizedBox(height: 15),
+                        Transform.translate(
+                          offset: const Offset(0, -30), // Move up to create overlap
+                          child: _buildSerialNumberSection(),
+                        ),
+                        const SizedBox(height: 5),
                         if (productAdded) ...[
                           _buildProductDetails(),
                           const SizedBox(height: 15),
@@ -153,17 +172,18 @@ class _AddMaintanenceRequestState extends State<AddMaintanenceRequest> {
                       ],
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-          // Fixed button at the bottom
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: _buildSubmitButton(),
-          ),
+          // Fixed button at the bottom - Hide when keyboard is visible
+          if (MediaQuery.of(context).viewInsets.bottom == 0)
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: _buildSubmitButton(),
+            ),
         ],
       ),
     );
@@ -235,6 +255,7 @@ class _AddMaintanenceRequestState extends State<AddMaintanenceRequest> {
             icon: Icons.send_outlined,
             label: AppLocalizations.of(context)!.submit,
             onTap: _submitMaintenanceRequest,
+            rotateIcon: true,
           ),
         ],
       ),
@@ -246,7 +267,9 @@ class _AddMaintanenceRequestState extends State<AddMaintanenceRequest> {
     required IconData icon,
     required String label,
     required VoidCallback onTap,
+    bool rotateIcon = false,
   }) {
+    final isRTL = locale.toString() == 'ar';
     return GestureDetector(
       onTap: onTap,
       child: Column(
@@ -258,7 +281,12 @@ class _AddMaintanenceRequestState extends State<AddMaintanenceRequest> {
               color: Colors.white.withOpacity(0.25),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(icon, color: Colors.white, size: 24),
+            child: rotateIcon
+                ? Transform.rotate(
+                    angle: isRTL ? 0.785398 : -0.785398, // 45 degrees for RTL, -45 for LTR
+                    child: Icon(icon, color: Colors.white, size: 24),
+                  )
+                : Icon(icon, color: Colors.white, size: 24),
           ),
           const SizedBox(height: 6),
           Text(
@@ -667,7 +695,12 @@ class _AddMaintanenceRequestState extends State<AddMaintanenceRequest> {
                       color: const Color(0xffEF4444),
                       borderRadius: BorderRadius.circular(4),
                     ),
-                    child: const Icon(Icons.qr_code_scanner, color: Colors.white, size: 12),
+                    child: SvgPicture.asset(
+                      'assets/icon/barcode.svg',
+                      width: 12,
+                      height: 12,
+                      colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                    ),
                   ),
                   const SizedBox(width: 6),
                   Text(
@@ -777,7 +810,11 @@ class _AddMaintanenceRequestState extends State<AddMaintanenceRequest> {
                                 strokeWidth: 2,
                               ),
                             )
-                          : const Icon(Icons.check, color: Colors.white, size: 20),
+                          : Icon(
+                              productAdded && !_serialChecked ? Icons.refresh : Icons.check,
+                              color: Colors.white,
+                              size: 20,
+                            ),
                       padding: EdgeInsets.zero,
                     ),
                   ),
@@ -794,190 +831,196 @@ class _AddMaintanenceRequestState extends State<AddMaintanenceRequest> {
   Widget _buildProductDetails() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Title outside the card
+          Row(
             children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(3),
-                    decoration: BoxDecoration(
-                      color: const Color(0xffEF4444),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: const Icon(Icons.inventory_2_outlined, color: Colors.white, size: 12),
-                  ),
-                  const SizedBox(width: 6),
-                  Expanded(
-                    child: Text(
-                      AppLocalizations.of(context)!.product_details,
-                      style: const TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
-                      ),
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      setState(() {
-                        productAdded = false;
-                        _serialNumberController.clear();
-                        _customerNameController.clear();
-                        _customerPhoneController.clear();
-                        _descriptionController.clear();
-                        _notesController.clear();
-                        productName = "";
-                        productImage = "";
-                        productID = 0;
-                        warrantyStatus = false;
-                        warrantyID = 0;
-                        warrantyOwner = "";
-                        ownerPhone = "";
-                        purchaseDate = "";
-                      });
-                    },
-                    icon: const Icon(Icons.delete_outline, color: Color(0xffEF4444), size: 20),
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 15),
-              // Product card with image
-              Row(
-                children: [
-                  // Product image
-                  Container(
-                    width: 65,
-                    height: 65,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF9FAFB),
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: const Color(0xFFE5E7EB),
-                        width: 1,
-                      ),
-                    ),
-                    child: productImage.isNotEmpty
-                        ? ClipRRect(
-                            borderRadius: BorderRadius.circular(9),
-                            child: Image.network(
-                              productImage,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return const Icon(Icons.image_not_supported,
-                                    color: Colors.grey, size: 28);
-                              },
-                            ),
-                          )
-                        : const Icon(Icons.inventory_2_outlined,
-                            color: Colors.grey, size: 32),
-                  ),
-                  const SizedBox(width: 14),
-                  // Product details
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          productName,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14,
-                            color: Color(0xFF111827),
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(height: 4),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 3),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF3F4F6),
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                          child: Text(
-                            _serialNumberController.text,
-                            style: const TextStyle(
-                              fontSize: 11,
-                              color: Color(0xFF374151),
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 15),
-              // Warranty details
-              _buildDetailRow(
-                Icons.calendar_today_outlined,
-                AppLocalizations.of(context)!.purchase_date,
-                purchaseDate.isNotEmpty ? purchaseDate : '--',
-              ),
-              const SizedBox(height: 10),
-              _buildDetailRow(
-                Icons.verified_outlined,
-                AppLocalizations.of(context)!.warranty_status,
-                warrantyStatus ? AppLocalizations.of(context)!.active : AppLocalizations.of(context)!.not_effectice,
-                valueColor: warrantyStatus ? Colors.green : Colors.red,
-              ),
-              if (warrantyOwner.isNotEmpty) ...[
-                const SizedBox(height: 10),
-                _buildDetailRow(
-                  Icons.person_outline,
-                  AppLocalizations.of(context)!.customer_name,
-                  warrantyOwner,
+              const Icon(Icons.info_outline, color: Color(0xffEF4444), size: 18),
+              const SizedBox(width: 6),
+              Text(
+                AppLocalizations.of(context)!.product_details,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
                 ),
-              ],
-              if (ownerPhone.isNotEmpty) ...[
-                const SizedBox(height: 10),
-                _buildDetailRow(
-                  Icons.phone_outlined,
-                  AppLocalizations.of(context)!.phone_number,
-                  ownerPhone,
-                ),
-              ],
+              ),
             ],
           ),
-        ),
+          const SizedBox(height: 12),
+          // Card container
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(15),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Product row with delete icon
+                  Row(
+                    children: [
+                      // Product image
+                      Container(
+                        width: 65,
+                        height: 65,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF9FAFB),
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: const Color(0xFFE5E7EB),
+                            width: 1,
+                          ),
+                        ),
+                        child: productImage.isNotEmpty
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(9),
+                                child: Image.network(
+                                  productImage,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return const Icon(Icons.image_not_supported,
+                                        color: Colors.grey, size: 28);
+                                  },
+                                ),
+                              )
+                            : const Icon(Icons.inventory_2_outlined,
+                                color: Colors.grey, size: 32),
+                      ),
+                      const SizedBox(width: 14),
+                      // Product details
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              productName,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                                color: Color(0xFF111827),
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              _serialNumberController.text,
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      // Delete icon in gray at top right
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            productAdded = false;
+                            _serialNumberController.clear();
+                            _customerNameController.clear();
+                            _customerPhoneController.clear();
+                            _descriptionController.clear();
+                            _notesController.clear();
+                            productName = "";
+                            productImage = "";
+                            productID = 0;
+                            warrantyStatus = false;
+                            warrantyID = 0;
+                            warrantyOwner = "";
+                            ownerPhone = "";
+                            purchaseDate = "";
+                            _serialChecked = false;
+                            _lastCheckedSerial = "";
+                          });
+                        },
+                        icon: const Icon(Icons.delete_outline, color: Color(0xFF9CA3AF), size: 22),
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 15),
+                  // Divider
+                  Divider(color: Colors.grey[200], height: 1),
+                  const SizedBox(height: 15),
+                  // Warranty details
+                  _buildDetailRow(
+                    Icons.calendar_today_outlined,
+                    AppLocalizations.of(context)!.purchase_date,
+                    purchaseDate.isNotEmpty ? purchaseDate : '--',
+                  ),
+                  const SizedBox(height: 12),
+                  _buildDetailRow(
+                    Icons.verified_outlined,
+                    AppLocalizations.of(context)!.warranty_status,
+                    warrantyStatus ? AppLocalizations.of(context)!.active : AppLocalizations.of(context)!.not_effectice,
+                    valueColor: warrantyStatus ? const Color(0xFF10B981) : Colors.red,
+                    isStatus: warrantyStatus,
+                  ),
+                  if (warrantyOwner.isNotEmpty) ...[
+                    const SizedBox(height: 12),
+                    _buildDetailRow(
+                      Icons.person_outline,
+                      AppLocalizations.of(context)!.customer_name,
+                      warrantyOwner,
+                    ),
+                  ],
+                  if (ownerPhone.isNotEmpty) ...[
+                    const SizedBox(height: 12),
+                    _buildDetailRow(
+                      Icons.phone_outlined,
+                      AppLocalizations.of(context)!.phone_number,
+                      ownerPhone,
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 
   /// Build detail row helper
-  Widget _buildDetailRow(IconData icon, String label, String value, {Color? valueColor}) {
+  Widget _buildDetailRow(IconData icon, String label, String value, {Color? valueColor, bool isStatus = false}) {
     return Row(
       children: [
-        Icon(icon, size: 16, color: Colors.grey[600]),
-        const SizedBox(width: 8),
+        Icon(icon, size: 16, color: Colors.grey[500]),
+        const SizedBox(width: 10),
         Expanded(
           child: Text(
             label,
             style: TextStyle(
-              fontSize: 11,
+              fontSize: 12,
               color: Colors.grey[600],
             ),
           ),
         ),
+        if (isStatus && warrantyStatus)
+          Container(
+            width: 8,
+            height: 8,
+            margin: const EdgeInsets.only(right: 6),
+            decoration: const BoxDecoration(
+              color: Color(0xFF10B981),
+              shape: BoxShape.circle,
+            ),
+          ),
         Text(
           value,
           style: TextStyle(
@@ -992,6 +1035,7 @@ class _AddMaintanenceRequestState extends State<AddMaintanenceRequest> {
 
   /// Build submit button
   Widget _buildSubmitButton() {
+    final isRTL = locale.toString() == 'ar';
     return SafeArea(
       child: Container(
         decoration: BoxDecoration(
@@ -1021,8 +1065,24 @@ class _AddMaintanenceRequestState extends State<AddMaintanenceRequest> {
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Icons.send, size: 20),
+              children: isRTL ? [
+                Text(
+                  AppLocalizations.of(context)!.submit_maintenance_request,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Transform.rotate(
+                  angle: 0.785398, // 45 degrees for RTL
+                  child: const Icon(Icons.send, size: 20),
+                ),
+              ] : [
+                Transform.rotate(
+                  angle: -0.785398, // -45 degrees for LTR
+                  child: const Icon(Icons.send, size: 20),
+                ),
                 const SizedBox(width: 8),
                 Text(
                   AppLocalizations.of(context)!.submit_maintenance_request,
@@ -1056,7 +1116,28 @@ class _AddMaintanenceRequestState extends State<AddMaintanenceRequest> {
       return;
     }
 
-    setState(() => _isLoading = true);
+    // Clear previous product data before checking new serial
+    setState(() {
+      _isLoading = true;
+      // Clear product data
+      productAdded = false;
+      productName = "";
+      productImage = "";
+      productID = 0;
+      // Clear warranty data
+      warrantyStatus = false;
+      warrantyID = 0;
+      warrantyOwner = "";
+      ownerPhone = "";
+      purchaseDate = "";
+      // Clear serial check state
+      _serialChecked = false;
+      _lastCheckedSerial = "";
+    });
+    
+    // Clear customer input fields
+    _customerNameController.clear();
+    _customerPhoneController.clear();
 
     try {
       // Get warranty data
@@ -1129,6 +1210,8 @@ class _AddMaintanenceRequestState extends State<AddMaintanenceRequest> {
       setState(() {
         productAdded = true;
         _isLoading = false;
+        _serialChecked = true;
+        _lastCheckedSerial = serialNumber;
       });
     } catch (e) {
       debugPrint('Error checking serial number: $e');
