@@ -361,7 +361,7 @@ class _MaintenanceCardWidgetState extends State<MaintenanceCardWidget> {
                               widget.maintenanceCategoryNotes,
                               style: TextStyle(
                                 fontSize: 11,
-                                color: Color(0xFF374151),
+                                color: Color(0xFF6B7280),
                                 fontWeight: FontWeight.w600,
                               ),
                               textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,

@@ -105,25 +105,25 @@ class AppLocalizationsAr extends AppLocalizations {
   String get edit_selected => 'تعديل متعدد';
 
   @override
-  String get cost => 'التكلفة : ';
+  String get cost => 'التكلفة';
 
   @override
-  String get desc_problem => 'وصف العطل : ';
+  String get desc_problem => 'وصف العطل';
 
   @override
-  String get notes_warranty => 'الملاحظات : ';
+  String get notes_warranty => 'الملاحظات';
 
   @override
   String get my_location => 'موقعي';
 
   @override
-  String get maintenance_status => 'حالة طلب الصيانة : ';
+  String get maintenance_status => 'حالة طلب الصيانة';
 
   @override
-  String get maintenance_notes => 'ملاحظات طلب الصيانة : ';
+  String get maintenance_notes => 'ملاحظات طلب الصيانة';
 
   @override
-  String get malfunction_description => 'وصف العطل : ';
+  String get malfunction_description => 'وصف العطل';
 
   @override
   String get maintenance_department => 'قسم الصيانة';
@@ -885,7 +885,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get warranty_activation => 'تفعيل الكفالة';
 
   @override
-  String get protect => 'حماية';
+  String get protect => 'الكفالة';
 
   @override
   String get scan => 'مسح';
@@ -975,10 +975,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get warranties => 'الكفالات';
 
   @override
-  String get search_by_serial_product_customer => 'بحث بالرقم التسلسلي أو المنتج أو العميل...';
+  String get search_by_serial_product_customer => 'بحث بالرقم التسلسلي او رقم العميل';
 
   @override
-  String get active => 'نشط';
+  String get active => 'فعالة';
 
   @override
   String get expiring_soon => 'تنتهي قريباً';
@@ -996,7 +996,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get purchase_date => 'تاريخ الشراء';
 
   @override
-  String get warranty_period => 'مدة الكفالة';
+  String get warranty_period => 'تنتهي الكفالة';
 
   @override
   String get delete => 'حذف';
@@ -1110,7 +1110,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get activate_warranties => 'تفعيل الكفالات';
 
   @override
-  String get warranty_already_active => 'الكفالة مفعلة بالفعل';
+  String get warranty_already_active => 'مفعلة';
 
   @override
   String get product_not_found => 'المنتج غير موجود';

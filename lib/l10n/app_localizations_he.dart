@@ -885,7 +885,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get warranty_activation => 'Warranty Activation';
 
   @override
-  String get protect => 'Protect';
+  String get protect => 'Warranty';
 
   @override
   String get scan => 'Scan';
@@ -975,7 +975,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get warranties => 'Warranties';
 
   @override
-  String get search_by_serial_product_customer => 'Search by serial, product, or customer...';
+  String get search_by_serial_product_customer => 'Search by serial number or customer phone';
 
   @override
   String get active => 'Active';
@@ -996,7 +996,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get purchase_date => 'Purchase Date';
 
   @override
-  String get warranty_period => 'Warranty Period';
+  String get warranty_period => 'Warranty Expires';
 
   @override
   String get delete => 'Delete';
@@ -1110,7 +1110,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get activate_warranties => 'Activate Warrantys';
 
   @override
-  String get warranty_already_active => 'Warranty already activated';
+  String get warranty_already_active => 'Active';
 
   @override
   String get product_not_found => 'Product not found';

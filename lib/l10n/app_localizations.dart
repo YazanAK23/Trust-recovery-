@@ -1852,7 +1852,7 @@ abstract class AppLocalizations {
   /// No description provided for @protect.
   ///
   /// In en, this message translates to:
-  /// **'Protect'**
+  /// **'Warranty'**
   String get protect;
 
   /// No description provided for @scan.
@@ -2032,7 +2032,7 @@ abstract class AppLocalizations {
   /// No description provided for @search_by_serial_product_customer.
   ///
   /// In en, this message translates to:
-  /// **'Search by serial, product, or customer...'**
+  /// **'Search by serial number or customer phone'**
   String get search_by_serial_product_customer;
 
   /// No description provided for @active.
@@ -2074,7 +2074,7 @@ abstract class AppLocalizations {
   /// No description provided for @warranty_period.
   ///
   /// In en, this message translates to:
-  /// **'Warranty Period'**
+  /// **'Warranty Expires'**
   String get warranty_period;
 
   /// No description provided for @delete.
@@ -2302,7 +2302,7 @@ abstract class AppLocalizations {
   /// No description provided for @warranty_already_active.
   ///
   /// In en, this message translates to:
-  /// **'Warranty already activated'**
+  /// **'Active'**
   String get warranty_already_active;
 
   /// No description provided for @product_not_found.

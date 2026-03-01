@@ -105,25 +105,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get edit_selected => 'Edit Selected';
 
   @override
-  String get cost => 'Cost : ';
+  String get cost => 'Cost';
 
   @override
-  String get desc_problem => 'Malfunction Description : ';
+  String get desc_problem => 'Malfunction Description';
 
   @override
-  String get notes_warranty => 'Notes : ';
+  String get notes_warranty => 'Notes';
 
   @override
   String get my_location => 'My Location';
 
   @override
-  String get maintenance_status => 'maintenance Status : ';
+  String get maintenance_status => 'Maintenance Status';
 
   @override
-  String get maintenance_notes => 'maintenance Notes : ';
+  String get maintenance_notes => 'Maintenance Notes';
 
   @override
-  String get malfunction_description => 'Malfunction Description : ';
+  String get malfunction_description => 'Malfunction Description';
 
   @override
   String get maintenance_department => 'Maintenance Department';
@@ -885,7 +885,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get warranty_activation => 'Warranty Activation';
 
   @override
-  String get protect => 'Protect';
+  String get protect => 'Warranty';
 
   @override
   String get scan => 'Scan';
@@ -975,7 +975,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get warranties => 'Warranties';
 
   @override
-  String get search_by_serial_product_customer => 'Search by serial, product, or customer...';
+  String get search_by_serial_product_customer => 'Search by serial number or customer phone';
 
   @override
   String get active => 'Active';
@@ -996,7 +996,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get purchase_date => 'Purchase Date';
 
   @override
-  String get warranty_period => 'Warranty Period';
+  String get warranty_period => 'Warranty Expires';
 
   @override
   String get delete => 'Delete';
@@ -1110,7 +1110,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get activate_warranties => 'Activate Warrantys';
 
   @override
-  String get warranty_already_active => 'Warranty already activated';
+  String get warranty_already_active => 'Active';
 
   @override
   String get product_not_found => 'Product not found';

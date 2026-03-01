@@ -10,7 +10,7 @@ class WarrantyCard extends StatefulWidget {
   final String customerName;
   final String customerPhone;
   final String purchaseDate;
-  final int warrantyYears;
+  final String expiryDate;
   final String status; // 'active', 'expiring-soon', 'expired'
   final VoidCallback onEdit;
   final VoidCallback onDelete;
@@ -23,7 +23,7 @@ class WarrantyCard extends StatefulWidget {
     required this.customerName,
     required this.customerPhone,
     required this.purchaseDate,
-    required this.warrantyYears,
+    required this.expiryDate,
     required this.status,
     required this.onEdit,
     required this.onDelete,
@@ -105,7 +105,7 @@ class _WarrantyCardState extends State<WarrantyCard> {
                         child: Text(
                           widget.productName,
                           style: const TextStyle(
-                            fontSize: 14,
+                            fontSize: 13,
                             fontWeight: FontWeight.bold,
                             color: Colors.black87,
                           ),
@@ -182,9 +182,7 @@ class _WarrantyCardState extends State<WarrantyCard> {
                       child: _buildInfoRow(
                         context,
                         label: AppLocalizations.of(context)!.warranty_period,
-                        value: widget.warrantyYears == 1
-                            ? '1 ${AppLocalizations.of(context)!.year}'
-                            : '${widget.warrantyYears} ${AppLocalizations.of(context)!.years}',
+                        value: widget.expiryDate,
                       ),
                     ),
                   ],
@@ -319,7 +317,7 @@ class _WarrantyCardState extends State<WarrantyCard> {
       onTap: onTap,
       borderRadius: BorderRadius.circular(10),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 12),
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
         decoration: BoxDecoration(
           color: backgroundColor,
           borderRadius: BorderRadius.circular(10),
@@ -330,15 +328,15 @@ class _WarrantyCardState extends State<WarrantyCard> {
           children: [
             Icon(
               icon,
-              size: 18,
+              size: 16,
               color: textColor ?? Colors.white,
             ),
             const SizedBox(width: 6),
             Text(
               label,
               style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
+                fontSize: 13,
+                fontWeight: FontWeight.normal,
                 color: textColor ?? Colors.white,
               ),
             ),

@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:trust_app_updated/Components/warranty_card/warranty_card.dart';
+import 'package:trust_app_updated/Components/drawer_widget/drawer_widget.dart';
 import 'package:trust_app_updated/Pages/merchant_screen/warranty_activation/warranty_activation_screen.dart';
 import 'package:trust_app_updated/Server/domains/domains.dart';
 import 'package:trust_app_updated/Server/functions/functions.dart';
@@ -18,6 +20,9 @@ class WarrantiesScreen extends StatefulWidget {
 }
 
 class _WarrantiesScreenState extends State<WarrantiesScreen> {
+  // Keys
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  
   // Controllers
   final TextEditingController _searchController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
@@ -120,13 +125,45 @@ class _WarrantiesScreenState extends State<WarrantiesScreen> {
 
   /// Get warranty status based on dates
   String _getWarrantyStatus(dynamic warranty) {
-    // You can implement logic to calculate status based on warranty dates
-    // For now, using warrantieStatus field if available
-    if (warranty['warrantieStatus'] == false) return 'expired';
+    if (warranty['createdAt'] == null) return 'active';
     
-    // Add logic to check if expiring soon (e.g., within 3 months)
-    // For demonstration, returning 'active'
-    return 'active';
+    try {
+      final purchaseDate = DateTime.parse(warranty['createdAt']);
+      final expiryDate = DateTime(
+        purchaseDate.year,
+        purchaseDate.month + 6,
+        purchaseDate.day,
+      );
+      final now = DateTime.now();
+      final daysUntilExpiry = expiryDate.difference(now).inDays;
+      
+      if (daysUntilExpiry < 0) {
+        return 'expired';
+      } else if (daysUntilExpiry <= 30) {
+        return 'expiring-soon';
+      } else {
+        return 'active';
+      }
+    } catch (e) {
+      return 'active';
+    }
+  }
+
+  /// Calculate expiry date (purchase date + 6 months)
+  String _getExpiryDate(dynamic warranty) {
+    if (warranty['createdAt'] == null) return '-';
+    
+    try {
+      final purchaseDate = DateTime.parse(warranty['createdAt']);
+      final expiryDate = DateTime(
+        purchaseDate.year,
+        purchaseDate.month + 6,
+        purchaseDate.day,
+      );
+      return expiryDate.toString().substring(0, 10);
+    } catch (e) {
+      return '-';
+    }
   }
 
   /// Get product name based on locale
@@ -482,10 +519,6 @@ class _WarrantiesScreenState extends State<WarrantiesScreen> {
     final phoneController = TextEditingController(
       text: warranty['customerPhone'] ?? '',
     );
-    
-    DateTime selectedDate = warranty['createdAt'] != null
-        ? DateTime.parse(warranty['createdAt'])
-        : DateTime.now();
 
     showDialog(
       context: context,
@@ -598,7 +631,7 @@ class _WarrantiesScreenState extends State<WarrantiesScreen> {
                               Text(
                                 _getProductName(warranty),
                                 style: const TextStyle(
-                                  fontSize: 14,
+                                  fontSize: 13,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black87,
                                 ),
@@ -684,66 +717,6 @@ class _WarrantiesScreenState extends State<WarrantiesScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 14),
-                  
-                  // Purchase Date field
-                  Text(
-                    AppLocalizations.of(context)!.purchase_date_required,
-                    style: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black87,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  InkWell(
-                    onTap: () async {
-                      final picked = await showDatePicker(
-                        context: context,
-                        initialDate: selectedDate,
-                        firstDate: DateTime(2020),
-                        lastDate: DateTime.now(),
-                        builder: (context, child) {
-                          return Theme(
-                            data: Theme.of(context).copyWith(
-                              colorScheme: ColorScheme.light(
-                                primary: Colors.black,
-                                onPrimary: Colors.white,
-                                surface: Colors.white,
-                                onSurface: Colors.black,
-                              ),
-                              dialogBackgroundColor: Colors.white,
-                            ),
-                            child: child!,
-                          );
-                        },
-                      );
-                      if (picked != null) {
-                        setDialogState(() => selectedDate = picked);
-                      }
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 14,
-                        vertical: 14,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: Colors.grey[300]!),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            '${selectedDate.month.toString().padLeft(2, '0')}/${selectedDate.day.toString().padLeft(2, '0')}/${selectedDate.year}',
-                            style: const TextStyle(fontSize: 14, color: Colors.black87),
-                          ),
-                          Icon(Icons.calendar_today, size: 18, color: Colors.grey[600]),
-                        ],
-                      ),
-                    ),
-                  ),
                   const SizedBox(height: 20),
                   
                   // Buttons
@@ -756,7 +729,7 @@ class _WarrantiesScreenState extends State<WarrantiesScreen> {
                             backgroundColor: const Color(0xFFF5F5F5),
                             foregroundColor: Colors.black87,
                             elevation: 0,
-                            padding: const EdgeInsets.symmetric(vertical: 13),
+                            padding: const EdgeInsets.symmetric(vertical: 10),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
@@ -764,7 +737,7 @@ class _WarrantiesScreenState extends State<WarrantiesScreen> {
                           child: Text(
                             AppLocalizations.of(context)!.cancel,
                             style: const TextStyle(
-                              fontSize: 15,
+                              fontSize: 14,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -793,7 +766,7 @@ class _WarrantiesScreenState extends State<WarrantiesScreen> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFFEF4444),
                             elevation: 0,
-                            padding: const EdgeInsets.symmetric(vertical: 13),
+                            padding: const EdgeInsets.symmetric(vertical: 10),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
@@ -802,7 +775,7 @@ class _WarrantiesScreenState extends State<WarrantiesScreen> {
                             AppLocalizations.of(context)!.save_changes,
                             style: const TextStyle(
                               color: Colors.white,
-                              fontSize: 15,
+                              fontSize: 14,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -859,7 +832,34 @@ class _WarrantiesScreenState extends State<WarrantiesScreen> {
       color: const Color(0xFFE53935),
       child: SafeArea(
         child: Scaffold(
+          key: _scaffoldKey,
           backgroundColor: const Color(0xFFF5F5F5),
+          drawer: DrawerWell(
+            Refresh: () {
+              setState(() {});
+            },
+          ),
+          floatingActionButton: SizedBox(
+            width: 52,
+            height: 52,
+            child: FloatingActionButton(
+              onPressed: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const WarrantyActivationScreen(),
+                  ),
+                );
+                _loadWarranties();
+              },
+              backgroundColor: const Color(0xFFEF4444),
+              child: const Icon(
+                Icons.add,
+                color: Colors.white,
+                size: 24,
+              ),
+            ),
+          ),
           body: SingleChildScrollView(
             controller: _scrollController,
             child: Column(
@@ -887,7 +887,7 @@ class _WarrantiesScreenState extends State<WarrantiesScreen> {
                                   final product = warranty['product'];
 
                                   return Transform.translate(
-                                    offset: const Offset(0, -28),
+                                    offset: const Offset(0, -18),
                                     child: WarrantyCard(
                                       productName: _getProductName(warranty),
                                       productSerialNumber: warranty['productSerialNumber'] ?? '-',
@@ -897,7 +897,7 @@ class _WarrantiesScreenState extends State<WarrantiesScreen> {
                                       purchaseDate: warranty['createdAt'] != null
                                           ? warranty['createdAt'].toString().substring(0, 10)
                                           : '-',
-                                      warrantyYears: product?['warranty_period'] ?? 2,
+                                      expiryDate: _getExpiryDate(warranty),
                                       status: _getWarrantyStatus(warranty),
                                       onEdit: () => _handleEdit(warranty),
                                       onDelete: () => _handleDelete(warranty['id']),
@@ -961,34 +961,22 @@ class _WarrantiesScreenState extends State<WarrantiesScreen> {
                   ),
                 ),
 
-                // Add button
+                // Menu button
                 Positioned(
                   left: isRTL ? 8 : null,
                   right: isRTL ? null : 8,
-                  child: Container(
-                    width: 32,
-                    height: 32,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFEF4444),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: IconButton(
-                      onPressed: () async {
-                        await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const WarrantyActivationScreen(),
-                          ),
-                        );
-                        _loadWarranties();
-                      },
-                      icon: const Icon(
-                        Icons.add,
-                        size: 18,
-                        color: Colors.white,
+                  child: IconButton(
+                    onPressed: () {
+                      _scaffoldKey.currentState?.openDrawer();
+                    },
+                    icon: SvgPicture.asset(
+                      'assets/images/Menu.svg',
+                      width: 24,
+                      height: 24,
+                      colorFilter: const ColorFilter.mode(
+                        Colors.white,
+                        BlendMode.srcIn,
                       ),
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(),
                     ),
                   ),
                 ),

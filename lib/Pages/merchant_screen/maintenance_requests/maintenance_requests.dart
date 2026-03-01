@@ -370,7 +370,7 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
                                       Text(
                                         productName,
                                         style: TextStyle(
-                                          fontSize: 15,
+                                          fontSize: 13,
                                           fontWeight: FontWeight.w600,
                                           color: Colors.black87,
                                         ),
@@ -379,13 +379,16 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
                                         textAlign: isRTL ? TextAlign.right : TextAlign.left,
                                       ),
                                       SizedBox(height: 4),
-                                      Text(
-                                        productSerial,
-                                        style: TextStyle(
-                                          fontSize: 13,
-                                          color: Colors.grey[600],
+                                      Align(
+                                        alignment: isRTL ? Alignment.centerRight : Alignment.centerLeft,
+                                        child: Text(
+                                          productSerial,
+                                          style: TextStyle(
+                                            fontSize: 13,
+                                            color: Colors.grey[600],
+                                          ),
+                                          textDirection: TextDirection.ltr,
                                         ),
-                                        textAlign: isRTL ? TextAlign.right : TextAlign.left,
                                       ),
                                     ],
                                   ),
@@ -421,6 +424,8 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
                             malfunctionController,
                             isRTL,
                             maxLines: 3,
+                            isRequired: false,
+                            fontSize: 11,
                           ),
                           SizedBox(height: 16),
                           
@@ -431,6 +436,8 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
                             notesController,
                             isRTL,
                             maxLines: 3,
+                            isRequired: false,
+                            fontSize: 11,
                           ),
                         ],
                       ),
@@ -441,32 +448,33 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
                   Container(
                     padding: EdgeInsets.fromLTRB(20, 16, 20, 20),
                     child: Row(
+                      textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
                       children: [
-                        if (!isRTL) ...[
-                          Expanded(
-                            child: OutlinedButton(
-                              onPressed: isSubmitting ? null : () => Navigator.pop(dialogContext),
-                              style: OutlinedButton.styleFrom(
-                                padding: EdgeInsets.symmetric(vertical: 14),
-                                side: BorderSide(color: Colors.grey[400]!),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
+                        // Cancel Button
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: isSubmitting ? null : () => Navigator.pop(dialogContext),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Color(0xFFF5F5F5),
+                              padding: EdgeInsets.symmetric(vertical: 12),
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
                               ),
-                              child: Text(
-                                AppLocalizations.of(context)!.cancel,
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.grey[700],
-                                ),
+                            ),
+                            child: Text(
+                              AppLocalizations.of(context)!.cancel,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black87,
                               ),
                             ),
                           ),
-                          SizedBox(width: 12),
-                        ],
+                        ),
+                        SizedBox(width: 12),
+                        // Save Changes Button
                         Expanded(
-                          flex: 2,
                           child: ElevatedButton(
                             onPressed: isSubmitting ? null : () async {
                               // Validate
@@ -506,16 +514,17 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
                               }
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: MAIN_COLOR,
-                              padding: EdgeInsets.symmetric(vertical: 14),
+                              backgroundColor: Color(0xFFf04444),
+                              padding: EdgeInsets.symmetric(vertical: 12),
+                              elevation: 0,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
                               ),
                             ),
                             child: isSubmitting
                                 ? SizedBox(
-                                    height: 20,
-                                    width: 20,
+                                    height: 18,
+                                    width: 18,
                                     child: CircularProgressIndicator(
                                       strokeWidth: 2,
                                       valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
@@ -524,36 +533,13 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
                                 : Text(
                                     AppLocalizations.of(context)!.save_changes,
                                     style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
                                       color: Colors.white,
                                     ),
                                   ),
                           ),
                         ),
-                        if (isRTL) ...[
-                          SizedBox(width: 12),
-                          Expanded(
-                            child: OutlinedButton(
-                              onPressed: isSubmitting ? null : () => Navigator.pop(dialogContext),
-                              style: OutlinedButton.styleFrom(
-                                padding: EdgeInsets.symmetric(vertical: 14),
-                                side: BorderSide(color: Colors.grey[400]!),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                              child: Text(
-                                AppLocalizations.of(context)!.cancel,
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.grey[700],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
                       ],
                     ),
                   ),
@@ -574,6 +560,8 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
     bool isRTL, {
     int maxLines = 1,
     TextInputType? keyboardType,
+    bool isRequired = true,
+    double fontSize = 15,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -583,7 +571,7 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
           child: Padding(
             padding: EdgeInsets.only(bottom: 8),
             child: Text(
-              '$label *',
+              isRequired ? '$label *' : label,
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
@@ -598,8 +586,8 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
           maxLines: maxLines,
           keyboardType: keyboardType,
           textDirection: keyboardType == TextInputType.phone ? TextDirection.ltr : null,
-          textAlign: keyboardType == TextInputType.phone ? TextAlign.left : (isRTL ? TextAlign.right : TextAlign.left),
-          style: TextStyle(fontSize: 15),
+          textAlign: keyboardType == TextInputType.phone ? (isRTL ? TextAlign.right : TextAlign.left) : (isRTL ? TextAlign.right : TextAlign.left),
+          style: TextStyle(fontSize: fontSize),
           decoration: InputDecoration(
             filled: true,
             fillColor: Colors.white,
