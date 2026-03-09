@@ -2251,6 +2251,12 @@ abstract class AppLocalizations {
   /// **'Preview'**
   String get preview;
 
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
   /// No description provided for @products_to_activate.
   ///
   /// In en, this message translates to:

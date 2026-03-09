@@ -30,7 +30,6 @@ class _WarrantiesScreenState extends State<WarrantiesScreen> {
   // State
   List<dynamic> _allWarranties = [];
   List<dynamic> _filteredWarranties = [];
-  String _selectedFilter = 'all';
   bool _isLoading = true;
   bool _isLoadingMore = false;
   bool _hasNextPage = true;
@@ -109,18 +108,8 @@ class _WarrantiesScreenState extends State<WarrantiesScreen> {
       return;
     }
 
-    // No search query - just apply filter
-    List<dynamic> filtered = _allWarranties;
-
-    // Apply filter by status
-    if (_selectedFilter != 'all') {
-      filtered = filtered.where((warranty) {
-        final status = _getWarrantyStatus(warranty);
-        return status.toLowerCase() == _selectedFilter.toLowerCase();
-      }).toList();
-    }
-
-    setState(() => _filteredWarranties = filtered);
+    // No search query - show all warranties (filter chips are hidden)
+    setState(() => _filteredWarranties = _allWarranties);
   }
 
   /// Get warranty status based on dates
@@ -251,15 +240,7 @@ class _WarrantiesScreenState extends State<WarrantiesScreen> {
     // Always do local search first for immediate results
     List<dynamic> filtered = _allWarranties;
     
-    // Apply status filter if selected
-    if (_selectedFilter != 'all') {
-      filtered = filtered.where((warranty) {
-        final status = _getWarrantyStatus(warranty);
-        return status.toLowerCase() == _selectedFilter.toLowerCase();
-      }).toList();
-    }
-    
-    // Apply search filter
+    // Apply search filter (status filter removed as filter chips are hidden)
     final searchLower = searchQuery.toLowerCase();
     filtered = filtered.where((warranty) {
       final productName = _getProductName(warranty).toLowerCase();
@@ -290,13 +271,7 @@ class _WarrantiesScreenState extends State<WarrantiesScreen> {
           if (data['success'] == true) {
             List<dynamic> searchResults = data['response']['data'] ?? [];
             
-            // Apply status filter if selected
-            if (_selectedFilter != 'all') {
-              searchResults = searchResults.where((warranty) {
-                final status = _getWarrantyStatus(warranty);
-                return status.toLowerCase() == _selectedFilter.toLowerCase();
-              }).toList();
-            }
+            // Status filter removed as filter chips are hidden
             
             setState(() => _filteredWarranties = searchResults);
           }
@@ -947,7 +922,6 @@ class _WarrantiesScreenState extends State<WarrantiesScreen> {
                                 _filteredWarranties.length,
                                 (index) {
                                   final warranty = _filteredWarranties[index];
-                                  final product = warranty['product'];
 
                                   return Transform.translate(
                                     offset: const Offset(0, -18),
@@ -1085,73 +1059,43 @@ class _WarrantiesScreenState extends State<WarrantiesScreen> {
             ),
           ),
 
-          // Filter chips
-          Padding(
-            padding: const EdgeInsets.only(bottom: 28),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                children: [
-                  _buildFilterChip(
-                    label: AppLocalizations.of(context)!.all,
-                    count: filterCounts['all']!,
-                    value: 'all',
-                  ),
-                  const SizedBox(width: 8),
-                  _buildFilterChip(
-                    label: AppLocalizations.of(context)!.active,
-                    count: filterCounts['active']!,
-                    value: 'active',
-                  ),
-                  const SizedBox(width: 8),
-                  _buildFilterChip(
-                    label: AppLocalizations.of(context)!.expiring_soon,
-                    count: filterCounts['expiring-soon']!,
-                    value: 'expiring-soon',
-                  ),
-                  const SizedBox(width: 8),
-                  _buildFilterChip(
-                    label: AppLocalizations.of(context)!.expired,
-                    count: filterCounts['expired']!,
-                    value: 'expired',
-                  ),
-                ],
-              ),
-            ),
-          ),
+          // Filter chips - HIDDEN
+          // Padding(
+          //   padding: const EdgeInsets.only(bottom: 28),
+          //   child: SingleChildScrollView(
+          //     scrollDirection: Axis.horizontal,
+          //     padding: const EdgeInsets.symmetric(horizontal: 16),
+          //     child: Row(
+          //       children: [
+          //         _buildFilterChip(
+          //           label: AppLocalizations.of(context)!.all,
+          //           count: filterCounts['all']!,
+          //           value: 'all',
+          //         ),
+          //         const SizedBox(width: 8),
+          //         _buildFilterChip(
+          //           label: AppLocalizations.of(context)!.active,
+          //           count: filterCounts['active']!,
+          //           value: 'active',
+          //         ),
+          //         const SizedBox(width: 8),
+          //         _buildFilterChip(
+          //           label: AppLocalizations.of(context)!.expiring_soon,
+          //           count: filterCounts['expiring-soon']!,
+          //           value: 'expiring-soon',
+          //         ),
+          //         const SizedBox(width: 8),
+          //         _buildFilterChip(
+          //           label: AppLocalizations.of(context)!.expired,
+          //           count: filterCounts['expired']!,
+          //           value: 'expired',
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // ),
+          const SizedBox(height: 28),
         ],
-      ),
-    );
-  }
-
-  Widget _buildFilterChip({
-    required String label,
-    required int count,
-    required String value,
-  }) {
-    final isSelected = _selectedFilter == value;
-
-    return InkWell(
-      onTap: () {
-        setState(() => _selectedFilter = value);
-        _applyFilters();
-      },
-      borderRadius: BorderRadius.circular(18),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(
-          color: isSelected ? Colors.white : const Color(0xFFEF5350),
-          borderRadius: BorderRadius.circular(18),
-        ),
-        child: Text(
-          '$label ($count)',
-          style: TextStyle(
-            color: isSelected ? const Color(0xFFE53935) : Colors.white,
-            fontSize: 12,
-            fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-          ),
-        ),
       ),
     );
   }

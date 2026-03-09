@@ -260,5 +260,17 @@
 	"warranty_already_active": "مفعلة",
 	"product_not_found": "المنتج غير موجود",
 	"checking_product": "جاري التحقق من المنتج...",
-	"enter_serial_number": "أدخل الرقم التسلسلي"
+	"enter_serial_number": "أدخل الرقم التسلسلي",
+	"product_catalogs": "كتالوجات المنتجات",
+	"no_catalogs_available": "لا توجد كتالوجات متاحة",
+	"total_products": "إجمالي المنتجات",
+	"products_label": "منتجات",
+	"pages_label": "صفحات",
+	"size_label": "الحجم",
+	"share": "مشاركة",
+	"preview": "معاينة",
+	"download_pdf_catalog": "تحميل الكتالوج PDF",
+	"standard": "قياسي",
+	"retry": "إعادة المحاولة",
+	"no_results": "لا توجد نتائج"
 }

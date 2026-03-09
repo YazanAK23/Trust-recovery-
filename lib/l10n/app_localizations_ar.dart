@@ -1086,6 +1086,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get preview => 'معاينة';
 
   @override
+  String get retry => 'إعادة المحاولة';
+
+  @override
   String get products_to_activate => 'المنتجات للتفعيل';
 
   @override

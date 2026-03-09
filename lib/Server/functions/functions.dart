@@ -153,13 +153,22 @@ getMaintenanceRequests(int page) async {
   return res;
 }
 
-getMaintenanceRequestsByMerchantID(int page) async {
+getMaintenanceRequestsByMerchantID(int page, {String? status, String? countryId}) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String? merchantID = prefs.getString('merchant_id');
-  print("$URL_MAINTENANCE_REQUESTS/merchantId/$merchantID?page=$page");
-  var response = await http.get(
-      Uri.parse("$URL_MAINTENANCE_REQUESTS/merchantId/$merchantID?page=$page"),
-      headers: headers);
+  
+  String url = "$URL_MAINTENANCE_REQUESTS/merchantId/$merchantID?page=$page";
+  
+  // Conditionally append filter parameters
+  if (status != null && status.isNotEmpty && status != 'all') {
+    url += "&status=$status";
+  }
+  if (countryId != null && countryId.isNotEmpty) {
+    url += "&countryId=$countryId";
+  }
+  
+  print("URL: $url");
+  var response = await http.get(Uri.parse(url), headers: headers);
   var res = jsonDecode(response.body)["response"];
   return res;
 }
@@ -401,12 +410,22 @@ Future<void> downloadAndOpenFile(BuildContext context, String url, String filena
 
     hideDialog(context);
 
-    Fluttertoast.showToast(msg: "File downloaded: $filename");
+    Fluttertoast.showToast(
+      msg: "File downloaded: $filename",
+      backgroundColor: Colors.white,
+      textColor: Colors.black,
+      fontSize: 16.0,
+    );
 
     await OpenFilex.open(savePath);
   } catch (e) {
     hideDialog(context);
-    Fluttertoast.showToast(msg: "Download failed: $e");
+    Fluttertoast.showToast(
+      msg: "Download failed: $e",
+      backgroundColor: Colors.white,
+      textColor: Colors.red,
+      fontSize: 16.0,
+    );
   }
 }
 
@@ -416,11 +435,17 @@ void showDownloadingDialog(BuildContext context) {
     context: context,
     barrierDismissible: false,
     builder: (_) => AlertDialog(
+      backgroundColor: Colors.white,
       content: Row(
         children: [
-          const CircularProgressIndicator(),
+          const CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFD51C29)),
+          ),
           const SizedBox(width: 20),
-          Text(AppLocalizations.of(context)!.downloading),
+          Text(
+            AppLocalizations.of(context)!.downloading,
+            style: const TextStyle(color: Colors.black),
+          ),
         ],
       ),
     ),

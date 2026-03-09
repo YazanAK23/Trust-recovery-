@@ -1086,6 +1086,9 @@ class AppLocalizationsHe extends AppLocalizations {
   String get preview => 'Preview';
 
   @override
+  String get retry => 'Retry';
+
+  @override
   String get products_to_activate => 'Products to Activate';
 
   @override

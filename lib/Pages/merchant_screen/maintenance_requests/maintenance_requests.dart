@@ -113,21 +113,27 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
     });
 
     try {
-      var response = await getMaintenanceRequestsByMerchantID(currentPage);
+      // Pass filter parameters to API
+      var response = await getMaintenanceRequestsByMerchantID(
+        currentPage,
+        status: selectedFilter != 'all' ? selectedFilter : null,
+      );
       
       if (response != null && response["data"] != null) {
         if (!mounted) return;
         setState(() {
           allMaintenanceRequests = List.from(response["data"]);
           
-          // Update status counts
-          pendingCount = response["statusCounts"]["pending"] ?? 0;
-          inProgressCount = response["statusCounts"]["in_progress"] ?? 0;
-          doneCount = response["statusCounts"]["done"] ?? 0;
-          deliveredCount = response["statusCounts"]["delivered"] ?? 0;
+          // Update status counts from API response
+          if (response["statusCounts"] != null) {
+            pendingCount = response["statusCounts"]["pending"] ?? 0;
+            inProgressCount = response["statusCounts"]["in_progress"] ?? 0;
+            doneCount = response["statusCounts"]["done"] ?? 0;
+            deliveredCount = response["statusCounts"]["delivered"] ?? 0;
+          }
           
-          // Apply filter
-          applyFilter();
+          // When using API filtering, filteredRequests = allMaintenanceRequests
+          filteredRequests = List.from(allMaintenanceRequests);
         });
       }
     } catch (e) {
@@ -152,13 +158,17 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
 
     try {
       currentPage++;
-      var response = await getMaintenanceRequestsByMerchantID(currentPage);
+      // Pass filter parameters to API
+      var response = await getMaintenanceRequestsByMerchantID(
+        currentPage,
+        status: selectedFilter != 'all' ? selectedFilter : null,
+      );
       
       if (response != null && response["data"] != null && response["data"].isNotEmpty) {
         if (!mounted) return;
         setState(() {
           allMaintenanceRequests.addAll(response["data"]);
-          applyFilter();
+          filteredRequests = List.from(allMaintenanceRequests);
         });
       } else {
         hasMorePages = false;
@@ -178,19 +188,16 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
   }
 
   void applyFilter() {
-    if (selectedFilter == 'all') {
-      filteredRequests = List.from(allMaintenanceRequests);
-    } else {
-      filteredRequests = allMaintenanceRequests
-          .where((request) => request['status'] == selectedFilter)
-          .toList();
-    }
+    // Filter is now applied via API, so just copy the data
+    // This method is kept for backwards compatibility
+    filteredRequests = List.from(allMaintenanceRequests);
   }
 
   void onFilterChanged(String filter) {
     setState(() {
       selectedFilter = filter;
-      applyFilter();
+      // Fetch filtered data from API
+      fetchMaintenanceRequests();
       // Scroll to top when filter changes
       if (scrollController.hasClients) {
         scrollController.animateTo(

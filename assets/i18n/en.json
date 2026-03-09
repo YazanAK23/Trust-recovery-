@@ -260,5 +260,17 @@
 	"warranty_already_active": "Active",
 	"product_not_found": "Product not found",
 	"checking_product": "Checking product...",
-	"enter_serial_number": "Enter serial number"
+	"enter_serial_number": "Enter serial number",
+	"product_catalogs": "Product Catalogs",
+	"no_catalogs_available": "No catalogs available",
+	"total_products": "Total Products",
+	"products_label": "Products",
+	"pages_label": "Pages",
+	"size_label": "Size",
+	"share": "Share",
+	"preview": "Preview",
+	"download_pdf_catalog": "Download PDF Catalog",
+	"standard": "Standard",
+	"retry": "Retry",
+	"no_results": "No results found"
 }
