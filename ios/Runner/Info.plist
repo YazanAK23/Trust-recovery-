@@ -32,6 +32,12 @@
 	<string>This app needs access to your location to show nearby point of sales.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This app needs access to your location to show nearby point of sales.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>This app needs access to your camera for document scanning and verification.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This app needs access to your photo library to upload documents.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This app needs access to your microphone for verification purposes.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
