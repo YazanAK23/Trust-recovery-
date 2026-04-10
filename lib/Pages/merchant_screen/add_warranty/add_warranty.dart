@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trust_app_updated/Components/responsive/app_responsive.dart';
 import 'package:trust_app_updated/l10n/app_localizations.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
@@ -36,6 +37,7 @@ class _AddWarrantyState extends State<AddWarranty> {
   int productID = 0;
   int merchantID = 0;
   bool showCustomerDetails = false;
+  late AppR _r;
 
   @override
   void initState() {
@@ -57,6 +59,7 @@ class _AddWarrantyState extends State<AddWarranty> {
     }
   }
   Widget build(BuildContext context) {
+    _r = AppR(context);
     return Container(
       color: MAIN_COLOR,
       child: SafeArea(
@@ -64,7 +67,7 @@ class _AddWarrantyState extends State<AddWarranty> {
           body: Column(
             children: [
               Container(
-                height: 70,
+                height: _r.dp(70),
                 width: double.infinity,
                 decoration: BoxDecoration(color: MAIN_COLOR),
                 child: Stack(
@@ -79,7 +82,7 @@ class _AddWarrantyState extends State<AddWarranty> {
                         },
                         icon: Icon(
                           Icons.arrow_back,
-                          size: 28,
+                          size: _r.dp(28),
                           color: Colors.white,
                         ),
                       ),
@@ -89,7 +92,7 @@ class _AddWarrantyState extends State<AddWarranty> {
                         AppLocalizations.of(context)!.amending_the_warranty,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 22,
+                          fontSize: _r.fs22,
                           color: Colors.white,
                         ),
                       ),
@@ -103,12 +106,12 @@ class _AddWarrantyState extends State<AddWarranty> {
                   child:
                   SingleChildScrollView(
                     child: Padding(
-                      padding: const EdgeInsets.only(top: 20),
+                      padding: EdgeInsets.only(top: _r.dp(20)),
                       child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(right: 25, left: 25),
+                    padding: EdgeInsets.symmetric(horizontal: _r.hPad),
                     child: Container(
                       width: double.infinity,
                       decoration: BoxDecoration(

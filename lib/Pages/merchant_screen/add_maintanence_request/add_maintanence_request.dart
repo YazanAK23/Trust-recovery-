@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trust_app_updated/l10n/app_localizations.dart';
+import 'package:trust_app_updated/Components/responsive/app_responsive.dart';
 import 'package:trust_app_updated/Server/domains/domains.dart';
 import 'package:trust_app_updated/Server/functions/functions.dart';
 import 'package:trust_app_updated/Services/scanning_service/scanning_service.dart';
@@ -46,6 +47,9 @@ class _AddMaintanenceRequestState extends State<AddMaintanenceRequest> {
   bool _isLoading = false;
   bool _serialChecked = false;
   String _lastCheckedSerial = "";
+
+  // Responsive helper – updated every build()
+  late AppR _r;
   
   @override
   void initState() {
@@ -117,18 +121,20 @@ class _AddMaintanenceRequestState extends State<AddMaintanenceRequest> {
 
   @override
   Widget build(BuildContext context) {
+    _r = AppR(context);
     final isRTL = locale.toString() == 'ar';
 
     return Scaffold(
       key: _scaffoldKey,
       resizeToAvoidBottomInset: true,
-      backgroundColor: const Color(0xffe33131), // Red background for status bar area
+      backgroundColor: const Color(0xFFF5F5F5),
       drawer: DrawerWell(
         Refresh: () {
           setState(() {});
         },
       ),
       body: Stack(
+        fit: StackFit.expand,
         children: [
           SingleChildScrollView(
             child: Column(
@@ -192,7 +198,7 @@ class _AddMaintanenceRequestState extends State<AddMaintanenceRequest> {
   /// Build header
   Widget _buildHeader(bool isRTL) {
     return Container(
-      height: 60,
+      height: _r.headerH,
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Stack(
@@ -203,15 +209,15 @@ class _AddMaintanenceRequestState extends State<AddMaintanenceRequest> {
             right: isRTL ? 0 : null,
             child: IconButton(
               onPressed: () => Navigator.pop(context),
-              icon: const Icon(Icons.arrow_back, size: 24, color: Colors.white),
+              icon: Icon(Icons.arrow_back, size: _r.actionBtnIconSize, color: Colors.white),
             ),
           ),
           Center(
             child: Text(
               AppLocalizations.of(context)!.send_to_maintenance,
-              style: const TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 18,
+                fontSize: _r.fs18,
                 color: Colors.white,
               ),
             ),
@@ -223,8 +229,8 @@ class _AddMaintanenceRequestState extends State<AddMaintanenceRequest> {
               onPressed: () => _scaffoldKey.currentState?.openDrawer(),
               icon: SvgPicture.asset(
                 'assets/images/Menu.svg',
-                width: 24,
-                height: 24,
+                width: _r.actionBtnIconSize,
+                height: _r.actionBtnIconSize,
                 colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
               ),
             ),
@@ -237,7 +243,7 @@ class _AddMaintanenceRequestState extends State<AddMaintanenceRequest> {
   /// Build top action buttons
   Widget _buildTopButtons() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 18),
+      padding: EdgeInsets.symmetric(horizontal: _r.dp(40), vertical: _r.dp(18)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -275,25 +281,25 @@ class _AddMaintanenceRequestState extends State<AddMaintanenceRequest> {
       child: Column(
         children: [
           Container(
-            width: 54,
-            height: 54,
+            width: _r.actionBtnSize,
+            height: _r.actionBtnSize,
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.25),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(_r.dp(12)),
             ),
             child: rotateIcon
                 ? Transform.rotate(
-                    angle: isRTL ? 0.785398 : -0.785398, // 45 degrees for RTL, -45 for LTR
-                    child: Icon(icon, color: Colors.white, size: 24),
+                    angle: isRTL ? 0.785398 : -0.785398,
+                    child: Icon(icon, color: Colors.white, size: _r.actionBtnIconSize),
                   )
-                : Icon(icon, color: Colors.white, size: 24),
+                : Icon(icon, color: Colors.white, size: _r.actionBtnIconSize),
           ),
-          const SizedBox(height: 6),
+          SizedBox(height: _r.dp(6)),
           Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               color: Colors.white,
-              fontSize: 11,
+              fontSize: _r.fs11,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -313,27 +319,27 @@ class _AddMaintanenceRequestState extends State<AddMaintanenceRequest> {
       child: Column(
         children: [
           Container(
-            width: 54,
-            height: 54,
+            width: _r.actionBtnSize,
+            height: _r.actionBtnSize,
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.25),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(_r.dp(12)),
             ),
             child: Center(
               child: SvgPicture.asset(
                 svgPath,
                 colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
-                width: 24,
-                height: 24,
+                width: _r.actionBtnIconSize,
+                height: _r.actionBtnIconSize,
               ),
             ),
           ),
-          const SizedBox(height: 6),
+          SizedBox(height: _r.dp(6)),
           Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               color: Colors.white,
-              fontSize: 11,
+              fontSize: _r.fs11,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -460,11 +466,11 @@ class _AddMaintanenceRequestState extends State<AddMaintanenceRequest> {
   /// Build malfunction details section
   Widget _buildMalfunctionDetails() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: _r.pagePadding,
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(_r.cardRadius),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.05),
@@ -474,96 +480,90 @@ class _AddMaintanenceRequestState extends State<AddMaintanenceRequest> {
           ],
         ),
         child: Padding(
-          padding: const EdgeInsets.all(15),
+          padding: _r.cardPadding,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
-                  const Icon(Icons.info_outline, color: Color(0xffEF4444), size: 16),
+                  Icon(Icons.info_outline, color: const Color(0xffEF4444), size: _r.dp(16)),
                   const SizedBox(width: 6),
                   Text(
                     AppLocalizations.of(context)!.malfunction_details,
-                    style: const TextStyle(
-                      fontSize: 13,
+                    style: TextStyle(
+                      fontSize: _r.fs13,
                       fontWeight: FontWeight.bold,
                       color: Colors.black87,
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 15),
+              SizedBox(height: _r.dp(15)),
               Text(
                 '${AppLocalizations.of(context)!.malfunction_description} *',
-                style: const TextStyle(
-                  fontSize: 11,
+                style: TextStyle(
+                  fontSize: _r.fs11,
                   fontWeight: FontWeight.w500,
                   color: Colors.black87,
                 ),
               ),
-              const SizedBox(height: 6),
+              SizedBox(height: _r.dp(6)),
               TextFormField(
                 controller: _descriptionController,
-                style: const TextStyle(fontSize: 12),
+                style: TextStyle(fontSize: _r.fs12),
                 maxLines: 4,
                 decoration: InputDecoration(
                   hintText: AppLocalizations.of(context)!.malfunction_description,
-                  hintStyle: TextStyle(fontSize: 12, color: Colors.grey[400]),
+                  hintStyle: TextStyle(fontSize: _r.fs12, color: Colors.grey[400]),
                   filled: true,
                   fillColor: Colors.white,
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(_r.smallRadius),
                     borderSide: BorderSide(color: Colors.grey[300]!),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(_r.smallRadius),
                     borderSide: BorderSide(color: Colors.grey[300]!),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(_r.smallRadius),
                     borderSide: const BorderSide(color: Color(0xffEF4444)),
                   ),
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 12,
-                  ),
+                  contentPadding: _r.fieldContentPadding,
                 ),
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: _r.dp(12)),
               Text(
                 AppLocalizations.of(context)!.notes,
-                style: const TextStyle(
-                  fontSize: 11,
+                style: TextStyle(
+                  fontSize: _r.fs11,
                   fontWeight: FontWeight.w500,
                   color: Colors.black87,
                 ),
               ),
-              const SizedBox(height: 6),
+              SizedBox(height: _r.dp(6)),
               TextFormField(
                 controller: _notesController,
-                style: const TextStyle(fontSize: 12),
+                style: TextStyle(fontSize: _r.fs12),
                 maxLines: 3,
                 decoration: InputDecoration(
                   hintText: AppLocalizations.of(context)!.notes,
-                  hintStyle: TextStyle(fontSize: 12, color: Colors.grey[400]),
+                  hintStyle: TextStyle(fontSize: _r.fs12, color: Colors.grey[400]),
                   filled: true,
                   fillColor: Colors.white,
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(_r.smallRadius),
                     borderSide: BorderSide(color: Colors.grey[300]!),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(_r.smallRadius),
                     borderSide: BorderSide(color: Colors.grey[300]!),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(_r.smallRadius),
                     borderSide: const BorderSide(color: Color(0xffEF4444)),
                   ),
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 12,
-                  ),
+                  contentPadding: _r.fieldContentPadding,
                 ),
               ),
             ],
@@ -576,37 +576,37 @@ class _AddMaintanenceRequestState extends State<AddMaintanenceRequest> {
   Widget _buildImportantNote() {
     final isRTL = locale.toString() == 'ar';
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: _r.pagePadding,
       child: Container(
-        padding: const EdgeInsets.all(14),
+        padding: _r.smallCardPadding,
         decoration: BoxDecoration(
           color: const Color(0xFFFFFFFF),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(_r.cardRadius),
           border: Border.all(color: const Color(0xFFE5E7EB)),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Icon(Icons.error_outline, color: Color(0xFFEF4444), size: 20),
-            const SizedBox(width: 10),
+            Icon(Icons.error_outline, color: const Color(0xFFEF4444), size: _r.dp(20)),
+            SizedBox(width: _r.dp(10)),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     AppLocalizations.of(context)!.important_note,
-                    style: const TextStyle(
-                      fontSize: 12,
+                    style: TextStyle(
+                      fontSize: _r.fs12,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF1F2937),
+                      color: const Color(0xFF1F2937),
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: _r.dp(4)),
                   Text(
                     AppLocalizations.of(context)!.important_note_message,
-                    style: const TextStyle(
-                      fontSize: 11,
-                      color: Color(0xFF374151),
+                    style: TextStyle(
+                      fontSize: _r.fs11,
+                      color: const Color(0xFF374151),
                       height: 1.4,
                     ),
                   ),
@@ -669,11 +669,11 @@ class _AddMaintanenceRequestState extends State<AddMaintanenceRequest> {
   /// Build serial number section
   Widget _buildSerialNumberSection() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: _r.pagePadding,
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(_r.cardRadius),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.05),
@@ -683,7 +683,7 @@ class _AddMaintanenceRequestState extends State<AddMaintanenceRequest> {
           ],
         ),
         child: Padding(
-          padding: const EdgeInsets.all(15),
+          padding: _r.cardPadding,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -705,99 +705,96 @@ class _AddMaintanenceRequestState extends State<AddMaintanenceRequest> {
                   const SizedBox(width: 6),
                   Text(
                     AppLocalizations.of(context)!.product_serial_number,
-                    style: const TextStyle(
-                      fontSize: 13,
+                    style: TextStyle(
+                      fontSize: _r.fs13,
                       fontWeight: FontWeight.bold,
                       color: Colors.black87,
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: _r.dp(12)),
               Text(
                 AppLocalizations.of(context)!.serial_number,
-                style: const TextStyle(
-                  fontSize: 11,
+                style: TextStyle(
+                  fontSize: _r.fs11,
                   fontWeight: FontWeight.w500,
                   color: Colors.black87,
                 ),
               ),
-              const SizedBox(height: 6),
+              SizedBox(height: _r.dp(6)),
               Row(
                 children: [
                   Expanded(
                     child: TextFormField(
                       controller: _serialNumberController,
-                      style: const TextStyle(fontSize: 12),
+                      style: TextStyle(fontSize: _r.fs12),
                       decoration: InputDecoration(
                         hintText: AppLocalizations.of(context)!.enter_serial_number,
-                        hintStyle: TextStyle(fontSize: 12, color: Colors.grey[400]),
+                        hintStyle: TextStyle(fontSize: _r.fs12, color: Colors.grey[400]),
                         filled: true,
                         fillColor: const Color(0xFFF9FAFB),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(_r.smallRadius),
                           borderSide: BorderSide(color: Colors.grey[300]!),
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(_r.smallRadius),
                           borderSide: BorderSide(color: Colors.grey[300]!),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(_r.smallRadius),
                           borderSide: const BorderSide(color: Color(0xffEF4444)),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 12,
-                        ),
+                        contentPadding: _r.fieldContentPadding,
                       ),
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: _r.dp(8)),
                   // Camera scan button
                   Container(
-                    width: 42,
-                    height: 42,
+                    width: _r.scanBtnSize,
+                    height: _r.scanBtnSize,
                     decoration: BoxDecoration(
                       color: const Color(0xFFFEF2F2),
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(_r.smallRadius),
                       border: Border.all(color: const Color(0xFFE5E7EB)),
                     ),
                     child: IconButton(
                       onPressed: _isLoading ? null : _scanFromImage,
-                      icon: const Icon(Icons.camera_alt, color: Color(0xffEF4444), size: 20),
+                      icon: Icon(Icons.camera_alt, color: const Color(0xffEF4444), size: _r.scanBtnIconSize),
                       padding: EdgeInsets.zero,
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: _r.dp(8)),
                   // Barcode scan button
                   Container(
-                    width: 42,
-                    height: 42,
+                    width: _r.scanBtnSize,
+                    height: _r.scanBtnSize,
                     decoration: BoxDecoration(
                       color: const Color(0xFFFEF2F2),
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(_r.smallRadius),
                       border: Border.all(color: const Color(0xFFE5E7EB)),
                     ),
                     child: IconButton(
                       onPressed: _isLoading ? null : _scanBarcode,
                       icon: SvgPicture.asset(
                         'assets/icon/barcode.svg',
-                        width: 20,
-                        height: 20,
+                        width: _r.scanBtnIconSize,
+                        height: _r.scanBtnIconSize,
                         colorFilter: const ColorFilter.mode(Color(0xffEF4444), BlendMode.srcIn),
                       ),
                       padding: EdgeInsets.zero,
                     ),
                   ),
-                  const SizedBox(width: 8),
-                  // Add button
+                  SizedBox(width: _r.dp(8)),
+                  // Check button
                   Container(
-                    width: 42,
-                    height: 42,
+                    width: _r.scanBtnSize,
+                    height: _r.scanBtnSize,
                     decoration: BoxDecoration(
                       color: const Color(0xffEF4444),
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(_r.smallRadius),
                     ),
                     child: IconButton(
                       onPressed: _isLoading ? null : _checkSerialNumber,
@@ -813,7 +810,7 @@ class _AddMaintanenceRequestState extends State<AddMaintanenceRequest> {
                           : Icon(
                               productAdded && !_serialChecked ? Icons.refresh : Icons.check,
                               color: Colors.white,
-                              size: 20,
+                              size: _r.scanBtnIconSize,
                             ),
                       padding: EdgeInsets.zero,
                     ),
@@ -830,19 +827,19 @@ class _AddMaintanenceRequestState extends State<AddMaintanenceRequest> {
   /// Build product details section
   Widget _buildProductDetails() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: _r.pagePadding,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Title outside the card
           Row(
             children: [
-              const Icon(Icons.info_outline, color: Color(0xffEF4444), size: 18),
-              const SizedBox(width: 6),
+              Icon(Icons.info_outline, color: const Color(0xffEF4444), size: _r.dp(18)),
+              SizedBox(width: _r.dp(6)),
               Text(
                 AppLocalizations.of(context)!.product_details,
-                style: const TextStyle(
-                  fontSize: 14,
+                style: TextStyle(
+                  fontSize: _r.fs14,
                   fontWeight: FontWeight.bold,
                   color: Colors.black87,
                 ),
@@ -854,7 +851,7 @@ class _AddMaintanenceRequestState extends State<AddMaintanenceRequest> {
           Container(
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(_r.cardRadius),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.05),
@@ -864,7 +861,7 @@ class _AddMaintanenceRequestState extends State<AddMaintanenceRequest> {
               ],
             ),
             child: Padding(
-              padding: const EdgeInsets.all(15),
+              padding: _r.cardPadding,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -873,11 +870,11 @@ class _AddMaintanenceRequestState extends State<AddMaintanenceRequest> {
                     children: [
                       // Product image
                       Container(
-                        width: 65,
-                        height: 65,
+                        width: _r.productImgSize,
+                        height: _r.productImgSize,
                         decoration: BoxDecoration(
                           color: const Color(0xFFF9FAFB),
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(_r.dp(10)),
                           border: Border.all(
                             color: const Color(0xFFE5E7EB),
                             width: 1,
@@ -885,7 +882,7 @@ class _AddMaintanenceRequestState extends State<AddMaintanenceRequest> {
                         ),
                         child: productImage.isNotEmpty
                             ? ClipRRect(
-                                borderRadius: BorderRadius.circular(9),
+                                borderRadius: BorderRadius.circular(_r.dp(9)),
                                 child: Image.network(
                                   productImage,
                                   fit: BoxFit.cover,
@@ -898,7 +895,7 @@ class _AddMaintanenceRequestState extends State<AddMaintanenceRequest> {
                             : const Icon(Icons.inventory_2_outlined,
                                 color: Colors.grey, size: 32),
                       ),
-                      const SizedBox(width: 14),
+                      SizedBox(width: _r.dp(14)),
                       // Product details
                       Expanded(
                         child: Column(
@@ -906,19 +903,19 @@ class _AddMaintanenceRequestState extends State<AddMaintanenceRequest> {
                           children: [
                             Text(
                               productName,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontWeight: FontWeight.w600,
-                                fontSize: 14,
-                                color: Color(0xFF111827),
+                                fontSize: _r.fs14,
+                                color: const Color(0xFF111827),
                               ),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
-                            const SizedBox(height: 6),
+                            SizedBox(height: _r.dp(6)),
                             Text(
                               _serialNumberController.text,
                               style: TextStyle(
-                                fontSize: 11,
+                                fontSize: _r.fs11,
                                 color: Colors.grey[600],
                               ),
                             ),
@@ -1000,13 +997,13 @@ class _AddMaintanenceRequestState extends State<AddMaintanenceRequest> {
   Widget _buildDetailRow(IconData icon, String label, String value, {Color? valueColor, bool isStatus = false}) {
     return Row(
       children: [
-        Icon(icon, size: 16, color: Colors.grey[500]),
-        const SizedBox(width: 10),
+        Icon(icon, size: _r.dp(16), color: Colors.grey[500]),
+        SizedBox(width: _r.dp(10)),
         Expanded(
           child: Text(
             label,
             style: TextStyle(
-              fontSize: 12,
+              fontSize: _r.fs12,
               color: Colors.grey[600],
             ),
           ),
@@ -1024,7 +1021,7 @@ class _AddMaintanenceRequestState extends State<AddMaintanenceRequest> {
         Text(
           value,
           style: TextStyle(
-            fontSize: 12,
+            fontSize: _r.fs12,
             fontWeight: FontWeight.w600,
             color: valueColor ?? Colors.black87,
           ),
@@ -1048,10 +1045,10 @@ class _AddMaintanenceRequestState extends State<AddMaintanenceRequest> {
             ),
           ],
         ),
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(_r.dp(16)),
         child: SizedBox(
           width: double.infinity,
-          height: 52,
+          height: _r.submitBtnHLarge,
           child: ElevatedButton(
             onPressed: _canSubmit() ? _submitMaintenanceRequest : null,
             style: ElevatedButton.styleFrom(
@@ -1060,7 +1057,7 @@ class _AddMaintanenceRequestState extends State<AddMaintanenceRequest> {
               foregroundColor: Colors.white,
               elevation: 0,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(_r.cardRadius),
               ),
             ),
             child: Row(
@@ -1068,26 +1065,26 @@ class _AddMaintanenceRequestState extends State<AddMaintanenceRequest> {
               children: isRTL ? [
                 Text(
                   AppLocalizations.of(context)!.submit_maintenance_request,
-                  style: const TextStyle(
-                    fontSize: 16,
+                  style: TextStyle(
+                    fontSize: _r.fs16,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: _r.dp(8)),
                 Transform.rotate(
-                  angle: 0.785398, // 45 degrees for RTL
-                  child: const Icon(Icons.send, size: 20),
+                  angle: 0.785398,
+                  child: Icon(Icons.send, size: _r.dp(20)),
                 ),
               ] : [
                 Transform.rotate(
-                  angle: -0.785398, // -45 degrees for LTR
-                  child: const Icon(Icons.send, size: 20),
+                  angle: -0.785398,
+                  child: Icon(Icons.send, size: _r.dp(20)),
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: _r.dp(8)),
                 Text(
                   AppLocalizations.of(context)!.submit_maintenance_request,
-                  style: const TextStyle(
-                    fontSize: 16,
+                  style: TextStyle(
+                    fontSize: _r.fs16,
                     fontWeight: FontWeight.bold,
                   ),
                 ),

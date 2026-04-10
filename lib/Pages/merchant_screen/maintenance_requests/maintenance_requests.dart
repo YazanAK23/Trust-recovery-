@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:trust_app_updated/Components/responsive/app_responsive.dart';
 import 'package:trust_app_updated/Server/functions/functions.dart';
 import 'package:trust_app_updated/l10n/app_localizations.dart';
 import 'package:trust_app_updated/main.dart';
@@ -56,6 +57,7 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
   
   // Track locale for rebuilding on language change
   Locale? _currentLocale;
+  late AppR _r;
 
   @override
   void initState() {
@@ -299,8 +301,8 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
             textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
             child: Dialog(
               backgroundColor: Colors.grey[50],
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              insetPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(_r.cardRadius)),
+              insetPadding: EdgeInsets.symmetric(horizontal: _r.hPad, vertical: _r.dp(24)),
               child: Container(
                 width: double.infinity,
                 constraints: BoxConstraints(maxHeight: 650),
@@ -309,7 +311,7 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
                   children: [
                   // Header with close button
                   Padding(
-                    padding: EdgeInsets.fromLTRB(20, 16, 16, 16),
+                    padding: EdgeInsets.fromLTRB(_r.hPad, _r.dp(16), _r.dp(16), _r.dp(16)),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -317,7 +319,7 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
                           child: Text(
                             '${AppLocalizations.of(context)!.edit} ${AppLocalizations.of(context)!.maintenance_requests}',
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: _r.fs18,
                               fontWeight: FontWeight.bold,
                               color: Colors.black87,
                             ),
@@ -338,29 +340,29 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
                   // Form Content
                   Flexible(
                     child: SingleChildScrollView(
-                      padding: EdgeInsets.all(20),
+                      padding: EdgeInsets.all(_r.hPad),
                       child: Column(
                         crossAxisAlignment: isRTL ? CrossAxisAlignment.end : CrossAxisAlignment.start,
                         children: [
                           // Product Card
                           Container(
-                            padding: EdgeInsets.all(12),
+                            padding: EdgeInsets.all(_r.dp(12)),
                             decoration: BoxDecoration(
                               color: Colors.grey[100],
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(_r.dp(10)),
                             ),
                             child: Row(
                               children: [
                                 // Product Image
                                 Container(
-                                  width: 60,
-                                  height: 60,
+                                  width: _r.productImgSmall,
+                                  height: _r.productImgSmall,
                                   decoration: BoxDecoration(
                                     color: Colors.white,
-                                    borderRadius: BorderRadius.circular(8),
+                                    borderRadius: BorderRadius.circular(_r.smallRadius),
                                   ),
                                   child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(8),
+                                    borderRadius: BorderRadius.circular(_r.smallRadius),
                                     child: productImage.isNotEmpty
                                         ? FancyShimmerImage(
                                             imageUrl: productImage,
@@ -370,7 +372,7 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
                                         : Icon(Icons.image, size: 30, color: Colors.grey),
                                   ),
                                 ),
-                                SizedBox(width: 12),
+                                SizedBox(width: _r.dp(12)),
                                 // Product Details
                                 Expanded(
                                   child: Column(
@@ -379,7 +381,7 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
                                       Text(
                                         productName,
                                         style: TextStyle(
-                                          fontSize: 13,
+                                          fontSize: _r.fs13,
                                           fontWeight: FontWeight.w600,
                                           color: Colors.black87,
                                         ),
@@ -387,13 +389,13 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
                                         overflow: TextOverflow.ellipsis,
                                         textAlign: isRTL ? TextAlign.right : TextAlign.left,
                                       ),
-                                      SizedBox(height: 4),
+                                      SizedBox(height: _r.dp(4)),
                                       Align(
                                         alignment: isRTL ? Alignment.centerRight : Alignment.centerLeft,
                                         child: Text(
                                           productSerial,
                                           style: TextStyle(
-                                            fontSize: 13,
+                                            fontSize: _r.fs13,
                                             color: Colors.grey[600],
                                           ),
                                           textDirection: TextDirection.ltr,
@@ -405,7 +407,7 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
                               ],
                             ),
                           ),
-                          SizedBox(height: 20),
+                          SizedBox(height: _r.dp(20)),
                           
                           // Customer Name
                           _buildSimpleField(
@@ -414,7 +416,7 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
                             customerNameController,
                             isRTL,
                           ),
-                          SizedBox(height: 16),
+                          SizedBox(height: _r.dp(16)),
                           
                           // Customer Phone
                           _buildSimpleField(
@@ -424,7 +426,7 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
                             isRTL,
                             keyboardType: TextInputType.phone,
                           ),
-                          SizedBox(height: 16),
+                          SizedBox(height: _r.dp(16)),
                           
                           // Malfunction Description
                           _buildSimpleField(
@@ -434,9 +436,9 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
                             isRTL,
                             maxLines: 3,
                             isRequired: false,
-                            fontSize: 11,
+                            fontSize: _r.fs11,
                           ),
-                          SizedBox(height: 16),
+                          SizedBox(height: _r.dp(16)),
                           
                           // Notes
                           _buildSimpleField(
@@ -446,7 +448,7 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
                             isRTL,
                             maxLines: 3,
                             isRequired: false,
-                            fontSize: 11,
+                            fontSize: _r.fs11,
                           ),
                         ],
                       ),
@@ -455,7 +457,7 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
                   
                   // Action Buttons
                   Container(
-                    padding: EdgeInsets.fromLTRB(20, 16, 20, 20),
+                    padding: EdgeInsets.fromLTRB(_r.hPad, _r.dp(16), _r.hPad, _r.dp(20)),
                     child: Row(
                       textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
                       children: [
@@ -465,23 +467,23 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
                             onPressed: isSubmitting ? null : () => Navigator.pop(dialogContext),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Color(0xFFF5F5F5),
-                              padding: EdgeInsets.symmetric(vertical: 12),
+                              padding: EdgeInsets.symmetric(vertical: _r.dp(12)),
                               elevation: 0,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
+                                borderRadius: BorderRadius.circular(_r.smallRadius),
                               ),
                             ),
                             child: Text(
                               AppLocalizations.of(context)!.cancel,
                               style: TextStyle(
-                                fontSize: 14,
+                                fontSize: _r.fs14,
                                 fontWeight: FontWeight.w600,
                                 color: Colors.black87,
                               ),
                             ),
                           ),
                         ),
-                        SizedBox(width: 12),
+                        SizedBox(width: _r.dp(12)),
                         // Save Changes Button
                         Expanded(
                           child: ElevatedButton(
@@ -524,16 +526,16 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Color(0xFFf04444),
-                              padding: EdgeInsets.symmetric(vertical: 12),
+                              padding: EdgeInsets.symmetric(vertical: _r.dp(12)),
                               elevation: 0,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
+                                borderRadius: BorderRadius.circular(_r.smallRadius),
                               ),
                             ),
                             child: isSubmitting
                                 ? SizedBox(
-                                    height: 18,
-                                    width: 18,
+                                    height: _r.dp(18),
+                                    width: _r.dp(18),
                                     child: CircularProgressIndicator(
                                       strokeWidth: 2,
                                       valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
@@ -542,7 +544,7 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
                                 : Text(
                                     AppLocalizations.of(context)!.save_changes,
                                     style: TextStyle(
-                                      fontSize: 14,
+                                      fontSize: _r.fs14,
                                       fontWeight: FontWeight.w600,
                                       color: Colors.white,
                                     ),
@@ -570,19 +572,20 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
     int maxLines = 1,
     TextInputType? keyboardType,
     bool isRequired = true,
-    double fontSize = 15,
+    double fontSize = 0,
   }) {
+    final fs = fontSize > 0 ? fontSize : _r.fs14;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Align(
           alignment: isRTL ? Alignment.centerRight : Alignment.centerLeft,
           child: Padding(
-            padding: EdgeInsets.only(bottom: 8),
+            padding: EdgeInsets.only(bottom: _r.dp(8)),
             child: Text(
               isRequired ? '$label *' : label,
               style: TextStyle(
-                fontSize: 13,
+                fontSize: _r.fs13,
                 fontWeight: FontWeight.w500,
                 color: Colors.black87,
               ),
@@ -596,23 +599,23 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
           keyboardType: keyboardType,
           textDirection: keyboardType == TextInputType.phone ? TextDirection.ltr : null,
           textAlign: keyboardType == TextInputType.phone ? (isRTL ? TextAlign.right : TextAlign.left) : (isRTL ? TextAlign.right : TextAlign.left),
-          style: TextStyle(fontSize: fontSize),
+          style: TextStyle(fontSize: fs),
           decoration: InputDecoration(
             filled: true,
             fillColor: Colors.white,
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(_r.smallRadius),
               borderSide: BorderSide(color: Colors.grey[300]!),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(_r.smallRadius),
               borderSide: BorderSide(color: Colors.grey[300]!),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(_r.smallRadius),
               borderSide: BorderSide(color: Colors.grey[400]!, width: 1.5),
             ),
-            contentPadding: EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+            contentPadding: _r.fieldContentPadding,
           ),
         ),
       ],
@@ -622,6 +625,7 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
   @override
   Widget build(BuildContext context) {
     final isRTL = locale.toString() == 'ar';
+    _r = AppR(context);
     
     return Container(
       color: MAIN_COLOR,
@@ -650,7 +654,7 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
                       // Header
                       SliverToBoxAdapter(
                         child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          padding: EdgeInsets.symmetric(horizontal: _r.hPad, vertical: _r.dp(12)),
                           decoration: BoxDecoration(
                             color: MAIN_COLOR,
                           ),
@@ -668,7 +672,7 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
                                       AppLocalizations.of(context)!.maintenance_requests,
                                       style: TextStyle(
                                         color: Colors.white,
-                                        fontSize: 20,
+                                        fontSize: _r.fs20,
                                         fontWeight: FontWeight.bold,
                                       ),
                                       textAlign: TextAlign.center,
@@ -676,8 +680,8 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
                                     ),
                                   ),
                                   Container(
-                                    width: 40,
-                                    height: 40,
+                                    width: _r.dp(40),
+                                    height: _r.dp(40),
                                     child: IconButton(
                                       padding: EdgeInsets.zero,
                                       onPressed: () {
@@ -736,14 +740,14 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
                                   children: [
                                     Icon(
                                       Icons.inbox_outlined,
-                                      size: 80,
+                                      size: _r.dp(80),
                                       color: Colors.grey[400],
                                     ),
-                                    SizedBox(height: 16),
+                                    SizedBox(height: _r.dp(16)),
                                     Text(
                                       AppLocalizations.of(context)!.empty_maintencaes,
                                       style: TextStyle(
-                                        fontSize: 16,
+                                        fontSize: _r.fs16,
                                         color: Colors.grey[600],
                                         fontWeight: FontWeight.w500,
                                       ),

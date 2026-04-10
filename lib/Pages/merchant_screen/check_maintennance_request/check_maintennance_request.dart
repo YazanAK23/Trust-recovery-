@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
+import 'package:trust_app_updated/Components/responsive/app_responsive.dart';
 import 'package:trust_app_updated/l10n/app_localizations.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
@@ -27,6 +28,7 @@ class CheckMaintennanceRequest extends StatefulWidget {
 class _CheckMaintennanceRequestState extends State<CheckMaintennanceRequest> {
   @override
   TextEditingController productSerialNumberController = TextEditingController();
+  late AppR _r;
   String resultMessageWarrantStatus = "";
   String maintenceNotes = "";
   String maintenceStatus = "";
@@ -50,6 +52,7 @@ class _CheckMaintennanceRequestState extends State<CheckMaintennanceRequest> {
   String customerName = "";
   String customerPhone = "";
   Widget build(BuildContext context) {
+    _r = AppR(context);
     return Container(
       color: MAIN_COLOR,
       child: SafeArea(
@@ -57,7 +60,7 @@ class _CheckMaintennanceRequestState extends State<CheckMaintennanceRequest> {
           body: Column(
             children: [
               Container(
-                height: 70,
+                height: _r.dp(70),
                 width: double.infinity,
                 decoration: BoxDecoration(color: MAIN_COLOR),
                 child: Stack(
@@ -72,7 +75,7 @@ class _CheckMaintennanceRequestState extends State<CheckMaintennanceRequest> {
                         },
                         icon: Icon(
                           Icons.arrow_back,
-                          size: 28,
+                          size: _r.dp(28),
                           color: Colors.white,
                         ),
                       ),
@@ -82,7 +85,7 @@ class _CheckMaintennanceRequestState extends State<CheckMaintennanceRequest> {
                         AppLocalizations.of(context)!.maintenance_status,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 22,
+                          fontSize: _r.fs22,
                           color: Colors.white,
                         ),
                       ),
@@ -96,17 +99,14 @@ class _CheckMaintennanceRequestState extends State<CheckMaintennanceRequest> {
                   child:
                   SingleChildScrollView(
                     child: Padding(
-                      padding: const EdgeInsets.only(top: 20),
+                      padding: EdgeInsets.only(top: _r.dp(20)),
                       child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Form(
                     key: _formKey,
                     child: Padding(
-                      padding: const EdgeInsets.only(
-                        right: 25,
-                        left: 25,
-                      ),
+                      padding: EdgeInsets.symmetric(horizontal: _r.hPad),
                       child: Container(
                         // height: 400,
                         width: double.infinity,

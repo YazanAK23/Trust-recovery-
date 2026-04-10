@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:trust_app_updated/Components/responsive/app_responsive.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:trust_app_updated/Components/warranty_card/warranty_card.dart';
@@ -22,6 +23,7 @@ class WarrantiesScreen extends StatefulWidget {
 class _WarrantiesScreenState extends State<WarrantiesScreen> {
   // Keys
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+    late AppR _r;
   
   // Controllers
   final TextEditingController _searchController = TextEditingController();
@@ -865,6 +867,7 @@ class _WarrantiesScreenState extends State<WarrantiesScreen> {
   Widget build(BuildContext context) {
     final filterCounts = _getFilterCounts();
     final isRTL = locale.toString() == 'ar';
+      _r = AppR(context);
 
     return Container(
       color: const Color(0xFFE53935),
@@ -968,7 +971,7 @@ class _WarrantiesScreenState extends State<WarrantiesScreen> {
         children: [
           // Header with back button, title, and add button
           SizedBox(
-            height: 60,
+            height: _r.headerH,
             child: Stack(
               alignment: Alignment.center,
               children: [
@@ -990,9 +993,9 @@ class _WarrantiesScreenState extends State<WarrantiesScreen> {
                 Center(
                   child: Text(
                     AppLocalizations.of(context)!.warranties,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 20,
+                      fontSize: _r.fs20,
                       color: Colors.white,
                     ),
                   ),
@@ -1008,8 +1011,8 @@ class _WarrantiesScreenState extends State<WarrantiesScreen> {
                     },
                     icon: SvgPicture.asset(
                       'assets/images/Menu.svg',
-                      width: 24,
-                      height: 24,
+                      width: _r.dp(24),
+                      height: _r.dp(24),
                       colorFilter: const ColorFilter.mode(
                         Colors.white,
                         BlendMode.srcIn,
@@ -1023,36 +1026,36 @@ class _WarrantiesScreenState extends State<WarrantiesScreen> {
 
           // Search bar
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: EdgeInsets.symmetric(horizontal: _r.hPad, vertical: _r.dp(8)),
             child: Container(
-              height: 42,
+                height: _r.dp(42),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(_r.smallRadius),
               ),
               child: TextField(
                 controller: _searchController,
                 onChanged: (_) => _applyFilters(),
-                style: const TextStyle(
-                  fontSize: 12,
+                style: TextStyle(
+                  fontSize: _r.fs12,
                   fontWeight: FontWeight.normal,
                 ),
                 decoration: InputDecoration(
                   hintText: AppLocalizations.of(context)!.search_by_serial_product_customer,
                   hintStyle: TextStyle(
                     color: Colors.grey[400],
-                    fontSize: 12,
+                      fontSize: _r.fs12,
                     fontWeight: FontWeight.normal,
                   ),
                   prefixIcon: Icon(
                     Icons.search,
                     color: Colors.grey[400],
-                    size: 20,
+                      size: _r.dp(20),
                   ),
                   border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 10,
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: _r.dp(16),
+                    vertical: _r.dp(10),
                   ),
                 ),
               ),
@@ -1107,14 +1110,14 @@ class _WarrantiesScreenState extends State<WarrantiesScreen> {
         children: [
           Icon(
             Icons.inventory_2_outlined,
-            size: 80,
-            color: Colors.grey[300],
-          ),
-          const SizedBox(height: 16),
+              size: _r.dp(80),
+              color: Colors.grey[300],
+            ),
+            SizedBox(height: _r.dp(16)),
           Text(
             'No warranties found',
             style: TextStyle(
-              fontSize: 16,
+                fontSize: _r.fs16,
               color: Colors.grey[600],
             ),
           ),

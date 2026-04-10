@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trust_app_updated/Components/responsive/app_responsive.dart';
 import 'package:trust_app_updated/l10n/app_localizations.dart';
 import 'package:trust_app_updated/Server/domains/domains.dart';
 
@@ -38,11 +39,12 @@ class _WarrantyCardState extends State<WarrantyCard> {
 
   @override
   Widget build(BuildContext context) {
+    final r = AppR(context);
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: EdgeInsets.symmetric(horizontal: r.hPad, vertical: r.dp(8)),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(r.cardRadius),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.15),
@@ -56,20 +58,20 @@ class _WarrantyCardState extends State<WarrantyCard> {
         children: [
           // Product info and status badge
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(r.dp(16)),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Product image
                 Container(
-                  width: 60,
-                  height: 60,
+                  width: r.productImgSmall,
+                  height: r.productImgSmall,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(r.smallRadius),
                     color: Colors.grey[100],
                   ),
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(r.smallRadius),
                     child: widget.productImage.isNotEmpty
                         ? Image.network(
                             URLIMAGE + widget.productImage,
@@ -89,7 +91,7 @@ class _WarrantyCardState extends State<WarrantyCard> {
                           ),
                   ),
                 ),
-                const SizedBox(width: 12),
+                  SizedBox(width: r.dp(12)),
                 
                 // Product name and serial
                 Expanded(
@@ -104,8 +106,8 @@ class _WarrantyCardState extends State<WarrantyCard> {
                         },
                         child: Text(
                           widget.productName,
-                          style: const TextStyle(
-                            fontSize: 13,
+                          style: TextStyle(
+                            fontSize: r.fs13,
                             fontWeight: FontWeight.bold,
                             color: Colors.black87,
                           ),
@@ -113,17 +115,17 @@ class _WarrantyCardState extends State<WarrantyCard> {
                           overflow: isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
                         ),
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: r.dp(4)),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        padding: EdgeInsets.symmetric(horizontal: r.dp(6), vertical: r.dp(2)),
                         decoration: BoxDecoration(
                           color: const Color(0xFFF5F5F5),
-                          borderRadius: BorderRadius.circular(4),
+                          borderRadius: BorderRadius.circular(r.dp(4)),
                         ),
                         child: Text(
                           widget.productSerialNumber,
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: r.fs12,
                             color: Colors.grey[700],
                           ),
                         ),
@@ -133,18 +135,18 @@ class _WarrantyCardState extends State<WarrantyCard> {
                 ),
                 
                 // Status badge
-                _buildStatusBadge(context),
+                _buildStatusBadge(context, r),
               ],
             ),
           ),
           
           // Customer info in light gray container
           Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            padding: const EdgeInsets.all(12),
+            margin: EdgeInsets.symmetric(horizontal: r.dp(16), vertical: r.dp(8)),
+            padding: EdgeInsets.all(r.dp(12)),
             decoration: BoxDecoration(
               color: const Color(0xFFFAFAFA),
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(r.smallRadius),
             ),
             child: Column(
               children: [
@@ -153,34 +155,38 @@ class _WarrantyCardState extends State<WarrantyCard> {
                     Expanded(
                       child: _buildInfoRow(
                         context,
+                        r: r,
                         label: AppLocalizations.of(context)!.customer,
                         value: widget.customerName,
                       ),
                     ),
-                    const SizedBox(width: 16),
+                    SizedBox(width: r.dp(16)),
                     Expanded(
                       child: _buildInfoRow(
                         context,
+                        r: r,
                         label: AppLocalizations.of(context)!.phone,
                         value: widget.customerPhone,
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: r.dp(10)),
                 Row(
                   children: [
                     Expanded(
                       child: _buildInfoRow(
                         context,
+                        r: r,
                         label: AppLocalizations.of(context)!.purchase_date,
                         value: widget.purchaseDate,
                       ),
                     ),
-                    const SizedBox(width: 16),
+                    SizedBox(width: r.dp(16)),
                     Expanded(
                       child: _buildInfoRow(
                         context,
+                        r: r,
                         label: AppLocalizations.of(context)!.warranty_period,
                         value: widget.expiryDate,
                       ),
@@ -193,22 +199,24 @@ class _WarrantyCardState extends State<WarrantyCard> {
           
           // Action buttons
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
+            padding: EdgeInsets.fromLTRB(r.dp(16), r.dp(4), r.dp(16), r.dp(16)),
             child: Row(
               children: [
                 Expanded(
                   child: _buildActionButton(
                     context,
+                    r: r,
                     label: AppLocalizations.of(context)!.edit,
                     icon: Icons.edit_outlined,
                     onTap: widget.onEdit,
                     backgroundColor: Colors.black,
                   ),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: r.dp(12)),
                 Expanded(
                   child: _buildActionButton(
                     context,
+                    r: r,
                     label: AppLocalizations.of(context)!.delete,
                     icon: Icons.delete_outline,
                     onTap: widget.onDelete,
@@ -225,7 +233,7 @@ class _WarrantyCardState extends State<WarrantyCard> {
     );
   }
 
-  Widget _buildStatusBadge(BuildContext context) {
+  Widget _buildStatusBadge(BuildContext context, AppR r) {
     Color backgroundColor;
     Color textColor;
     String statusText;
@@ -253,25 +261,25 @@ class _WarrantyCardState extends State<WarrantyCard> {
     }
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: EdgeInsets.symmetric(horizontal: r.dp(8), vertical: r.dp(4)),
       decoration: BoxDecoration(
         color: backgroundColor,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(r.dp(12)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
             Icons.circle,
-            size: 8,
+            size: r.dp(8),
             color: textColor,
           ),
-          const SizedBox(width: 4),
+          SizedBox(width: r.dp(4)),
           Text(
             statusText,
             style: TextStyle(
               color: textColor,
-              fontSize: 12,
+              fontSize: r.fs12,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -280,22 +288,22 @@ class _WarrantyCardState extends State<WarrantyCard> {
     );
   }
 
-  Widget _buildInfoRow(BuildContext context, {required String label, required String value}) {
+  Widget _buildInfoRow(BuildContext context, {required AppR r, required String label, required String value}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
           style: TextStyle(
-            fontSize: 12,
+            fontSize: r.fs12,
             color: Colors.grey[600],
           ),
         ),
-        const SizedBox(height: 2),
+        SizedBox(height: r.dp(2)),
         Text(
           value,
-          style: const TextStyle(
-            fontSize: 14,
+          style: TextStyle(
+            fontSize: r.fs14,
             fontWeight: FontWeight.bold,
             color: Colors.black87,
           ),
@@ -306,6 +314,7 @@ class _WarrantyCardState extends State<WarrantyCard> {
 
   Widget _buildActionButton(
     BuildContext context, {
+    required AppR r,
     required String label,
     required IconData icon,
     required VoidCallback onTap,
@@ -315,12 +324,12 @@ class _WarrantyCardState extends State<WarrantyCard> {
   }) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(10),
+      borderRadius: BorderRadius.circular(r.dp(10)),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+        padding: EdgeInsets.symmetric(vertical: r.dp(8), horizontal: r.dp(12)),
         decoration: BoxDecoration(
           color: backgroundColor,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(r.dp(10)),
           border: borderColor != null ? Border.all(color: borderColor) : null,
         ),
         child: Row(
@@ -328,14 +337,14 @@ class _WarrantyCardState extends State<WarrantyCard> {
           children: [
             Icon(
               icon,
-              size: 16,
+              size: r.dp(16),
               color: textColor ?? Colors.white,
             ),
-            const SizedBox(width: 6),
+            SizedBox(width: r.dp(6)),
             Text(
               label,
               style: TextStyle(
-                fontSize: 13,
+                fontSize: r.fs13,
                 fontWeight: FontWeight.normal,
                 color: textColor ?? Colors.white,
               ),

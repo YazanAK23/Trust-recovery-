@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
+import 'package:trust_app_updated/Components/responsive/app_responsive.dart';
 import '../../l10n/app_localizations.dart';
 import '../../main.dart';
 
@@ -94,9 +95,9 @@ class _MaintenanceCardWidgetState extends State<MaintenanceCardWidget> {
     }
   }
 
-  Widget _buildHorizontalInfoItem(IconData icon, String label, String value, bool isRTL, {bool keepValueLTR = false}) {
+  Widget _buildHorizontalInfoItem(AppR r, IconData icon, String label, String value, bool isRTL, {bool keepValueLTR = false}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 1),
+      padding: EdgeInsets.symmetric(vertical: r.dp(1)),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -106,12 +107,12 @@ class _MaintenanceCardWidgetState extends State<MaintenanceCardWidget> {
             mainAxisSize: MainAxisSize.min,
             textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
             children: [
-              Icon(icon, size: 14, color: Colors.grey[600]),
-              SizedBox(width: 6),
+              Icon(icon, size: r.dp(14), color: Colors.grey[600]),
+              SizedBox(width: r.dp(6)),
               Text(
                 label,
                 style: TextStyle(
-                  fontSize: 10,
+                  fontSize: r.fs10,
                   color: Colors.grey[600],
                   fontWeight: FontWeight.w400,
                 ),
@@ -123,7 +124,7 @@ class _MaintenanceCardWidgetState extends State<MaintenanceCardWidget> {
             child: Text(
               value.isEmpty ? '-' : value,
               style: TextStyle(
-                fontSize: 11,
+                fontSize: r.fs11,
                 color: Colors.black,
                 fontWeight: FontWeight.w600,
               ),
@@ -141,30 +142,31 @@ class _MaintenanceCardWidgetState extends State<MaintenanceCardWidget> {
   @override
   Widget build(BuildContext context) {
     final isRTL = locale.toString() == 'ar';
+    final r = AppR(context);
     
     return Card(
-      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      margin: EdgeInsets.symmetric(horizontal: r.hPad, vertical: r.dp(6)),
       elevation: 3,
       color: Colors.white,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(r.cardRadius),
       ),
       child: Column(
         crossAxisAlignment: isRTL ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
           // Header with image and basic info
           Container(
-            padding: EdgeInsets.all(10),
+            padding: EdgeInsets.all(r.dp(10)),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
               children: [
                 // Product Image
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(r.smallRadius),
                   child: Container(
-                    width: 65,
-                    height: 65,
+                    width: r.productImgSize,
+                    height: r.productImgSize,
                     color: Colors.grey[200],
                     child: widget.productImage.isNotEmpty
                         ? FancyShimmerImage(
@@ -197,7 +199,7 @@ class _MaintenanceCardWidgetState extends State<MaintenanceCardWidget> {
                               child: Text(
                                 widget.productName,
                                 style: TextStyle(
-                                  fontSize: 13,
+                                  fontSize: r.fs13,
                                   fontWeight: FontWeight.w400,
                                   color: Colors.black,
                                 ),
@@ -208,28 +210,28 @@ class _MaintenanceCardWidgetState extends State<MaintenanceCardWidget> {
                               ),
                             ),
                           ),
-                          SizedBox(width: 6),
+                          SizedBox(width: r.dp(6)),
                           // Status Badge beside title
                           Container(
-                            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                            padding: EdgeInsets.symmetric(horizontal: r.dp(8), vertical: r.dp(3)),
                             decoration: BoxDecoration(
                               color: _getStatusColor(),
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: BorderRadius.circular(r.dp(20)),
                             ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Icon(
                                   _getStatusIcon(widget.status),
-                                  size: 12,
+                                  size: r.dp(12),
                                   color: Colors.white,
                                 ),
-                                SizedBox(width: 4),
+                                SizedBox(width: r.dp(4)),
                                 Text(
                                   _getStatusLabel(context, widget.status),
                                   style: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 10,
+                                    fontSize: r.fs10,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -238,20 +240,20 @@ class _MaintenanceCardWidgetState extends State<MaintenanceCardWidget> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 2),
+                      SizedBox(height: r.dp(2)),
                       Align(
                         alignment: isRTL ? Alignment.centerRight : Alignment.centerLeft,
                         child: Text(
                           widget.productSerialNumber,
                           style: TextStyle(
-                            fontSize: 11,
+                            fontSize: r.fs11,
                             color: Colors.black,
                             fontWeight: FontWeight.w600,
                           ),
                           textDirection: TextDirection.ltr,
                         ),
                       ),
-                      SizedBox(height: 2),
+                      SizedBox(height: r.dp(2)),
                       // Notes in orange
                       if (widget.notes.isNotEmpty)
                         Align(
@@ -259,7 +261,7 @@ class _MaintenanceCardWidgetState extends State<MaintenanceCardWidget> {
                           child: Text(
                             widget.notes,
                             style: TextStyle(
-                              fontSize: 10,
+                              fontSize: r.fs10,
                               color: Color(0xFFFF9800),
                               fontWeight: FontWeight.w500,
                             ),
@@ -278,22 +280,23 @@ class _MaintenanceCardWidgetState extends State<MaintenanceCardWidget> {
 
           // Details Section
           Padding(
-            padding: EdgeInsets.all(10),
+            padding: EdgeInsets.all(r.dp(10)),
             child: Column(
               crossAxisAlignment: isRTL ? CrossAxisAlignment.end : CrossAxisAlignment.start,
               children: [
                 // Gray container with information
                 Container(
                   width: double.infinity,
-                  padding: EdgeInsets.all(8),
+                  padding: EdgeInsets.all(r.dp(8)),
                   decoration: BoxDecoration(
                     color: Color(0xFFFAFAFA).withOpacity(0.5),
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(r.smallRadius),
                     border: Border.all(color: Colors.grey[200]!.withOpacity(0.5), width: 1),
                   ),
                   child: Column(
                     children: [
                       _buildHorizontalInfoItem(
+                        r,
                         Icons.calendar_today,
                         AppLocalizations.of(context)!.scheduled_date,
                         _formatDate(widget.scheduledDate),
@@ -301,12 +304,14 @@ class _MaintenanceCardWidgetState extends State<MaintenanceCardWidget> {
                         keepValueLTR: true,
                       ),
                       _buildHorizontalInfoItem(
+                        r,
                         Icons.person,
                         AppLocalizations.of(context)!.customer_name,
                         widget.customerName,
                         isRTL,
                       ),
                       _buildHorizontalInfoItem(
+                        r,
                         Icons.phone,
                         AppLocalizations.of(context)!.phone_number,
                         widget.customerPhone,
@@ -318,13 +323,13 @@ class _MaintenanceCardWidgetState extends State<MaintenanceCardWidget> {
                 ),
                 // Service Notes Section
                 Padding(
-                  padding: EdgeInsets.only(top: 6),
+                  padding: EdgeInsets.only(top: r.dp(6)),
                   child: Container(
                     width: double.infinity,
-                    padding: EdgeInsets.all(8),
+                    padding: EdgeInsets.all(r.dp(8)),
                     decoration: BoxDecoration(
                       color: Color(0xFFEFF6FF),
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(r.smallRadius),
                     ),
                     child: Column(
                       crossAxisAlignment: isRTL ? CrossAxisAlignment.end : CrossAxisAlignment.start,
@@ -337,14 +342,14 @@ class _MaintenanceCardWidgetState extends State<MaintenanceCardWidget> {
                             children: [
                               Icon(
                                 Icons.info_outline,
-                                size: 12,
+                                size: r.dp(12),
                                 color: Color(0xFF6B7280),
                               ),
-                              SizedBox(width: 4),
+                              SizedBox(width: r.dp(4)),
                               Text(
                                 AppLocalizations.of(context)!.service_notes,
                                 style: TextStyle(
-                                  fontSize: 10,
+                                  fontSize: r.fs10,
                                   fontWeight: FontWeight.w400,
                                   color: Color(0xFF6B7280),
                                 ),
@@ -354,13 +359,13 @@ class _MaintenanceCardWidgetState extends State<MaintenanceCardWidget> {
                           ),
                         ),
                         if (widget.maintenanceCategoryNotes.isNotEmpty) ...[
-                          SizedBox(height: 3),
+                          SizedBox(height: r.dp(3)),
                           SizedBox(
                             width: double.infinity,
                             child: Text(
                               widget.maintenanceCategoryNotes,
                               style: TextStyle(
-                                fontSize: 11,
+                                fontSize: r.fs11,
                                 color: Color(0xFF6B7280),
                                 fontWeight: FontWeight.w600,
                               ),
@@ -379,7 +384,7 @@ class _MaintenanceCardWidgetState extends State<MaintenanceCardWidget> {
 
           // Action Buttons
           Padding(
-            padding: EdgeInsets.fromLTRB(10, 4, 10, 10),
+            padding: EdgeInsets.fromLTRB(r.dp(10), r.dp(4), r.dp(10), r.dp(10)),
             child: Row(
               textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
               children: [
@@ -391,23 +396,23 @@ class _MaintenanceCardWidgetState extends State<MaintenanceCardWidget> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xFFEF4444),
                       foregroundColor: Colors.white,
-                      padding: EdgeInsets.symmetric(vertical: 10),
+                      padding: EdgeInsets.symmetric(vertical: r.dp(10)),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(r.dp(10)),
                       ),
                       elevation: 0,
                     ),
                     child: Text(
                       AppLocalizations.of(context)!.view_report,
                       style: TextStyle(
-                        fontSize: 12,
+                        fontSize: r.fs12,
                         fontWeight: FontWeight.w600,
                       ),
                       textAlign: TextAlign.center,
                     ),
                   ),
                 ),
-                SizedBox(width: 8),
+                SizedBox(width: r.dp(8)),
                 // Edit Button
                 Expanded(
                   flex: 2,
@@ -416,17 +421,17 @@ class _MaintenanceCardWidgetState extends State<MaintenanceCardWidget> {
                     style: OutlinedButton.styleFrom(
                       backgroundColor: Colors.white,
                       foregroundColor: Color(0xFF374151),
-                      padding: EdgeInsets.symmetric(vertical: 10),
+                      padding: EdgeInsets.symmetric(vertical: r.dp(10)),
                       side: BorderSide(color: Color(0xFFE5E7EB), width: 1.5),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(r.dp(10)),
                       ),
                       elevation: 0,
                     ),
                     child: Text(
                       AppLocalizations.of(context)!.edit,
                       style: TextStyle(
-                        fontSize: 12,
+                        fontSize: r.fs12,
                         fontWeight: FontWeight.w600,
                       ),
                       textAlign: TextAlign.center,
