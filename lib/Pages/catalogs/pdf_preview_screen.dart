@@ -35,6 +35,7 @@ class _PdfPreviewScreenState extends State<PdfPreviewScreen> {
   }
 
   Future<void> _downloadPdf() async {
+    if (!mounted) return;
     setState(() {
       _isLoading = true;
       _errorMessage = null;
@@ -43,6 +44,8 @@ class _PdfPreviewScreenState extends State<PdfPreviewScreen> {
     try {
       // Download the PDF file
       final response = await http.get(Uri.parse(widget.pdfUrl));
+      
+      if (!mounted) return;
       
       if (response.statusCode == 200) {
         // Get temporary directory
@@ -53,28 +56,43 @@ class _PdfPreviewScreenState extends State<PdfPreviewScreen> {
         // Write the file
         await file.writeAsBytes(response.bodyBytes);
         
-        setState(() {
-          _localFilePath = file.path;
-          _isLoading = false;
-        });
+        if (mounted) {
+          setState(() {
+            _localFilePath = file.path;
+            _isLoading = false;
+          });
+        }
       } else {
+        if (mounted) {
+          setState(() {
+            _errorMessage = 'Failed to download PDF: ${response.statusCode}';
+            _isLoading = false;
+          });
+        }
+      }
+    } catch (e) {
+      if (mounted) {
         setState(() {
-          _errorMessage = 'Failed to download PDF: ${response.statusCode}';
+          _errorMessage = 'Error downloading PDF: $e';
           _isLoading = false;
         });
       }
-    } catch (e) {
-      setState(() {
-        _errorMessage = 'Error downloading PDF: $e';
-        _isLoading = false;
-      });
     }
   }
 
   void _sharePdf() {
+    final box = context.findRenderObject() as RenderBox?;
     Share.share(
       '${AppLocalizations.of(context)!.download_pdf_catalog}\n\n${widget.title}\n\n${widget.pdfUrl}',
       subject: widget.title,
+      sharePositionOrigin: box != null
+          ? Rect.fromLTWH(
+              0,
+              0,
+              box.size.width,
+              box.size.height,
+            )
+          : null,
     );
   }
 

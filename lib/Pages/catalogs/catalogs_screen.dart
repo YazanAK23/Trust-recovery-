@@ -643,51 +643,55 @@ class _CatalogsScreenState extends State<CatalogsScreen> {
   Widget _buildFilterTabs() {
     return Container(
       height: 50,
-      padding: const EdgeInsets.symmetric(vertical: 6),
-      child: ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        scrollDirection: Axis.horizontal,
-        itemCount: _availableTypes.length,
-        itemBuilder: (context, index) {
-          final type = _availableTypes[index];
+      padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: _availableTypes.map((type) {
           final isSelected = _selectedType == type;
           
-          return GestureDetector(
-            onTap: () {
-              setState(() {
-                _selectedType = type;
-                _applyFilter();
-              });
-            },
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 4),
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              decoration: BoxDecoration(
-                color: isSelected ? const Color(0xFFEF4444) : Colors.white,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: isSelected ? const Color(0xFFEF4444) : Colors.grey[300]!,
-                  width: 1,
-                ),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  _buildTypeIcon(type, isSelected ? Colors.white : Colors.grey[700]!, 16),
-                  const SizedBox(width: 5),
-                  Text(
-                    _getTypeLabel(type),
-                    style: TextStyle(
-                      color: isSelected ? Colors.white : Colors.grey[700],
-                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-                      fontSize: 13,
-                    ),
+          return Expanded(
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  _selectedType = type;
+                  _applyFilter();
+                });
+              },
+              child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 6),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                decoration: BoxDecoration(
+                  color: isSelected ? const Color(0xFFEF4444) : Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: isSelected ? const Color(0xFFEF4444) : Colors.grey[300]!,
+                    width: 1,
                   ),
-                ],
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _buildTypeIcon(type, isSelected ? Colors.white : Colors.grey[700]!, 16),
+                    const SizedBox(width: 6),
+                    Flexible(
+                      child: Text(
+                        _getTypeLabel(type),
+                        style: TextStyle(
+                          color: isSelected ? Colors.white : Colors.grey[700],
+                          fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                          fontSize: 13,
+                        ),
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           );
-        },
+        }).toList(),
       ),
     );
   }
@@ -875,9 +879,18 @@ class _CatalogsScreenState extends State<CatalogsScreen> {
                                   catalog,
                                   'title',
                                 );
+                                final box = context.findRenderObject() as RenderBox?;
                                 Share.share(
                                   '${AppLocalizations.of(context)!.download_pdf_catalog}\n\n$title\n\n$fullPdfUrl',
                                   subject: title,
+                                  sharePositionOrigin: box != null
+                                      ? Rect.fromLTWH(
+                                          0,
+                                          0,
+                                          box.size.width,
+                                          box.size.height,
+                                        )
+                                      : null,
                                 );
                               }
                             : null,

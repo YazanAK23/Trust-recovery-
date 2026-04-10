@@ -2038,7 +2038,18 @@ class _ProductScreenState extends State<ProductScreen> {
                           String modifiedUrl = modifyURL(
                               "https://redtrust.ps/$ShareUrl/${slug}");
 
-                          Share.share(modifiedUrl);
+                          final box = context.findRenderObject() as RenderBox?;
+                          Share.share(
+                            modifiedUrl,
+                            sharePositionOrigin: box != null
+                                ? Rect.fromLTWH(
+                                    0,
+                                    0,
+                                    box.size.width,
+                                    box.size.height,
+                                  )
+                                : null,
+                          );
                         },
                         child: FaIcon(
                           FontAwesomeIcons.share,

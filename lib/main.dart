@@ -11,7 +11,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:google_fonts/google_fonts.dart'; // (unused, keep if you use later)
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:upgrader/upgrader.dart';
@@ -48,9 +47,9 @@ Future<void> _setAppAndDeviceKeys() async {
   } else if (Platform.isIOS) {
     final i = await info.iosInfo;
     await FirebaseCrashlytics.instance.setCustomKey(
-        'device_model', i.utsname.machine ?? i.model ?? 'unknown');
+      'device_model', i.utsname.machine.isNotEmpty ? i.utsname.machine : i.model);
     await FirebaseCrashlytics.instance
-        .setCustomKey('ios_version', i.systemVersion ?? 'unknown');
+      .setCustomKey('ios_version', i.systemVersion);
   }
 }
 
@@ -66,6 +65,12 @@ Future<void> triggerTestCrash() async {
 
 Future<void> _initMessagingAndTopics() async {
   final messaging = FirebaseMessaging.instance;
+
+  await messaging.setForegroundNotificationPresentationOptions(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
 
   // Request permission on BOTH Android & iOS
   final settings = await messaging.requestPermission(
@@ -158,7 +163,7 @@ bool ArabicLang = false;
 Locale locale = const Locale('en', '');
 
 class Trust extends StatefulWidget {
-  bool flag = false;
+  final bool flag;
   Trust({Key? key, required this.flag}) : super(key: key);
 
   @override
@@ -183,18 +188,44 @@ class _TrustState extends State<Trust> {
     // Permission is already requested in _initMessagingAndTopics()
     // but you can keep this if other iOS setup lives here.
     final messaging = FirebaseMessaging.instance;
+    if (Platform.isIOS) {
+      String? apnsToken = await messaging.getAPNSToken();
+      for (int i = 0; i < 8 && apnsToken == null; i++) {
+        await Future<void>.delayed(const Duration(milliseconds: 500));
+        apnsToken = await messaging.getAPNSToken();
+      }
+
+      if (apnsToken != null) {
+        debugPrint('=== APNS Token: $apnsToken ===');
+      } else {
+        debugPrint(
+            '=== APNS token not available yet (simulator or push capability not enabled) ===');
+        return;
+      }
+    }
+
     final token = await messaging.getToken();
     if (token != null) {
-      print('=== FCM Token Generated: $token ===');
+      debugPrint('=== FCM Token Generated: $token ===');
+      FirebaseCrashlytics.instance.log('FCM Token: $token');
       FirebaseCrashlytics.instance.setCustomKey('fcm_token_present', true);
+      FirebaseCrashlytics.instance.setCustomKey('fcm_token', token);
       
       // Save FCM token to SharedPreferences
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('fcm_token', token);
-      print('=== FCM Token Saved to SharedPreferences ===');
+      debugPrint('=== FCM Token Saved to SharedPreferences ===');
     } else {
-      print('=== FCM Token is NULL ===');
+      debugPrint('=== FCM Token is NULL ===');
     }
+
+    FirebaseMessaging.instance.onTokenRefresh.listen((newToken) async {
+      debugPrint('=== FCM Token Refreshed: $newToken ===');
+      FirebaseCrashlytics.instance.log('FCM Token Refreshed: $newToken');
+      FirebaseCrashlytics.instance.setCustomKey('fcm_token', newToken);
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('fcm_token', newToken);
+    });
   }
 
   @override

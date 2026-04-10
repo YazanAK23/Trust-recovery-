@@ -1,27 +1,24 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:trust_app_updated/Pages/home_screen/home_screen.dart';
-import 'package:trust_app_updated/Pages/new_products/new_products.dart';
-import 'package:trust_app_updated/Pages/offers/offers.dart';
 import 'local_notification_service.dart';
 
+String _notificationRoute(RemoteMessage message) {
+  return message.data['route']?.toString() ??
+      message.data['data']?.toString() ??
+      'home';
+}
+
+@pragma('vm:entry-point')
 Future<void> onBackgroundMessage(RemoteMessage message) async {
   await Firebase.initializeApp();
 
-  if (message.data.containsKey('data')) {
-    // Handle data message
-    final data = message.data['data'];
-    NavigatorNotification(message.notification!.android!.color);
-  }
-
-  if (message.data.containsKey('notification')) {
-    // Handle notification message
-    final notification = message.data['notification'];
-    NavigatorNotification(message.notification!.android!.color);
-  }
-  // Or do other work.
+  // Background isolate: do not navigate here.
+  debugPrint('Background message received. route=${_notificationRoute(message)}');
 }
 
 NavigatorNotification(message) {
@@ -58,7 +55,7 @@ class FCM {
     FirebaseMessaging.onBackgroundMessage(onBackgroundMessage);
     FirebaseMessaging.instance.getInitialMessage().then((message) {
       if (message != null) {
-        NavigatorNotification(message.notification!.android!.color);
+        NavigatorNotification(_notificationRoute(message));
       }
     });
 
@@ -66,18 +63,23 @@ class FCM {
     FirebaseMessaging.onMessage.listen((message) {
       if (message.notification != null) {
         LocalNotificationService.display(message);
-        NavigatorNotification(message.notification!.android!.color);
+        NavigatorNotification(_notificationRoute(message));
       }
     });
 
     ///When the app is in background but opened and user taps
     ///on the notification
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
-      NavigatorNotification(message.notification!.android!.color);
+      NavigatorNotification(_notificationRoute(message));
     });
-    // With this token you can test it easily on your phone
-    final token =
-        _firebaseMessaging.getToken().then((value) => print('Token: $value'));
+
+    // Avoid APNS-token-not-set error on iOS simulator.
+    if (!Platform.isIOS) {
+      _firebaseMessaging
+          .getToken()
+          .then((value) => debugPrint('Token: $value'))
+          .catchError((_) {});
+    }
   }
 
   dispose() {

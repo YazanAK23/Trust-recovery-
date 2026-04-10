@@ -10,7 +10,11 @@ class LocalNotificationService {
     final InitializationSettings initializationSettings =
         InitializationSettings(
             android: AndroidInitializationSettings("@mipmap/launcher_icon"),
-            iOS: DarwinInitializationSettings());
+            iOS: DarwinInitializationSettings(
+              requestAlertPermission: true,
+              requestBadgePermission: true,
+              requestSoundPermission: true,
+            ));
     _notificationsPlugin.initialize(
       initializationSettings,
     );
@@ -28,7 +32,12 @@ class LocalNotificationService {
               importance: Importance.max,
               ongoing: true,
               priority: Priority.high,
-              enableLights: true));
+              enableLights: true),
+          iOS: DarwinNotificationDetails(
+            presentAlert: true,
+            presentBadge: true,
+            presentSound: true,
+          ));
 
       await _notificationsPlugin.show(
         id,
@@ -38,7 +47,7 @@ class LocalNotificationService {
         payload: message.data["route"],
       );
     } on Exception catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
   }
 }
