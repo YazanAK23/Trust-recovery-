@@ -16,6 +16,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trust_app_updated/Pages/main_categories/main_categories.dart';
 import 'package:trust_app_updated/Pages/merchant_screen/driver_screen/driver_screen.dart';
+import 'package:trust_app_updated/Pages/merchant_screen/maintenance_requests/maintenance_requests.dart';
 import 'package:trust_app_updated/Pages/merchant_screen/merchant_screen.dart';
 import 'package:trust_app_updated/l10n/app_localizations.dart';
 
@@ -708,10 +709,10 @@ addMaintanenceRequest(
         backgroundColor: const Color.fromARGB(255, 28, 116, 31),
         textColor: Colors.white,
         fontSize: 16.0);
-    // Navigate back to Warranty and Maintenance page
+    // Navigate to maintenance requests screen after successful submit
     Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(builder: (context) => MerchantScreen()),
+      MaterialPageRoute(builder: (context) => MaintenanceRequests()),
       (route) => false,
     );
   } else {

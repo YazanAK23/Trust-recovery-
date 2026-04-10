@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trust_app_updated/Components/drawer_widget/drawer_widget.dart';
 import 'package:trust_app_updated/Components/responsive/app_responsive.dart';
 import 'package:trust_app_updated/Models/warranty_product_model.dart';
+import 'package:trust_app_updated/Pages/merchant_screen/warranties/warranties_screen.dart';
 import 'package:trust_app_updated/Server/domains/domains.dart';
 import 'package:trust_app_updated/Server/functions/functions.dart';
 import 'package:trust_app_updated/Services/scanning_service/scanning_service.dart';
@@ -397,10 +398,15 @@ class _WarrantyActivationScreenState extends State<WarrantyActivationScreen> {
         _savedCustomerName = '';
         _savedCustomerPhone = '';
 
-        // Navigate back after a delay
+        // Navigate to the activated warranties list after a delay
         await Future.delayed(const Duration(milliseconds: 1500));
         if (mounted) {
-          Navigator.pop(context);
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const WarrantiesScreen(),
+            ),
+          );
         }
       } else {
         _showError(data["message"] ?? AppLocalizations.of(context)!.some_warranties_failed);
