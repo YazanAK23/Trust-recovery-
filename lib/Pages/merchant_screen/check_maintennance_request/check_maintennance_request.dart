@@ -14,6 +14,7 @@ import 'package:trust_app_updated/Pages/merchant_screen/check_maintennance_reque
 import 'package:trust_app_updated/Server/domains/domains.dart';
 import 'package:trust_app_updated/Server/functions/functions.dart';
 import 'package:trust_app_updated/main.dart';
+import 'package:trust_app_updated/Pages/merchant_screen/merchant_screen.dart';
 
 import '../../../Components/loading_widget/loading_widget.dart';
 
@@ -56,9 +57,14 @@ class _CheckMaintennanceRequestState extends State<CheckMaintennanceRequest> {
     return Container(
       color: MAIN_COLOR,
       child: SafeArea(
-        child: Scaffold(
-          body: Column(
-            children: [
+        child: WillPopScope(
+          onWillPop: () async {
+            NavigatorPopWithFallback(context, const MerchantScreen());
+            return false;
+          },
+          child: Scaffold(
+            body: Column(
+              children: [
               Container(
                 height: _r.dp(70),
                 width: double.infinity,
@@ -71,7 +77,7 @@ class _CheckMaintennanceRequestState extends State<CheckMaintennanceRequest> {
                       right: locale.toString() == "ar" ? 0 : null,
                       child: IconButton(
                         onPressed: () {
-                          Navigator.pop(context);
+                          NavigatorPopWithFallback(context, const MerchantScreen());
                         },
                         icon: Icon(
                           Icons.arrow_back,
@@ -678,7 +684,8 @@ class _CheckMaintennanceRequestState extends State<CheckMaintennanceRequest> {
                   ),
                 ),
               ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

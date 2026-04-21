@@ -57,6 +57,21 @@ NavigatorPushFunction(BuildContext context, Widget widget) {
   );
 }
 
+NavigatorPopWithFallback(BuildContext context, Widget fallbackWidget) {
+  if (!context.mounted) return;
+  final navigator = Navigator.of(context);
+  if (navigator.canPop()) {
+    navigator.pop();
+    return;
+  }
+
+  Navigator.pushAndRemoveUntil(
+    context,
+    MaterialPageRoute(builder: (context) => fallbackWidget),
+    (route) => false,
+  );
+}
+
 Future<bool> checkForUpdate() async {
   try {
     final updateInfo = await InAppUpdate.checkForUpdate();
@@ -700,7 +715,9 @@ addMaintanenceRequest(
   var data = json.decode(response.body);
   if (data["success"] == true) {
     // Close loading dialog first
-    Navigator.pop(context);
+    if (context.mounted) {
+      Navigator.pop(context);
+    }
     Fluttertoast.showToast(
         msg: AppLocalizations.of(context)!.consuccess,
         toastLength: Toast.LENGTH_LONG,
@@ -709,12 +726,13 @@ addMaintanenceRequest(
         backgroundColor: const Color.fromARGB(255, 28, 116, 31),
         textColor: Colors.white,
         fontSize: 16.0);
-    // Navigate to maintenance requests screen after successful submit
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => MaintenanceRequests()),
-      (route) => false,
-    );
+    // Replace add screen with maintenance requests without wiping app routes.
+    if (context.mounted) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => MaintenanceRequests()),
+      );
+    }
   } else {
     Fluttertoast.showToast(
         msg: AppLocalizations.of(context)!.confailed,

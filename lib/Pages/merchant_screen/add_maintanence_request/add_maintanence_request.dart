@@ -12,6 +12,7 @@ import 'package:trust_app_updated/main.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:trust_app_updated/Components/drawer_widget/drawer_widget.dart';
+import '../merchant_screen.dart';
 
 /// Send To Maintenance Screen - Redesigned to match UI mockup
 class AddMaintanenceRequest extends StatefulWidget {
@@ -124,73 +125,79 @@ class _AddMaintanenceRequestState extends State<AddMaintanenceRequest> {
     _r = AppR(context);
     final isRTL = locale.toString() == 'ar';
 
-    return Scaffold(
-      key: _scaffoldKey,
-      resizeToAvoidBottomInset: true,
-      backgroundColor: const Color(0xFFF5F5F5),
-      drawer: DrawerWell(
-        Refresh: () {
-          setState(() {});
-        },
-      ),
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                // Header and top section with red background
-                Container(
-                  color: const Color(0xffe33131),
-                  child: Column(
-                    children: [
-                      SafeArea(
-                        bottom: false,
-                        child: _buildHeader(isRTL),
-                      ),
-                      _buildTopButtons(),
-                      const SizedBox(height: 30), // Extra space for overlap
-                    ],
-                  ),
-                ),
-                // Content with gray background
-                Container(
-                  color: const Color(0xFFF5F5F5),
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 100),
+    return WillPopScope(
+      onWillPop: () async {
+        NavigatorPopWithFallback(context, const MerchantScreen());
+        return false;
+      },
+      child: Scaffold(
+        key: _scaffoldKey,
+        resizeToAvoidBottomInset: true,
+        backgroundColor: const Color(0xFFF5F5F5),
+        drawer: DrawerWell(
+          Refresh: () {
+            setState(() {});
+          },
+        ),
+        body: Stack(
+          fit: StackFit.expand,
+          children: [
+            SingleChildScrollView(
+              child: Column(
+                children: [
+                  // Header and top section with red background
+                  Container(
+                    color: const Color(0xffe33131),
                     child: Column(
                       children: [
-                        Transform.translate(
-                          offset: const Offset(0, -30), // Move up to create overlap
-                          child: _buildSerialNumberSection(),
+                        SafeArea(
+                          bottom: false,
+                          child: _buildHeader(isRTL),
                         ),
-                        const SizedBox(height: 5),
-                        if (productAdded) ...[
-                          _buildProductDetails(),
-                          const SizedBox(height: 15),
-                        ],
-                        _buildCustomerInformation(),
-                        const SizedBox(height: 15),
-                        _buildMalfunctionDetails(),
-                        const SizedBox(height: 15),
-                        _buildImportantNote(),
-                        const SizedBox(height: 40),
+                        _buildTopButtons(),
+                        const SizedBox(height: 30), // Extra space for overlap
                       ],
                     ),
                   ),
-                ),
-              ],
+                  // Content with gray background
+                  Container(
+                    color: const Color(0xFFF5F5F5),
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 100),
+                      child: Column(
+                        children: [
+                          Transform.translate(
+                            offset: const Offset(0, -30), // Move up to create overlap
+                            child: _buildSerialNumberSection(),
+                          ),
+                          const SizedBox(height: 5),
+                          if (productAdded) ...[
+                            _buildProductDetails(),
+                            const SizedBox(height: 15),
+                          ],
+                          _buildCustomerInformation(),
+                          const SizedBox(height: 15),
+                          _buildMalfunctionDetails(),
+                          const SizedBox(height: 15),
+                          _buildImportantNote(),
+                          const SizedBox(height: 40),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          // Fixed button at the bottom - Hide when keyboard is visible
-          if (MediaQuery.of(context).viewInsets.bottom == 0)
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: _buildSubmitButton(),
-            ),
-        ],
+            // Fixed button at the bottom - Hide when keyboard is visible
+            if (MediaQuery.of(context).viewInsets.bottom == 0)
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: _buildSubmitButton(),
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -208,7 +215,7 @@ class _AddMaintanenceRequestState extends State<AddMaintanenceRequest> {
             left: isRTL ? null : 0,
             right: isRTL ? 0 : null,
             child: IconButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => NavigatorPopWithFallback(context, const MerchantScreen()),
               icon: Icon(Icons.arrow_back, size: _r.actionBtnIconSize, color: Colors.white),
             ),
           ),

@@ -14,6 +14,7 @@ import 'package:trust_app_updated/Components/drawer_widget/drawer_widget.dart';
 import '../../../Constants/constants.dart';
 import '../../../Server/domains/domains.dart';
 import '../add_maintanence_request/add_maintanence_request.dart';
+import '../merchant_screen.dart';
 
 class MaintenanceRequests extends StatefulWidget {
   const MaintenanceRequests({super.key});
@@ -630,27 +631,32 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
     return Container(
       color: MAIN_COLOR,
       child: SafeArea(
-        child: Scaffold(
-          backgroundColor: Color(0xFFF5F5F5),
-          drawer: DrawerWell(
-            Refresh: () async {
-              await fetchMaintenanceRequests();
-            },
-          ),
-          body: isLoading
-              ? Center(
-                  child: SpinKitCircle(
+        child: WillPopScope(
+          onWillPop: () async {
+            NavigatorPopWithFallback(context, const MerchantScreen());
+            return false;
+          },
+          child: Scaffold(
+            backgroundColor: Color(0xFFF5F5F5),
+            drawer: DrawerWell(
+              Refresh: () async {
+                await fetchMaintenanceRequests();
+              },
+            ),
+            body: isLoading
+                ? Center(
+                    child: SpinKitCircle(
+                      color: MAIN_COLOR,
+                      size: 50.0,
+                    ),
+                  )
+                : RefreshIndicator(
+                    onRefresh: fetchMaintenanceRequests,
                     color: MAIN_COLOR,
-                    size: 50.0,
-                  ),
-                )
-              : RefreshIndicator(
-                  onRefresh: fetchMaintenanceRequests,
-                  color: MAIN_COLOR,
-                  child: CustomScrollView(
-                    controller: scrollController,
-                    physics: AlwaysScrollableScrollPhysics(),
-                    slivers: [
+                    child: CustomScrollView(
+                      controller: scrollController,
+                      physics: AlwaysScrollableScrollPhysics(),
+                      slivers: [
                       // Header
                       SliverToBoxAdapter(
                         child: Container(
@@ -664,7 +670,7 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
                                 textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
                                 children: [
                                   IconButton(
-                                    onPressed: () => Navigator.pop(context),
+                                    onPressed: () => NavigatorPopWithFallback(context, const MerchantScreen()),
                                     icon: Icon(Icons.arrow_back, color: Colors.white),
                                   ),
                                   Expanded(
@@ -804,30 +810,31 @@ class _MaintenanceRequestsState extends State<MaintenanceRequests> {
                                 childCount: filteredRequests.length + (isLoadingMore ? 1 : 0),
                               ),
                             ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () async {
-              await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => AddMaintanenceRequest(prodSerialNumber: ''),
-                ),
-              );
-              // Refresh the list when returning from add page
-              if (mounted) {
-                await fetchMaintenanceRequests();
-              }
-            },
-            // mini: true,
-            backgroundColor: Color(0xFFEF4444),
-            child: Icon(
-              Icons.add,
-              color: Colors.white,
-              size: 20,
+            floatingActionButton: FloatingActionButton(
+              onPressed: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddMaintanenceRequest(prodSerialNumber: ''),
+                  ),
+                );
+                // Refresh the list when returning from add page
+                if (mounted) {
+                  await fetchMaintenanceRequests();
+                }
+              },
+              // mini: true,
+              backgroundColor: Color(0xFFEF4444),
+              child: Icon(
+                Icons.add,
+                color: Colors.white,
+                size: 20,
+              ),
+              tooltip: AppLocalizations.of(context)!.new_maintenance_requests,
             ),
-            tooltip: AppLocalizations.of(context)!.new_maintenance_requests,
           ),
         ),
       ),

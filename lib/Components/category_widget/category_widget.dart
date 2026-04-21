@@ -82,14 +82,29 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                     )),
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 20),
-              child: Text(
-                locale.toString() == "ar" ? widget.name_ar : widget.name_en,
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontSize: 13),
+            Positioned(
+              left: 10,
+              right: 10,
+              bottom: 14,
+              child: SizedBox(
+                height: 34,
+                child: Center(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      locale.toString() == "ar" ? widget.name_ar : widget.name_en,
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: false,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 13,
+                          height: 1.1),
+                    ),
+                  ),
+                ),
               ),
             )
           ],
