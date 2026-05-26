@@ -265,7 +265,7 @@ class _WarrantiesScreenState extends State<WarrantiesScreen> {
     if (searchQuery.length >= 3) {
       try {
         final response = await http.get(
-          Uri.parse('http://app.redtrust.ps:3003/warranties/search/$searchQuery'),
+          Uri.parse('${URL}warranties/search/$searchQuery'),
         );
 
         if (response.statusCode == 200) {
@@ -530,7 +530,7 @@ class _WarrantiesScreenState extends State<WarrantiesScreen> {
   Future<void> _deleteWarranty(int warrantyId) async {
     try {
       final response = await http.delete(
-        Uri.parse('http://app.redtrust.ps:3003/warranties/$warrantyId'),
+        Uri.parse('${URL}warranties/$warrantyId'),
       );
 
       if (response.statusCode == 200) {
@@ -841,7 +841,7 @@ class _WarrantiesScreenState extends State<WarrantiesScreen> {
   }) async {
     try {
       final response = await http.put(
-        Uri.parse('http://app.redtrust.ps:3003/warranties/edit'),
+        Uri.parse('${URL}warranties/edit'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'id': warrantyId,

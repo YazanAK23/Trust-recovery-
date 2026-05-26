@@ -1,4 +1,4 @@
-var URL = "http://app.redtrust.ps:3003/";
+var URL = "https://app.redtrust.ps/";
 var URLIMAGE = "https://test.redtrust.ps/storage/";
 
 //PUBLIC

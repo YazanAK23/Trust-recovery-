@@ -262,7 +262,7 @@ getCategories() async {
 
 Future<Map<String, dynamic>> getSubCategories(int subCategoryId, int page) async {
   // لازم URL_SUB_CATEGORIES يكون مثل:
-  // "http://app.redtrust.ps:3003/cats/list"
+  // "$URLcats/list"
   final url = "$URL_SUB_CATEGORIES/$subCategoryId?page=$page";
   print(">>> getSubCategories(): $url");
 
@@ -1074,7 +1074,7 @@ addOrder(context, notes) async {
 
 getRelatedProducts(product_id, category_id) async {
   var response = await http.get(Uri.parse(
-      'http://app.redtrust.ps:3003/products/$product_id/related/$category_id'));
+      '${URL}products/$product_id/related/$category_id'));
   var res = jsonDecode(response.body)["response"];
   return res;
 }
