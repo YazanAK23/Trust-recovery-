@@ -51,6 +51,11 @@ android {
            minifyEnabled true
            shrinkResources true
            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+           firebaseCrashlytics {
+               // Temporary build unblocker: disable mapping upload at build time.
+               // App crash reporting still works, but Java/Kotlin stack traces remain obfuscated.
+               mappingFileUploadEnabled false
+           }
        }
        debug {
            signingConfig signingConfigs.debug

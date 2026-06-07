@@ -87,7 +87,7 @@ class _CatalogsScreenState extends State<CatalogsScreen> {
     
     try {
       final response = await http.get(
-        Uri.parse('http://app.redtrust.ps:3003/catalogs?page=1'),
+        Uri.parse('${URL}catalogs?page=1'),
       ).timeout(
         const Duration(seconds: 30),
         onTimeout: () {
@@ -161,7 +161,7 @@ class _CatalogsScreenState extends State<CatalogsScreen> {
     try {
       final nextPage = _currentPage + 1;
       final response = await http.get(
-        Uri.parse('http://app.redtrust.ps:3003/catalogs?page=$nextPage'),
+        Uri.parse('${URL}catalogs?page=$nextPage'),
       ).timeout(
         const Duration(seconds: 30),
         onTimeout: () {
